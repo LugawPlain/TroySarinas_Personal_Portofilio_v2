@@ -70,7 +70,7 @@ export default function Home() {
               digital experiences that deliver measurable results and support
               business growth.
             </p>
-            <div className="grid grid-flow-col grid-rows-2 font-inter font-semibold gap-2">
+            <div className="grid grid-flow-col grid-rows-2 font-inter font-semibold gap-8">
               <div className="backdrop-blur-[20%] bg-gradient-to-br from-[rgba(17,153,142,0.15)] to-[rgba(56,239,125,0.1)] shadow-2xl border-[rgba(17,153,142,0.3)] border-2 rounded-3xl flex flex-col px-4 py-4 gap-2">
                 <div className="flex flex-row gap-4">
                   <div className="flex items-center relative justify-center">
@@ -116,55 +116,60 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="flex gap-4">
+            <div className="flex gap-4 mt-8">
               <Link
-                href={""}
-                className="flex bg-gray-50 justify-center items-center h-12 w-12 rounded-lg shadow-md"
+                href={"https://github.com/LugawPlain"}
+                className="flex bg-gray-50 justify-center items-center h-12 w-12 rounded-lg shadow-xl"
               >
                 <FaGithub size={24} />
               </Link>
               <Link
-                href={""}
-                className="flex bg-gray-50 justify-center items-center h-12 w-12 rounded-lg shadow-md"
+                href={"https://www.linkedin.com/in/troy-sarinas-47062b1ba/"}
+                className="flex bg-gray-50 justify-center items-center h-12 w-12 rounded-lg shadow-xl"
               >
                 <FaLinkedin className="text-blue-400" size={24} />
               </Link>
               <Link
-                href={""}
-                className="flex bg-gray-50 justify-center items-center h-12 w-12 rounded-lg shadow-md"
+                href={"mailto:troysarinas22@gmail.com"}
+                className="flex bg-gray-50 justify-center items-center h-12 w-12 rounded-lg shadow-xl"
               >
                 <FaEnvelope className="text-red-400" size={24} />
               </Link>
               <Link
-                href={""}
-                className="flex bg-gray-50 justify-center items-center h-12 w-12 rounded-lg shadow-md"
+                href={"https://www.instagram.com/troysarinas/"}
+                className="flex bg-gray-50 justify-center items-center h-12 w-12 rounded-lg shadow-xl"
               >
                 <FaInstagram className="" size={24} />
               </Link>
               <Link
-                href={""}
-                className="flex bg-gray-50 justify-center items-center h-12 w-12 rounded-lg shadow-md"
+                href={"https://www.facebook.com/TroyGwapoOmsim/"}
+                className="flex bg-gray-50 justify-center items-center h-12 w-12 rounded-lg shadow-xl"
               >
                 <FaFacebook className="text-blue-400" size={24} />
               </Link>
               <Link
-                href={""}
-                className="flex bg-gray-50 justify-center items-center h-12 w-12 rounded-lg shadow-md"
+                href={"#"}
+                className="flex bg-gray-50 justify-center items-center h-12 w-12 rounded-lg shadow-xl"
               >
                 <FaXTwitter className="" size={24} />
               </Link>
             </div>
+
+            {/* <div className="flex justify-around mt-8">
+              <Button>Get in Touch</Button>
+              <Button>Resume</Button>
+            </div> */}
           </div>
         </div>
         <div className=" border-border border-2 items-center py-2 px-4 ">
           <div className="space-y-2">
             <h1 className="text-center font-bold text-3xl mt-2">PROJECTS</h1>
-            <div className="py-4 card card shadow-2xl rounded-md">
-              <div className=" min-h-40 min-w-4/5 bg-gray-500 rounded-sm">
+            <div className="pb-2 card card font-fraunces shadow-2xl rounded-2xl overflow-hidden">
+              <div className=" min-h-40 min-w-4/5 bg-gray-500 ">
                 <Image src="" alt=""></Image>
               </div>
-              <div className="mt-2 mb-2 text-center space-y-4">
-                <h3>Yorticia.com</h3>
+              <div className="px-2 mt-2 mb-2 text-center space-y-4">
+                <h3 className="font-bold text-2xl">Yorticia.com</h3>
                 <p className="text-start">
                   &emsp; Created a stunning personal portfolio website for model
                   Yorticia, enhancing her online presence and providing a
@@ -197,14 +202,17 @@ export default function Home() {
         <div className="flex-col flex flex-wrap px-4">
           <div className="">
             <h1 className="text-center font-bold text-3xl mt-2 ">
-              CERTIFICATES
+              Professional Certifications & Credentials 📜
             </h1>
-            <p className="text-center">
-              Research contributions and technical insights
-            </p>
-            <div className="block shadow-2xl rounded-md overflow-clip">
-              <div className=" h-50 w-full bg-gray-500 ">
-                <Image src="" alt=""></Image>
+            <p className="text-center">Indrustry Recognized certifications</p>
+            <div className="block shadow-2xl rounded-2xl overflow-clip">
+              <div className=" h-45 w-full flex items-center justify-center bg-gray-500 ">
+                <Image
+                  src="/CiscoLogo.png"
+                  alt="CiscoLogo"
+                  height={150}
+                  width={150}
+                ></Image>
               </div>
               <div className="text-center space-y-2">
                 <h3 className="mt-1 text-2xl">Python</h3>
@@ -220,8 +228,14 @@ export default function Home() {
             <h2 className="">Web Development</h2>
             <div className="flex gap-2 flex-wrap items-center justify-center">
               <div className="">
-                <div className="h-20 w-20 mx-auto bg-gray-500"></div>
-                <p>HTML</p>
+                <Image
+                  className="mx-auto"
+                  src="/Icons/HTML5.svg"
+                  alt="s"
+                  width={60}
+                  height={60}
+                ></Image>
+                <p className="text-center">HTML</p>
               </div>
               <div className="">
                 <div className="h-20 w-20 mx-auto bg-gray-500"></div>
@@ -319,20 +333,40 @@ export default function Home() {
         </div>
         <div className="px-2">
           <h1 className="text-center">Education</h1>
-          <div className="shadow-2xl overflow-clip rounded-2xl">
-            <div className="h-24 bg-black flex justify-center items-center">
-              <div className="h-15 w-15 bg-white"></div>
+          <div className="shadow-2xl overflow-clip rounded-2xl font-inter relative">
+            <a
+              href="https://sscr.edu/Beta/"
+              className="w-full h-full absolute top-0 left-0 rounded-2xl"
+            ></a>
+            <div className="h-24 bg-[#6a0106] flex justify-center items-center">
+              <Image
+                src="/SSCRLOGO1.png"
+                height={80}
+                width={80}
+                alt="SSCRDCLOGO"
+              />
             </div>
-            <h2 className="text-3xl text-bold">
-              San Sebastian College Recoletos de Cavite
-            </h2>
-            <h3 className="text-muted-foreground">
-              Bachelor of Science in Computer Engineering
-            </h3>
-            <p className="text-muted-foreground">June 2020 - June 2024</p>
-            <p></p>
-            <p> </p>
-            <br className="w-4/5"></br>
+            <div className="p-2 gap-2 flex flex-col">
+              <h2 className="text-2xl text-bold">
+                San Sebastian College Recoletos de Cavite
+              </h2>
+              <h3 className="text-muted-foreground text-sm">
+                Bachelor of Science in Computer Engineering
+              </h3>
+              <p className="text-muted-foreground">June 2020 - June 2024</p>
+              <p className="">
+                Data Structure and Algorithms, Embedded Systems,
+                Microprocessors, Operating Softwares, Object Oriented
+                Programming
+              </p>
+              <hr />
+              <h2>Key Courses & Highlights </h2>
+              <p className="text-sm">
+                Undergraduate Thesis 🎓: ARDUINO-CONTROLLED AUTOMATED BANANA
+                PEEL TO PANCAKE CONVERTER
+              </p>
+              <p className="text-sm">Awards:</p>
+            </div>
           </div>
         </div>
         <div className="px-2">
