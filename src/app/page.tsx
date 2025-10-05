@@ -8,6 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import GitHubButton from "react-github-btn";
 import Image from "next/image";
 import Technologies from "../components/Technologies";
 import { GiHamburgerMenu } from "react-icons/gi";
@@ -22,18 +23,16 @@ import {
 } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 import Link from "next/link";
+import NameTitle from "@/components/NameTitle";
+import SocialLinks from "@/components/SocialLinks";
+import GitHubStarCount from "@/components/GithubStarCount";
+import Footer from "@/components/Footer";
 export default function Home() {
   return (
     <>
       <div className="flex flex-col space-y-8 ">
         <div className="Header top-0 bg-white z-999 backdrop-blur-2xl sticky flex items-center justify-between px-4 h-20 border-b-2 border-border">
-          <h1 className=" text-3xl font-extralight flex items-center">
-            <span className="text-gray-400">{"<"}</span>
-            <span className="font-passionconflict text-5xl text-test">
-              Troy Sarinas
-            </span>
-            <span className="text-gray-400">{"/>"}</span>
-          </h1>
+          <NameTitle />
           <div className="flex items-center justify-between grow max-w-32">
             <ul className="flex justify-between ">
               <li className="hidden">Skills</li>
@@ -116,44 +115,7 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="flex gap-4 mt-8">
-              <Link
-                href={"https://github.com/LugawPlain"}
-                className="flex bg-gray-50 justify-center items-center h-12 w-12 rounded-lg shadow-xl"
-              >
-                <FaGithub size={24} />
-              </Link>
-              <Link
-                href={"https://www.linkedin.com/in/troy-sarinas-47062b1ba/"}
-                className="flex bg-gray-50 justify-center items-center h-12 w-12 rounded-lg shadow-xl"
-              >
-                <FaLinkedin className="text-blue-400" size={24} />
-              </Link>
-              <Link
-                href={"mailto:troysarinas22@gmail.com"}
-                className="flex bg-gray-50 justify-center items-center h-12 w-12 rounded-lg shadow-xl"
-              >
-                <FaEnvelope className="text-red-400" size={24} />
-              </Link>
-              <Link
-                href={"https://www.instagram.com/troysarinas/"}
-                className="flex bg-gray-50 justify-center items-center h-12 w-12 rounded-lg shadow-xl"
-              >
-                <FaInstagram className="" size={24} />
-              </Link>
-              <Link
-                href={"https://www.facebook.com/TroyGwapoOmsim/"}
-                className="flex bg-gray-50 justify-center items-center h-12 w-12 rounded-lg shadow-xl"
-              >
-                <FaFacebook className="text-blue-400" size={24} />
-              </Link>
-              <Link
-                href={"#"}
-                className="flex bg-gray-50 justify-center items-center h-12 w-12 rounded-lg shadow-xl"
-              >
-                <FaXTwitter className="" size={24} />
-              </Link>
-            </div>
+            <SocialLinks size={24} />
 
             {/* <div className="flex justify-around mt-8">
               <Button>Get in Touch</Button>
@@ -221,9 +183,11 @@ export default function Home() {
             </div>
           </div>
         </div>
-
-        <div className="flex flex-col items-center">
-          <h1 className="text-center">Technical Proficiency</h1>
+        <Technologies />
+        {/* <div className="flex flex-col items-center">
+          <h1 className="text-center text-3xl font-bold">
+            Technical Proficiency
+          </h1>
           <div className="text-center">
             <h2 className="">Web Development</h2>
             <div className="flex gap-2 flex-wrap items-center justify-center">
@@ -330,7 +294,7 @@ export default function Home() {
               </div>
             </div>
           </div>
-        </div>
+        </div> */}
         <div className="px-2">
           <h1 className="text-center">Education</h1>
           <div className="shadow-2xl overflow-clip rounded-2xl font-inter relative">
@@ -383,6 +347,7 @@ export default function Home() {
             <br className="w-4/5"></br>
           </div>
         </div>
+        <Footer></Footer>
       </div>
     </>
   );

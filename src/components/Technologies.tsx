@@ -132,9 +132,6 @@ const Technologies = () => {
         <span className="text-3xl sm:text-4xl">Technologies I use ✨</span>
       </h2>
       <div className="relative px-4">
-        {/* AnimatePresence is not strictly needed here if only animating height/maxHeight */}
-        {/* but good practice if items were animating in/out individually */}
-        {/* Use motion.div and apply variants */}
         <motion.div
           style={{
             WebkitMaskImage:
@@ -143,30 +140,29 @@ const Technologies = () => {
           }}
           className={`grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 overflow-hidden py-4 `}
           variants={gridVariants}
-          initial="hidden" // Start hidden (collapsed)
-          animate={showAll ? "visible" : "hidden"} // Animate based on state
-          // No transition prop here, defined in variants
+          initial="hidden"
+          animate={showAll ? "visible" : "hidden"}
         >
-          {/* Map over the technologies array */}
           {technologies.map(({ name, IconComponent }, index) => (
-            <div
-              key={index} // Use index as key
-              className="px-4 py-2 items-center justify-between rounded-md bg-secondary hover:-translate-y-3 transition-all duration-500 ease-in-out text-secondary-foreground inline-flex"
-            >
-              {/* Handle custom components vs react-icons */}
-              {name === "HTML" || name === "CSS" ? (
-                <IconComponent />
-              ) : (
-                // Add SiFramer check if needed, or keep generic size
-                <IconComponent size={24} />
-              )}
-              <p>{name}</p>
+            <div className="group perspective-1000">
+              <div className="relative w-full h-8 transform transition duration-500 transform-3d group-hover:rotate-y-180">
+                <div className="absolute flex px-4 py-2 items-center justify-between inset-0  backface-hidden rounded-md bg-secondary text-secondary-foreground">
+                  {name === "HTML" || name === "CSS" ? (
+                    <IconComponent />
+                  ) : (
+                    <IconComponent size={24} />
+                  )}
+                  <p>{name}</p>
+                </div>
+                <div className="absolute inset-0 bg-red-500 flex items-center justify-center text-white rotate-y-180 backface-hidden">
+                  World
+                </div>
+              </div>
             </div>
           ))}
         </motion.div>
       </div>
 
-      {/* Toggle button - visible only on mobile */}
       <Button
         onClick={() => setShowAll(!showAll)}
         className="block  mx-auto mt-4 px-4 py-2 rounded-md border border-input bg-primary text-primary-foreground  hover:bg-primary/80 hover:text-primary-foreground text-sm"
