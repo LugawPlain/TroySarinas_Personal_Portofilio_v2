@@ -167,6 +167,22 @@
   --shadow-lg: var(--shadow-lg);
   --shadow-xl: var(--shadow-xl);
   --shadow-2xl: var(--shadow-2xl);
+
+  --animate-progress-bar: progress-bar 2.5s ease-in-out infinite;
+  @keyframes progress-bar {
+    0% {
+      transform: translateX(-100%);
+      filter: hue-rotate(0deg);
+    }
+
+    50% {
+      transform: translateX(-30);
+    }
+    100% {
+      transform: translateX(-100%);
+      filter: hue-rotate(180deg);
+    }
+  }
 }
 
 @layer base {
@@ -177,3 +193,5 @@
     @apply bg-background text-foreground;
   }
 }
+
+

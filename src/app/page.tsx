@@ -167,9 +167,10 @@ export default function Home() {
               Professional Certifications & Credentials 📜
             </h1>
             <p className="text-center">Indrustry Recognized certifications</p>
-            <div className="block shadow-2xl rounded-2xl overflow-clip">
-              <div className=" h-45 w-full flex items-center justify-center bg-gray-500 ">
+            <div className="block shadow-2xl rounded-2xl overflow-clip ">
+              <div className=" h-45 w-full flex items-center justify-center bg-gray-500  ">
                 <Image
+                  className="h"
                   src="/CiscoLogo.png"
                   alt="CiscoLogo"
                   height={150}

@@ -51,73 +51,59 @@ import { RiPerplexityLine } from "react-icons/ri";
 import { SiOllama } from "react-icons/si";
 import { SiHuggingface } from "react-icons/si";
 import { RiSupabaseLine } from "react-icons/ri";
-// Define the technology data array
+
 const technologies = [
-  { name: "HTML", IconComponent: HtmlIcon },
-  { name: "CSS", IconComponent: CssIcon },
-  { name: "JavaScript", IconComponent: IoLogoJavascript },
-  { name: "TypeScript", IconComponent: SiTypescript },
-  { name: "React", IconComponent: FaReact },
-  { name: "Node.js", IconComponent: FaNodeJs }, // 10th item
-  { name: "Next.js", IconComponent: SiNextdotjs },
-  { name: "Python", IconComponent: FaPython },
-  //   { name: "Go", IconComponent: FaGolang },
-  //   { name: "Rust", IconComponent: FaRust },
-  //   { name: "Svelte", IconComponent: RiSvelteFill },
-  //   { name: "Jest", IconComponent: SiJest },
-  { name: "Docker", IconComponent: FaDocker },
-  //   { name: "Figma", IconComponent: IoLogoFigma },
-  { name: "Framer", IconComponent: SiFramer },
-  { name: "Tailwind CSS", IconComponent: RiTailwindCssFill },
-  //   { name: "Aframe", IconComponent: SiAframe },
-  { name: "Three.js", IconComponent: SiThreedotjs },
-  //   { name: "Ruby", IconComponent: DiRuby },
-  //   { name: "GitHub", IconComponent: FaGithub },
-  //   { name: "Git", IconComponent: BiLogoGit },
-  { name: "MongoDB", IconComponent: SiMongodb },
-  { name: "Supabase", IconComponent: RiSupabaseLine },
-  { name: "MySQL", IconComponent: SiMysql },
-  { name: "PostgreSQL", IconComponent: BiLogoPostgresql },
-  { name: "Prisma", IconComponent: SiPrisma },
-  //   { name: "Netlify", IconComponent: SiNetlify },
-  { name: "AWS", IconComponent: FaAws },
-  //   { name: "Firebase", IconComponent: IoLogoFirebase },
-  { name: "Cloudfare", IconComponent: CloudfareIcon },
-  //   { name: "Swift", IconComponent: FaSwift },
-  //   { name: "Kotlin", IconComponent: SiKotlin },
-  //   { name: "Flutter", IconComponent: FaFlutter },
-  //   { name: "Wix", IconComponent: FaWix },
-  //   { name: "Shopify", IconComponent: FaShopify },
-  //   { name: "Woocommerce", IconComponent: SiWoocommerce },
-  //   { name: "Squarespace", IconComponent: FaSquarespace },
-  { name: "n8n", IconComponent: SiN8N },
-  { name: "Make", IconComponent: SiMake },
-  { name: "Zapier", IconComponent: SiZapier },
-  { name: "HubSpot", IconComponent: FaHubspot },
-  //   { name: "WordPress", IconComponent: FaWordpress },
-  { name: "OpenAI", IconComponent: PiOpenAiLogo },
-  { name: "Google Gemini", IconComponent: SiGooglegemini },
-  { name: "Claude", IconComponent: SiClaude },
-  { name: "Perplexity", IconComponent: RiPerplexityLine },
-  { name: "Ollama", IconComponent: SiOllama },
-  { name: "Huggingface", IconComponent: SiHuggingface },
+  { name: "HTML", IconComponent: HtmlIcon, Percent: 100 },
+  { name: "CSS", IconComponent: CssIcon, Percent: 95 },
+  { name: "JavaScript", IconComponent: IoLogoJavascript, Percent: 90 },
+  { name: "TypeScript", IconComponent: SiTypescript, Percent: 90 },
+  { name: "React", IconComponent: FaReact, Percent: 90 },
+  { name: "Node.js", IconComponent: FaNodeJs, Percent: 85 },
+  { name: "Next.js", IconComponent: SiNextdotjs, Percent: 90 },
+  { name: "Python", IconComponent: FaPython, Percent: 95 },
+  { name: "Docker", IconComponent: FaDocker, Percent: 80 },
+  { name: "Framer", IconComponent: SiFramer, Percent: 60 },
+  { name: "Tailwind CSS", IconComponent: RiTailwindCssFill, Percent: 92 },
+  { name: "Three.js", IconComponent: SiThreedotjs, Percent: 60 },
+  { name: "MongoDB", IconComponent: SiMongodb, Percent: 80 },
+  { name: "Supabase", IconComponent: RiSupabaseLine, Percent: 75 },
+  { name: "MySQL", IconComponent: SiMysql, Percent: 85 },
+  { name: "PostgreSQL", IconComponent: BiLogoPostgresql, Percent: 80 },
+  { name: "Prisma", IconComponent: SiPrisma, Percent: 50 },
+  { name: "AWS", IconComponent: FaAws, Percent: 60 },
+  { name: "Cloudfare", IconComponent: CloudfareIcon, Percent: 70 },
+  { name: "n8n", IconComponent: SiN8N, Percent: 98 },
+  { name: "Make", IconComponent: SiMake, Percent: 80 },
+  { name: "Zapier", IconComponent: SiZapier, Percent: 40 },
+  { name: "HubSpot", IconComponent: FaHubspot, Percent: 30 },
+  { name: "OpenAI", IconComponent: PiOpenAiLogo, Percent: 98 },
+  { name: "Google Gemini", IconComponent: SiGooglegemini, Percent: 95 },
+  { name: "Claude", IconComponent: SiClaude, Percent: 98 },
+  { name: "Perplexity", IconComponent: RiPerplexityLine, Percent: 80 },
+  { name: "Ollama", IconComponent: SiOllama, Percent: 98 },
+  { name: "Huggingface", IconComponent: SiHuggingface, Percent: 95 },
 ];
 
 const Technologies = () => {
   const [showAll, setShowAll] = useState(false);
+  const [tappedIndex, setTappedIndex] = useState<number | null>(null);
 
-  // Animation variants for the grid container
   const gridVariants = {
     hidden: {
       height: "15rem",
       opacity: 1,
-      transition: { duration: 0.75, ease: "easeInOut" as const }, // ✅ cast or use [0.42, 0, 0.58, 1]
+      transition: { duration: 0.75, ease: "easeInOut" as const },
     },
     visible: {
       height: "auto",
       opacity: 1,
       transition: { duration: 0.5, ease: "easeInOut" as const },
     },
+  };
+
+  const variants = {
+    idle: { scaleX: 1, scaleY: 1, rotateY: 0 },
+    active: { scaleX: 1.05, scaleY: 1.2, rotateY: 180 },
   };
 
   return (
@@ -131,44 +117,100 @@ const Technologies = () => {
       <h2 className="text-center mb-8 font-bold">
         <span className="text-3xl sm:text-4xl">Technologies I use ✨</span>
       </h2>
-      <div className="relative px-4">
+      <div className="relative">
         <motion.div
           style={{
             WebkitMaskImage:
               "linear-gradient(to bottom, black 100%, transparent)",
             maskImage: "linear-gradient(to bottom, black 100%, transparent)",
           }}
-          className={`grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 overflow-hidden py-4 `}
+          className="px-6 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-5 py-4"
           variants={gridVariants}
           initial="hidden"
           animate={showAll ? "visible" : "hidden"}
         >
-          {technologies.map(({ name, IconComponent }, index) => (
-            <div className="group perspective-1000">
-              <div className="relative w-full h-8 transform transition duration-500 transform-3d group-hover:rotate-y-180">
-                <div className="absolute flex px-4 py-2 items-center justify-between inset-0  backface-hidden rounded-md bg-secondary text-secondary-foreground">
-                  {name === "HTML" || name === "CSS" ? (
-                    <IconComponent />
-                  ) : (
-                    <IconComponent size={24} />
-                  )}
-                  <p>{name}</p>
-                </div>
-                <div className="absolute inset-0 bg-red-500 flex items-center justify-center text-white rotate-y-180 backface-hidden">
-                  World
-                </div>
-              </div>
-            </div>
-          ))}
+          {technologies.map(({ name, IconComponent, Percent = 50 }, index) => {
+            const isActive = tappedIndex === index;
+
+            return (
+              <motion.div
+                onTap={() => setTappedIndex(isActive ? null : index)}
+                initial={{ zIndex: 0 }}
+                animate={{ zIndex: isActive ? 100 : 0 }}
+                key={index}
+                className="group perspective-1000"
+                tabIndex={0}
+              >
+                <motion.div
+                  variants={variants}
+                  animate={isActive ? "active" : "idle"}
+                  className="relative shadow-2xl rounded-2xl w-full h-8 group-focus-within:scale-120 transform transition duration-500"
+                  style={{ transformStyle: "preserve-3d" }}
+                >
+                  <div
+                    className="absolute px-4 py-2 flex items-center justify-between inset-0 rounded-lg bg-secondary text-secondary-foreground"
+                    style={{ backfaceVisibility: "hidden" }}
+                  >
+                    {name === "HTML" || name === "CSS" ? (
+                      <IconComponent />
+                    ) : (
+                      <IconComponent size={24} />
+                    )}
+                    <p>{name}</p>
+                  </div>
+                  <div
+                    className="absolute py-2 rounded-lg inset-0 bg-gray-200 flex flex-col items-center justify-center overflow-hidden"
+                    style={{
+                      backfaceVisibility: "hidden",
+                      transform: "rotateY(180deg)",
+                    }}
+                  >
+                    <p className="text-center text-xs font-semibold">
+                      {(() => {
+                        if (Percent < 30) return "Entry Level";
+                        if (Percent < 50) return "Junior";
+                        if (Percent < 70) return "Mid-Level";
+                        if (Percent < 80) return "Senior";
+                        if (Percent < 90) return "Expert";
+                        return "Advanced";
+                      })()}
+                    </p>
+                    <div className="min-h-3 overflow-hidden w-full bg-gray-100 flex justify-start items-center relative">
+                      <motion.div
+                        initial={{ width: "0%" }}
+                        animate={{
+                          width: isActive ? `${Percent}%` : "0%",
+                          filter: isActive
+                            ? `hue-rotate(${(Percent / 100) * 120}deg)`
+                            : "none",
+                        }}
+                        transition={{ duration: 1.5, ease: "linear" }}
+                        className="flex flex-col top-0 left-0 bg-red-500/50 h-full relative"
+                      >
+                        <div className="absolute text-[10px] left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-fit font-bold text-white drop-shadow-sm">
+                          <motion.p
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: isActive ? 1 : 0 }}
+                            transition={{ duration: 3 }}
+                          >
+                            {Percent}%
+                          </motion.p>
+                        </div>
+                      </motion.div>
+                    </div>
+                  </div>
+                </motion.div>
+              </motion.div>
+            );
+          })}
         </motion.div>
       </div>
-
-      <Button
+      <button
         onClick={() => setShowAll(!showAll)}
-        className="block  mx-auto mt-4 px-4 py-2 rounded-md border border-input bg-primary text-primary-foreground  hover:bg-primary/80 hover:text-primary-foreground text-sm"
+        className="block mx-auto mt-4 px-4 py-2 rounded-md border border-input bg-blue-600 text-white hover:bg-blue-700 text-sm"
       >
         {showAll ? "Show Less" : "Show More"}
-      </Button>
+      </button>
     </motion.div>
   );
 };
