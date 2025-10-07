@@ -16,7 +16,7 @@ const Experience = () => {
             />
           </div>
         </div>
-        <div className="flex flex-col px-2 py-2">
+        <div className="flex flex-col px-4 py-4">
           <h2 className="text-2xl font-semibold">
             Software Engineer and Automation Engineer
           </h2>
@@ -60,7 +60,7 @@ const Experience = () => {
             />
           </div>
         </div>
-        <div className="flex flex-col px-2 py-2">
+        <div className="flex flex-col px-4 py-4">
           <h2 className="text-2xl font-semibold">
             Information Technology Technician
           </h2>
@@ -106,7 +106,7 @@ const Experience = () => {
             />
           </div>
         </div>
-        <div className="flex flex-col px-2 py-2">
+        <div className="flex flex-col px-4 py-4">
           <h2 className="text-2xl font-semibold">Developer Intern</h2>
           <h3 className="text-lg font-medium">LZ Cybersecurity</h3>
           <p className="mt-2 font-medium"> April 2024 - June 2024</p>

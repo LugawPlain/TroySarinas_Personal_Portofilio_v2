@@ -8,6 +8,7 @@ import Image from "next/image";
 import UndrawDevProductivity from "./Icons/UndrawDevProductivity";
 import Spline from "@splinetool/react-spline";
 import { motion } from "framer-motion";
+import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 const HeroSection = () => {
   const handleSplineLoad = (spline: any) => {
     // Try to hide logo after load
@@ -142,7 +143,16 @@ const HeroSection = () => {
           </Button>
         </div>
         <div className="max-w-screen">
-          <UndrawDevProductivity />
+          <DotLottieReact
+            src="https://lottie.host/9efb8419-fa6e-4e40-8488-6a5632587950/9M6NqyO9Bg.lottie"
+            loop
+            autoplay
+          />
+          <DotLottieReact
+            src="https://lottie.host/480ba756-90d7-4ba6-bd6c-5167f02d7187/V1fklWpnHV.lottie"
+            loop
+            autoplay
+          />
         </div>
       </div>
     </div>

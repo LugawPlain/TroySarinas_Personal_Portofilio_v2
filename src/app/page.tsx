@@ -15,8 +15,7 @@ export default function Home() {
 
         <HeroSection />
         <Projects />
-        <Certifications />
-        <Technologies />
+        <Experience />
         {/* <div className="flex flex-col items-center">
           <h1 className="text-center text-3xl font-bold">
             Technical Proficiency
@@ -129,7 +128,8 @@ export default function Home() {
           </div>
         </div> */}
         <Education />
-        <Experience />
+        <Technologies />
+        <Certifications />
         <Footer />
       </div>
     </>
