@@ -27,6 +27,8 @@ import NameTitle from "@/components/NameTitle";
 import SocialLinks from "@/components/SocialLinks";
 import GitHubStarCount from "@/components/GithubStarCount";
 import Footer from "@/components/Footer";
+import Experience from "@/components/Experience";
+import Education from "@/components/Education";
 export default function Home() {
   return (
     <>
@@ -296,59 +298,9 @@ export default function Home() {
             </div>
           </div>
         </div> */}
-        <div className="px-2">
-          <h1 className="text-center">Education</h1>
-          <div className="shadow-2xl overflow-clip rounded-2xl font-inter relative">
-            <a
-              href="https://sscr.edu/Beta/"
-              className="w-full h-full absolute top-0 left-0 rounded-2xl"
-            ></a>
-            <div className="h-24 bg-[#6a0106] flex justify-center items-center">
-              <Image
-                src="/SSCRLOGO1.png"
-                height={80}
-                width={80}
-                alt="SSCRDCLOGO"
-              />
-            </div>
-            <div className="p-2 gap-2 flex flex-col">
-              <h2 className="text-2xl text-bold">
-                San Sebastian College Recoletos de Cavite
-              </h2>
-              <h3 className="text-muted-foreground text-sm">
-                Bachelor of Science in Computer Engineering
-              </h3>
-              <p className="text-muted-foreground">June 2020 - June 2024</p>
-              <p className="">
-                Data Structure and Algorithms, Embedded Systems,
-                Microprocessors, Operating Softwares, Object Oriented
-                Programming
-              </p>
-              <hr />
-              <h2>Key Courses & Highlights </h2>
-              <p className="text-sm">
-                Undergraduate Thesis 🎓: ARDUINO-CONTROLLED AUTOMATED BANANA
-                PEEL TO PANCAKE CONVERTER
-              </p>
-              <p className="text-sm">Awards:</p>
-            </div>
-          </div>
-        </div>
-        <div className="px-2">
-          <h1 className="text-center">Experience</h1>
-          <div className="shadow-2xl overflow-clip rounded-2xl">
-            <div className="h-24 bg-black flex justify-center items-center">
-              <div className="h-15 w-15 bg-white"></div>
-            </div>
-            <h2></h2>
-            <h3></h3>
-            <p></p>
-            <p></p>
-            <p> </p>
-            <br className="w-4/5"></br>
-          </div>
-        </div>
-        <Footer></Footer>
+        <Education />
+        <Experience />
+        <Footer />
       </div>
     </>
   );
