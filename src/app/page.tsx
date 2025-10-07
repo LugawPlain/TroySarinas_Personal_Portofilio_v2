@@ -9,7 +9,7 @@ import HeroSection from "@/components/HeroSection";
 export default function Home() {
   return (
     <>
-      <div className="flex flex-col space-y-8 ">
+      <div className="flex flex-col space-y-8 font-inter ">
         <Header />
         <HeroSection />
         <Projects />

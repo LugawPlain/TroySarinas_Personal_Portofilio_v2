@@ -2,6 +2,9 @@ import React from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import InfoIcon from "../../public/Icons/InformationIcon";
 import SocialLinks from "./SocialLinks";
+import { Button } from "./ui/button";
+import Image from "next/image";
+import UndrawDevProductivity from "./Icons/UndrawDevProductivity";
 
 const HeroSection = () => {
   return (
@@ -13,19 +16,24 @@ const HeroSection = () => {
         </Avatar>
       </div>
       <div className="space-y-3">
-        <h2 className="text-3xl font-semi font-fraunces text-center ">
-          Troy Sarinas
-        </h2>
-        <p className="text-sm text-muted-foreground text-center">
-          AI Automation & Full Stack Engineer
-        </p>
-        <p className="mt-2 text-justify">
-          I am a graduate of Computer Engineering with a passion for technology
-          and design. Collaborating with companies worldwide to create visually
-          stunning, highly functional, and user-friendly digital experiences
-          that deliver measurable results and support business growth.
-        </p>
-        <div className="grid grid-flow-col grid-rows-2 font-inter font-semibold gap-8">
+        <div>
+          <h2 className="text-3xl font-semibold font-fraunces text-center ">
+            Troy Sarinas
+          </h2>
+          <p className="text-sm text-muted-foreground text-center">
+            AI Automation & Full Stack Engineer
+          </p>
+        </div>
+        <div>
+          <p className="mt-2 text-justify">
+            🚀 I am a graduate of Computer Engineering with a passion for
+            technology and design. Collaborating with companies worldwide to
+            create visually stunning, highly functional, and user-friendly
+            digital experiences that deliver measurable results and support
+            business growth.
+          </p>
+        </div>
+        <div className="grid grid-flow-col grid-rows-2 font-inter font-semibold gap-8 mt-4">
           <div className="backdrop-blur-[20%] bg-gradient-to-br from-[rgba(17,153,142,0.15)] to-[rgba(56,239,125,0.1)] shadow-2xl border-[rgba(17,153,142,0.3)] border-2 rounded-3xl flex flex-col px-4 py-4 gap-2">
             <div className="flex flex-row gap-4">
               <div className="flex items-center relative justify-center">
@@ -73,10 +81,20 @@ const HeroSection = () => {
 
         <SocialLinks size={24} />
 
-        {/* <div className="flex justify-around mt-8">
-              <Button>Get in Touch</Button>
-              <Button>Resume</Button>
-            </div> */}
+        <div className="flex justify-center gap-4 mt-8 ">
+          <Button className="text-md font-semibold px-5 py-5 uppercase tracking-tight shadow-2xl">
+            Get in Touch
+          </Button>
+          <Button
+            variant={"outline"}
+            className="text-md font-semibold px-5 py-5 uppercase tracking-tight shadow-2xl"
+          >
+            Resume
+          </Button>
+        </div>
+        <div className="max-w-screen">
+          <UndrawDevProductivity />
+        </div>
       </div>
     </div>
   );

@@ -4,7 +4,7 @@ import { Button } from "./ui/button";
 
 const Projects = () => {
   return (
-    <div className=" border-border border-2 items-center py-2 px-4 ">
+    <div className="items-center py-2 px-4 ">
       <div className="space-y-2">
         <h1 className="text-center font-bold text-3xl mt-2">PROJECTS</h1>
         <div className="pb-2 card card font-fraunces shadow-2xl rounded-2xl overflow-hidden">

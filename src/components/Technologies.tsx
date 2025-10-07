@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import HtmlIcon from "./Icons/HtmlIcon";
 import CssIcon from "./Icons/CssIcon";
-import CloudfareIcon from "./Icons/Cloudfare.con";
+import CloudfareIcon from "./Icons/CloudfareIcon";
 import { SiFramer } from "react-icons/si";
 import { IoLogoJavascript } from "react-icons/io5";
 import { SiTypescript } from "react-icons/si";

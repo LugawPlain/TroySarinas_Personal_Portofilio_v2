@@ -152,7 +152,8 @@
   --font-serif: var(--font-serif);
   --font-passionconflict: var(--font-passionconflict);
   --font-inter: var(--font-inter);
-  --font-fraunces: var(--font-fraunces)
+  --font-fraunces: var(--font-fraunces);
+  --font-montserrat: var(--font-montserrat);
 
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
@@ -193,5 +194,3 @@
     @apply bg-background text-foreground;
   }
 }
-
-

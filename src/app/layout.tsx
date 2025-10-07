@@ -5,9 +5,16 @@ import {
   Inter,
   Passions_Conflict,
   Fraunces,
+  Montserrat,
 } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
+
+const montserrat = Montserrat({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-montserrat",
+});
 
 const fraunces = Fraunces({
   variable: "--font-fraunces",
@@ -56,6 +63,7 @@ export default function RootLayout({
           passionConflict.variable,
           inter.variable,
           fraunces.variable,
+          montserrat.variable,
           "antialiased"
         )}
       >
