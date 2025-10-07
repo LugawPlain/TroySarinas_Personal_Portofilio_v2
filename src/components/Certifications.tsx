@@ -2,7 +2,7 @@ import React from "react";
 import Image from "next/image";
 const Certifications = () => {
   return (
-    <div className="flex-col flex flex-wrap px-4">
+    <div id="certifications" className="flex-col flex flex-wrap px-4">
       <div className="">
         <h1 className="text-center font-bold text-3xl mt-2 ">
           Professional Certifications & Credentials 📜

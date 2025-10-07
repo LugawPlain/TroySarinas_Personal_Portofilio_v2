@@ -33,7 +33,7 @@ const HeroSection = () => {
             <motion.div
               initial={{ rotateY: 0 }}
               animate={{ rotateY: 180 }}
-              transition={{ duration: 2, delay: 3 }}
+              transition={{ duration: 1, delay: 3 }}
               style={{ transformStyle: "preserve-3d" }}
               className="w-full h-full relative"
             >
@@ -145,11 +145,6 @@ const HeroSection = () => {
         <div className="max-w-screen">
           <DotLottieReact
             src="https://lottie.host/9efb8419-fa6e-4e40-8488-6a5632587950/9M6NqyO9Bg.lottie"
-            loop
-            autoplay
-          />
-          <DotLottieReact
-            src="https://lottie.host/480ba756-90d7-4ba6-bd6c-5167f02d7187/V1fklWpnHV.lottie"
             loop
             autoplay
           />

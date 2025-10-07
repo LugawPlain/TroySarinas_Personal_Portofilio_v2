@@ -2,7 +2,7 @@ import React from "react";
 import Image from "next/image";
 const Education = () => {
   return (
-    <div className="px-4">
+    <div id="education" className="px-4">
       <h1 className="text-center text-3xl sm:text-4xl mb-10 font-bold">
         Education 🎓
       </h1>

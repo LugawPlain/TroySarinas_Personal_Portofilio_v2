@@ -8,7 +8,7 @@ import Link from "next/link";
 
 const Projects = () => {
   return (
-    <div className="items-center flex flex-col py-2 px-4 ">
+    <div id="projects" className="items-center flex flex-col py-2 px-4 ">
       <div className="space-y-8 flex flex-col justify-center items-center">
         <h1 className="text-center font-bold text-3xl mt-2">PROJECTS</h1>
         <div className="pb-2 card card font-fraunces shadow-2xl rounded-2xl overflow-hidden">

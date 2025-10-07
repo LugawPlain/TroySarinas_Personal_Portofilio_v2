@@ -12,7 +12,10 @@ import BuyMeACoffeeButton from "./BuyMeACoffeeButton";
 
 const Footer = () => {
   return (
-    <footer className="bg-gray-200 gap-4  flex flex-col items-center justify-center px-6 py-4">
+    <footer
+      id="contacts"
+      className="bg-gray-200 gap-4  flex flex-col items-center justify-center px-6 py-4"
+    >
       <div className="flex flex-col justify-center items-center gap-2 font-inter">
         <Link href="#">
           <NameTitle size="text-5xl" />
