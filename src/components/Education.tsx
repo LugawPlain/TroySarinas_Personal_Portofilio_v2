@@ -2,8 +2,10 @@ import React from "react";
 import Image from "next/image";
 const Education = () => {
   return (
-    <div className="px-2">
-      <h1 className="text-center text-3xl sm:text-4xl font-bold">Education</h1>
+    <div className="px-4">
+      <h1 className="text-center text-3xl sm:text-4xl mb-10 font-bold">
+        Education 🎓
+      </h1>
       <div className="shadow-2xl overflow-clip rounded-2xl font-inter relative">
         <a
           href="https://sscr.edu/Beta/"

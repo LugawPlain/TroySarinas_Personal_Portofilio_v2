@@ -4,7 +4,9 @@ import React from "react";
 const Experience = () => {
   return (
     <div className="px-4 font-inter space-y-4">
-      <h1 className="text-center text-3xl sm:text-4xl font-bold">Experience</h1>
+      <h1 className="text-center text-3xl sm:text-4xl font-bold mb-6">
+        Experience
+      </h1>
       <div className="shadow-2xl overflow-clip rounded-2xl">
         <div className="h-24 bg-black flex justify-center items-center">
           <div className="h-20 w-20 bg-white rounded-full flex items-center justify-center">

@@ -112,19 +112,20 @@ const Technologies = () => {
       whileInView={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
       transition={{ duration: 0.5 }}
-      className="mt-20"
+      className="mt-4"
     >
-      <h2 className="text-center mb-8 font-bold">
-        <span className="text-3xl sm:text-4xl">Technologies I use ✨</span>
+      <h2 className="text-center mb-10 font-bold">
+        <span className="text-3xl sm:text-4xl">Technologies I use 🧑‍💻</span>
       </h2>
       <div className="relative">
         <motion.div
           style={{
             WebkitMaskImage:
-              "linear-gradient(to bottom, black 100%, transparent)",
-            maskImage: "linear-gradient(to bottom, black 100%, transparent)",
+              "linear-gradient(to bottom, black 95%, transparent 100%)",
+            maskImage:
+              "linear-gradient(to bottom, black 95%, transparent 100%)",
           }}
-          className="px-6 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-5 py-4"
+          className="px-6 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-5 py-4 pb-8"
           variants={gridVariants}
           initial="hidden"
           animate={showAll ? "visible" : "hidden"}
@@ -156,7 +157,7 @@ const Technologies = () => {
                     ) : (
                       <IconComponent size={24} />
                     )}
-                    <p>{name}</p>
+                    <p className="text-sm font-medium font-inter">{name}</p>
                   </div>
                   <div
                     className="absolute py-2 rounded-lg inset-0 bg-gray-200 flex flex-col items-center justify-center overflow-hidden"
@@ -207,7 +208,7 @@ const Technologies = () => {
       </div>
       <button
         onClick={() => setShowAll(!showAll)}
-        className="block mx-auto mt-4 px-4 py-2 rounded-md border border-input bg-blue-600 text-white hover:bg-blue-700 text-sm"
+        className="block mx-auto font-semibold text-sm mt-4 px-4 py-2 rounded-md border border-input bg-blue-600 text-white hover:bg-blue-700 font-montserrat"
       >
         {showAll ? "Show Less" : "Show More"}
       </button>
