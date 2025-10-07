@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import InfoIcon from "../../public/Icons/InformationIcon";
@@ -5,14 +6,62 @@ import SocialLinks from "./SocialLinks";
 import { Button } from "./ui/button";
 import Image from "next/image";
 import UndrawDevProductivity from "./Icons/UndrawDevProductivity";
-
+import Spline from "@splinetool/react-spline";
+import { motion } from "framer-motion";
 const HeroSection = () => {
+  const handleSplineLoad = (spline: any) => {
+    // Try to hide logo after load
+    setTimeout(() => {
+      const viewer = document.querySelector("spline-viewer");
+      if (viewer?.shadowRoot) {
+        const logo = viewer.shadowRoot.querySelector("#logo");
+        if (logo) {
+          (logo as HTMLElement).style.display = "none";
+        }
+      }
+    }, 100);
+  };
   return (
     <div className="flex flex-col justify-center items-center px-8 ">
-      <div className="mt-4 flex w-40 h-40 overflow-hidden rounded-full bg-test items-center justify-center">
+      <div className="mt-4 flex w-40 h-40 overflow-hidden rounded-full bg-test items-center justify-center ">
         <Avatar className="w-38 h-38">
-          <AvatarImage src="/me2.webp" />
-          <AvatarFallback>CN</AvatarFallback>
+          <motion.div
+            style={{ perspective: "1000px" }}
+            className="w-full h-full"
+          >
+            <motion.div
+              initial={{ rotateY: 0 }}
+              animate={{ rotateY: 180 }}
+              transition={{ duration: 2, delay: 3 }}
+              style={{ transformStyle: "preserve-3d" }}
+              className="w-full h-full relative"
+            >
+              <div
+                className="absolute inset-0"
+                style={{ backfaceVisibility: "hidden" }}
+              >
+                <AvatarImage src="/me2.webp" />
+                <AvatarFallback>CN</AvatarFallback>
+              </div>
+
+              <div
+                className="absolute inset-0 bg-gray-100 pointer-events-auto aspect-square w-40 mx-auto rounded-full overflow-hidden"
+                style={{
+                  backfaceVisibility: "hidden",
+                  transform: "rotateY(180deg)",
+                }}
+              >
+                <Spline
+                  onSplineMouseDown={() => {}}
+                  onSplineMouseUp={() => {}}
+                  className="scale-150"
+                  onLoad={handleSplineLoad}
+                  scene="https://prod.spline.design/9ZcNa-NZOsuRA3Nl/scene.splinecode"
+                />
+                <div className="absolute bottom-0 h-7 left-0 right-0 bg-[#222222]" />
+              </div>
+            </motion.div>
+          </motion.div>
         </Avatar>
       </div>
       <div className="space-y-3">

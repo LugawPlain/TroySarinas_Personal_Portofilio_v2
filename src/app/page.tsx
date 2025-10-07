@@ -6,11 +6,13 @@ import Certifications from "@/components/Certifications";
 import Projects from "@/components/Projects";
 import Header from "@/components/Header";
 import HeroSection from "@/components/HeroSection";
+import Spline from "@splinetool/react-spline/next";
 export default function Home() {
   return (
     <>
       <div className="flex flex-col space-y-8 font-inter ">
         <Header />
+
         <HeroSection />
         <Projects />
         <Certifications />
