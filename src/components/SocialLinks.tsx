@@ -16,7 +16,7 @@ interface SocialLinksProps {
 
 const SocialLinks: React.FC<SocialLinksProps> = ({ className, size = 24 }) => {
   return (
-    <div className={cn("flex gap-4 mt-8", className)}>
+    <div className={cn("flex gap-4", className)}>
       <Link
         href={"https://github.com/LugawPlain"}
         className="flex p-2 bg-gray-50 justify-center items-center rounded-lg shadow-xl"
