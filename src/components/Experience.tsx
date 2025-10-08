@@ -1,8 +1,29 @@
 import Image from "next/image";
 import React from "react";
+import { FaStar } from "react-icons/fa6";
+import { MdStars } from "react-icons/md";
+import { RiTimer2Line } from "react-icons/ri";
+interface Highlight {
+  icon?: React.ReactNode;
+  title: string;
+  label: string;
+}
 
-// Define your experience data here
-const experienceData = [
+interface ExperienceItem {
+  logo: string;
+  logoSize: { height: number; width: number };
+  logoBgColor: string;
+  title: string;
+  company: string;
+  period: string;
+  location: string;
+  description: string;
+  showHighlights: boolean;
+  highlights: Highlight[];
+  technologies: string[];
+}
+
+const experienceData: ExperienceItem[] = [
   {
     logo: "/FreelanceLogo.png",
     logoSize: { height: 70, width: 70 },
@@ -13,9 +34,14 @@ const experienceData = [
     location: "Remote",
     description: "Provided clients with Custom Websites and Custom Automations",
     showHighlights: true,
-    highlights: [], // Add your highlights as strings if needed
+    highlights: [
+      {
+        icon: <FaStar size="40" className="text-primary-500" />,
+        title: "Improved app load time by 20%",
+        label: "App Performance",
+      },
+    ],
     technologies: ["Next js", "Javascript", "TailwindCSS", "Python", "N8n"],
-    layout: "full", // 'full' for the detailed layout with highlights section
   },
   {
     logo: "/RITSLogo.png",
@@ -27,8 +53,14 @@ const experienceData = [
     location: "Cavite, Philippines",
     description:
       "Responsible for maintaining and troubleshooting computer systems,networks, and software. I also provide technical support to usersand ensure the smooth operation of IT infrastructure. Additionally, I assist in the deployment and configuration of new hardware and software.",
-    showHighlights: false,
-    highlights: [],
+    showHighlights: true,
+    highlights: [
+      {
+        icon: <MdStars size="40" className="text-primary-500 " />,
+        title: "Improved app load time by 20%",
+        label: "App Performance",
+      },
+    ],
     technologies: [
       "Microsoft Ecosystem",
       "Docker",
@@ -36,7 +68,6 @@ const experienceData = [
       "Cloudflare",
       "Google Cloud Service",
     ],
-    layout: "simple",
   },
   {
     logo: "/LZCybersecurityLogo.png",
@@ -49,9 +80,14 @@ const experienceData = [
     description:
       "I developed a web application for creating penetration testing documents for clients",
     showHighlights: true,
-    highlights: ["Showd sghasdaswpoaspdlk", "ASDADWIDUASODAIUSODIASsdasds"],
+    highlights: [
+      {
+        icon: <RiTimer2Line size="40" className="text-primary-500" />,
+        title: "Improved app load",
+        label: "App Performance",
+      },
+    ],
     technologies: ["Next Js", "Javascript", "Python", "Tailwind CSS"],
-    layout: "simple",
   },
 ];
 
@@ -96,46 +132,38 @@ const Experience = () => {
               <hr />
             </div>
 
-            {/* Highlights and Technologies Section */}
-            {exp.layout === "full" && (
-              <div className="flex flex-col px-4 border-l border-border w-80">
-                {exp.showHighlights && exp.highlights.length > 0 && (
-                  <div className="mb-4">
-                    <h2 className="text-xl font-semibold text-start mt-2">
-                      Highlights
-                    </h2>
-                    <div className="space-y-2 mt-2">
-                      {exp.highlights.map((highlight, idx) => (
-                        <div
-                          key={idx}
-                          className="mx-auto min-w-full bg-gray-200 border-border min-h-20 rounded-lg p-3"
-                        >
-                          {highlight}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                <div>
-                  <h3 className="text-lg font-semibold mt-2">Technologies</h3>
-                  <div className="flex flex-wrap text-xs text-white gap-2">
-                    {exp.technologies.map((tech, idx) => (
+            <div className="flex flex-col px-4 border-l border-border xl:min-w-80 xl:max-w-80">
+              {exp.showHighlights && exp.highlights.length > 0 && (
+                <div className="mb-4">
+                  <h2 className="text-xl font-bold text-start mt-2">
+                    Highlights
+                  </h2>
+                  <div className="space-y-2 mt-2">
+                    {exp.highlights.map((highlight, idx) => (
                       <div
                         key={idx}
-                        className="bg-gray-500 px-2 py-0.5 rounded-full"
+                        className="mx-auto min-w-full flex bg-gray-200 border-border min-h-20 items-center rounded-lg p-3"
                       >
-                        {tech}
+                        <div className="flex items-center">
+                          <div className="shrink min-w-fit">
+                            {highlight.icon}
+                          </div>
+                          <div className="grow text-start ml-2">
+                            <h4 className="text-lg/6 font-semibold font-montserrat">
+                              {highlight.title}
+                            </h4>
+                            <p className=" text-sm text-muted-foreground">
+                              {highlight.label}
+                            </p>
+                          </div>
+                        </div>
                       </div>
                     ))}
                   </div>
                 </div>
-              </div>
-            )}
+              )}
 
-            {/* Simple Layout - Technologies Only */}
-            {exp.layout === "simple" && (
-              <div className="px-4">
+              <div>
                 <h3 className="text-lg font-semibold mt-2">Technologies</h3>
                 <div className="flex flex-wrap text-xs text-white gap-2">
                   {exp.technologies.map((tech, idx) => (
@@ -148,7 +176,7 @@ const Experience = () => {
                   ))}
                 </div>
               </div>
-            )}
+            </div>
           </div>
         </div>
       ))}
