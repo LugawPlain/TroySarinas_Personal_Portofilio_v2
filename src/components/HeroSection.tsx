@@ -4,14 +4,12 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import InfoIcon from "../../public/Icons/InformationIcon";
 import SocialLinks from "./SocialLinks";
 import { Button } from "./ui/button";
-import Image from "next/image";
-import UndrawDevProductivity from "./Icons/UndrawDevProductivity";
 import Spline from "@splinetool/react-spline";
 import { motion } from "framer-motion";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
+
 const HeroSection = () => {
   const handleSplineLoad = (spline: any) => {
-    // Try to hide logo after load
     setTimeout(() => {
       const viewer = document.querySelector("spline-viewer");
       if (viewer?.shadowRoot) {
@@ -22,10 +20,12 @@ const HeroSection = () => {
       }
     }, 100);
   };
+
   return (
-    <div className="flex flex-col justify-center items-center px-8 ">
-      <div className="flex flex-col justify-center items-center max-w-[90rem] ">
-        <div className="mt-4 flex w-40 h-40 xl:w-50 xl:h-50 overflow-hidden rounded-full bg-test items-center justify-center ">
+    <div className="flex flex-col items-center px-8 min-h-screen">
+      <div className="flex flex-col justify-center items-center max-w-[90rem]">
+        {/* Avatar Section */}
+        <div className="mt-4 w-40 h-40 xl:w-50 xl:h-50 overflow-hidden rounded-full bg-test flex items-center justify-center">
           <Avatar className="w-38 h-38 xl:w-48 xl:h-48">
             <motion.div
               style={{ perspective: "1000px" }}
@@ -34,7 +34,13 @@ const HeroSection = () => {
               <motion.div
                 initial={{ rotateY: 0 }}
                 animate={{ rotateY: 180 }}
-                transition={{ duration: 1, delay: 3 }}
+                transition={{
+                  duration: 1,
+                  delay: 3,
+                  repeat: Infinity,
+                  repeatType: "reverse",
+                  repeatDelay: 8,
+                }}
                 style={{ transformStyle: "preserve-3d" }}
                 className="w-full h-full relative"
               >
@@ -66,91 +72,107 @@ const HeroSection = () => {
             </motion.div>
           </Avatar>
         </div>
+
+        {/* Content Section */}
         <div className="space-y-3 flex flex-col lg:justify-center lg:items-center">
+          {/* Header */}
           <div>
-            <h2 className="text-3xl xl:text-5xl font-semibold font-fraunces text-center ">
+            <h2 className="text-3xl xl:text-5xl font-semibold font-fraunces text-center">
               Troy Sarinas
             </h2>
             <p className="text-sm xl:text-base text-muted-foreground text-center">
               AI Automation & Full Stack Engineer
             </p>
           </div>
-          <div>
-            <p className="mt-2 xl:text-lg text-justify">
-              🚀 I am a graduate of Computer Engineering with a passion for
-              technology and design. Collaborating with companies worldwide to
-              create visually stunning, highly functional, and user-friendly
-              digital experiences that deliver measurable results and support
-              business growth.
-            </p>
-          </div>
-          <div className="grid grid-flow-col grid-rows-2 lg:grid-cols-2 lg:grid-rows-1 font-inter font-semibold gap-8 mt-4 w-full">
-            <div className="backdrop-blur-[20%] bg-gradient-to-br from-[rgba(17,153,142,0.15)] to-[rgba(56,239,125,0.1)] shadow-2xl border-[rgba(17,153,142,0.3)] border-2 rounded-3xl flex flex-col px-4 py-4 gap-2">
-              <div className="flex flex-row gap-4">
-                <div className="flex items-center relative justify-center">
-                  <div className="bg-green-600 ml-2  w-3 h-3 rounded-full"></div>
-                  <div className="bg-green-300 ml-2 absolute w-4 h-4 rounded-full animate-ping"></div>
+
+          {/* Main Content Grid */}
+          <div className="flex flex-col xl:flex-row">
+            <div className="flex flex-col justify-center items-center">
+              {/* Bio */}
+              <p className="mt-2 xl:text-lg text-justify">
+                🚀 I am a graduate of Computer Engineering with a passion for
+                technology and design. Collaborating with companies worldwide to
+                create visually stunning, highly functional, and user-friendly
+                digital experiences that deliver measurable results and support
+                business growth.
+              </p>
+              {/* Status Cards */}
+              <div className="grid grid-flow-col grid-rows-2 lg:grid-cols-2 lg:grid-rows-1 font-inter font-semibold gap-8 mt-4 w-full">
+                {/* Available Card */}
+                <div className="backdrop-blur-[20%] bg-gradient-to-br from-[rgba(17,153,142,0.15)] to-[rgba(56,239,125,0.1)] shadow-2xl border-[rgba(17,153,142,0.3)] border-2 rounded-3xl flex flex-col px-4 py-4 gap-2">
+                  <div className="flex flex-row gap-4">
+                    <div className="flex items-center relative justify-center">
+                      <div className="bg-green-600 ml-2 w-3 h-3 rounded-full"></div>
+                      <div className="bg-green-300 ml-2 absolute w-4 h-4 rounded-full animate-ping"></div>
+                    </div>
+                    <div className="bg-green-400/20 rounded-full text-sm px-3 py-1">
+                      Available
+                    </div>
+                  </div>
+                  <h2 className="text-2xl">Ready to Start</h2>
+                  <p className="text-md text-muted-foreground font-normal">
+                    Full-time opportunities and Freelance projects
+                  </p>
+                  <div className="flex gap-2">
+                    <div className="shadow-sm rounded-full bg-white/20 p-2 text-nowrap text-sm">
+                      💼 Open to work
+                    </div>
+                    <div className="shadow-sm rounded-full bg-white/20 p-2 text-nowrap text-sm">
+                      🌍 Remote Friendly
+                    </div>
+                  </div>
                 </div>
-                <div className="bg-green-400/20 rounded-full text-sm px-3 py-1">
-                  Available
+
+                {/* Response Time Card */}
+                <div className="backdrop-blur-[20%] bg-gradient-to-br from-[rgba(102,126,234,0.15)] to-[rgba(118,75,162,0.1)] shadow-2xl border-[rgba(102,126,234,0.3)] border-2 rounded-3xl flex flex-col px-4 py-4 gap-2">
+                  <div className="flex flex-row gap-4">
+                    <InfoIcon className="text-violet-500" />
+                    <div className="bg-violet-600/10 rounded-full text-sm px-3 py-1">
+                      Available
+                    </div>
+                  </div>
+                  <h2 className="text-2xl">2-4 Hours</h2>
+                  <p className="text-md text-muted-foreground font-normal">
+                    Average response time on business days
+                  </p>
+                  <div className="flex gap-2 mt-auto">
+                    <div className="shadow-sm rounded-full bg-white/20 p-2 text-nowrap text-sm">
+                      ⚡ Quick Turnaround
+                    </div>
+                    <div className="shadow-sm rounded-full bg-white/20 p-2 text-nowrap text-sm">
+                      🔄️ Regular Updates
+                    </div>
+                  </div>
                 </div>
               </div>
-              <h2 className="text-2xl">Ready to Start</h2>
-              <p className="text-md text-muted-foreground font-normal">
-                Full-time opportunities and Freelance projects
-              </p>
-              <div className="flex gap-2">
-                <div className="shadow-sm rounded-full bg-white/20 p-2 text-nowrap text-sm">
-                  💼 Open to work
-                </div>
-                <div className="shadow-sm rounded-full bg-white/20 p-2 text-nowrap text-sm">
-                  🌍 Remote Friendly
-                </div>
+
+              {/* Social Links */}
+              <SocialLinks className="mt-4" size={24} />
+
+              {/* CTA Buttons */}
+              <div className="flex justify-center gap-4 mt-8">
+                <Button className="text-md font-semibold px-5 py-5 uppercase tracking-tight shadow-2xl">
+                  Get in Touch
+                </Button>
+                <Button
+                  variant="outline"
+                  className="text-md font-semibold px-5 py-5 uppercase tracking-tight shadow-2xl"
+                >
+                  Resume
+                </Button>
               </div>
             </div>
-            <div className="backdrop-blur-[20%] bg-gradient-to-br from-[rgba(102,126,234,0.15)] to-[rgba(118,75,162,0.1)] shadow-2xl border-[rgba(102,126,234,0.3)] border-2 rounded-3xl flex flex-col px-4 py-4 gap-2">
-              <div className="flex flex-row gap-4">
-                <InfoIcon className="text-violet-500"></InfoIcon>
-                <div className="bg-violet-600/10 rounded-full text-sm px-3 py-1">
-                  Available
-                </div>
-              </div>
-              <h2 className="text-2xl">2-4 Hours</h2>
-              <p className="text-md text-muted-foreground font-normal">
-                Average response time on business days
-              </p>
-              <div className="flex gap-2 mt-auto">
-                <div className="shadow-sm rounded-full bg-white/20 p-2 text-nowrap text-sm">
-                  ⚡ Quick Turnaround
-                </div>
-                <div className="shadow-sm rounded-full bg-white/20 p-2 text-nowrap text-sm">
-                  🔄️ Regular Updates
-                </div>
-              </div>
+
+            {/* Lottie Animation */}
+            <div className="w-full max-w-xl flex-grow">
+              <DotLottieReact
+                src="https://lottie.host/9efb8419-fa6e-4e40-8488-6a5632587950/9M6NqyO9Bg.lottie"
+                loop
+                autoplay
+              />
             </div>
-          </div>
-
-          <SocialLinks className="" size={24} />
-
-          <div className="flex justify-center gap-4 mt-8 ">
-            <Button className="text-md font-semibold px-5 py-5 uppercase tracking-tight shadow-2xl">
-              Get in Touch
-            </Button>
-            <Button
-              variant={"outline"}
-              className="text-md font-semibold px-5 py-5 uppercase tracking-tight shadow-2xl"
-            >
-              Resume
-            </Button>
           </div>
         </div>
-      </div>
-      <div className="max-w-screen w-full lg:w-fit flex-grow">
-        <DotLottieReact
-          src="https://lottie.host/9efb8419-fa6e-4e40-8488-6a5632587950/9M6NqyO9Bg.lottie"
-          loop
-          autoplay
-        />
       </div>
     </div>
   );

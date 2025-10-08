@@ -72,7 +72,7 @@ const Header = () => {
         <div className="flex items-center gap-6">
           {/* Desktop Navigation */}
           <nav className="hidden md:block">
-            <ul className="flex gap-6">
+            <ul className="flex gap-6 text-xl">
               {navLinks.map((link) => (
                 <li key={link.name}>
                   <a

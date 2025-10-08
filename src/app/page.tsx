@@ -7,10 +7,14 @@ import Projects from "@/components/Projects";
 import Header from "@/components/Header";
 import HeroSection from "@/components/HeroSection";
 import Spline from "@splinetool/react-spline/next";
+import LiquidEther from "@/components/LiquidEther";
+import SplashCursor from "@/components/SplashCursor";
+
 export default function Home() {
   return (
     <>
-      <div className="flex flex-col space-y-8 font-inter ">
+      <SplashCursor COLOR_UPDATE_SPEED={2} SPLAT_RADIUS={0.1} />
+      <div className="flex flex-col space-y-8 font-inter relative ">
         <Header />
 
         <HeroSection />
