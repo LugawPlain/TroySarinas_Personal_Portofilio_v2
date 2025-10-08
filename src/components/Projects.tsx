@@ -11,7 +11,7 @@ const Projects = () => {
     <div id="projects" className="items-center flex flex-col py-2 px-4">
       <div className="space-y-8 flex flex-col justify-center items-center max-w-[90rem]">
         <h1 className="text-center font-bold text-3xl mt-2">PROJECTS</h1>
-        <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8">
           <div className="pb-2 card card font-fraunces shadow-2xl rounded-2xl overflow-hidden">
             <div className="relative w-full aspect-video overflow-hidden bg-gray-500 border-b border-border">
               <Image
