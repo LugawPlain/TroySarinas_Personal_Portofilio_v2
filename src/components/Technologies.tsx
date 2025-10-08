@@ -125,7 +125,7 @@ const Technologies = () => {
             maskImage:
               "linear-gradient(to bottom, black 95%, transparent 100%)",
           }}
-          className="px-6 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-5 py-4 pb-8"
+          className="px-6 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-5 py-4 pb-8 max-w-[80rem] mx-auto"
           variants={gridVariants}
           initial="hidden"
           animate={showAll ? "visible" : "hidden"}
@@ -139,13 +139,13 @@ const Technologies = () => {
                 initial={{ zIndex: 0 }}
                 animate={{ zIndex: isActive ? 100 : 0 }}
                 key={index}
-                className="group perspective-1000"
+                className="group perspective-1000 cursor-pointer"
                 tabIndex={0}
               >
                 <motion.div
                   variants={variants}
                   animate={isActive ? "active" : "idle"}
-                  className="relative shadow-2xl rounded-2xl w-full h-8 group-focus-within:scale-120 transform transition duration-500"
+                  className="relative shadow-2xl rounded-2xl w-full h-8 xl:h-10  group-focus-within:scale-120 transform transition duration-500"
                   style={{ transformStyle: "preserve-3d" }}
                 >
                   <div
@@ -166,7 +166,7 @@ const Technologies = () => {
                       transform: "rotateY(180deg)",
                     }}
                   >
-                    <p className="text-center text-xs font-semibold">
+                    <p className="text-center text-xs xl:text-md font-semibold">
                       {(() => {
                         if (Percent < 30) return "Entry Level";
                         if (Percent < 50) return "Junior";
