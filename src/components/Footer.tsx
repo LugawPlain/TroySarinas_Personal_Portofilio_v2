@@ -12,44 +12,60 @@ import BuyMeACoffeeButton from "./BuyMeACoffeeButton";
 
 const Footer = () => {
   return (
-    <footer
-      id="contacts"
-      className="bg-gray-200 gap-4  flex flex-col items-center justify-center px-6 py-4"
-    >
-      <div className="flex flex-col justify-center items-center gap-2 font-inter">
-        <Link href="#">
-          <NameTitle size="text-5xl" />
-        </Link>
-        <p className="text-sm">
-          Ready to collaborate on something extraordinary? I'm always excited to
-          connect with fellow innovators, explore cutting-edge projects, and
-          push the boundaries of what's possible with technology. Let's build
-          the future together.
-        </p>
-        <SocialLinks className="mt-4" size={16} />
+    <footer id="contacts" className="bg-gray-200 py-4">
+      <div className="py-4 xl:flex-row max-w-[80rem] mx-auto flex flex-col justify-between items-center px-8 gap-4">
+        <div className="flex flex-col justify-center items-center font-inter gap-2 max-w-80 min-w-80 order-3 xl:order-1">
+          <div className="flex flex-col items-center">
+            <div>
+              <DotLottieReact
+                src="https://lottie.host/480ba756-90d7-4ba6-bd6c-5167f02d7187/V1fklWpnHV.lottie"
+                loop
+                autoplay
+              />
+            </div>
+            <div className="max-w-">
+              <BuyMeACoffeeButton />
+            </div>
+          </div>
+        </div>
+
+        <div className="flex flex-col justify-center items-center gap-2 font-inter order-1 xl:order-2 ">
+          <Link href="#">
+            <NameTitle size="xl:text-7xl text-5xl lg:text-6xl " />
+          </Link>
+          <p className="text-sm font-medium font-montserrat text-justify">
+            Ready to collaborate on something extraordinary? I'm always excited
+            to connect with fellow innovators, explore cutting-edge projects,
+            and push the boundaries of what's possible with technology. Let's
+            build the future together.
+          </p>
+          <SocialLinks className="mt-4" size={16} />
+        </div>
+        <div className="flex flex-col mt-4 xl:mt-0 justify-center pl-8 items-center font-inter max-w-80 min-w-80 xl:block oirder-2 xl:order-3">
+          <h3 className="font-semibold text-xl">Quick Links</h3>
+          <ul className="flex flex-wrap justify-center gap-3 mt-4 text-sm xl:block ">
+            <Link className="underline" href="#about">
+              <li className="py-2">About</li>
+            </Link>
+            <Link className="underline" href="#skills">
+              <li className="py-2">Skills</li>
+            </Link>
+            <Link className="underline" href="#skills">
+              <li className="py-2">Experience</li>
+            </Link>
+            <Link className="underline" href="#projects">
+              <li className="py-2">Projects</li>
+            </Link>
+            <Link className="underline" href="#publications">
+              <li className="py-2">Publications</li>
+            </Link>
+            <Link className="underline" href="#resume">
+              <li className="py-2">Resume</li>
+            </Link>
+          </ul>
+        </div>
       </div>
-      <div className="flex flex-col justify-center items-center font-inter">
-        <h3 className="font-semibold text-lg">Quick Links</h3>
-        <ul className="flex flex-wrap justify-center gap-3 mt-4 text-sm ">
-          <Link className="p-2 underline" href="#about">
-            <li>About</li>
-          </Link>
-          <Link className="p-2 underline" href="#skills">
-            <li>Skills</li>
-          </Link>
-          <Link className="p-2 underline" href="#skills">
-            <li>Experience</li>
-          </Link>
-          <Link className="p-2 underline" href="#projects">
-            <li>Projects</li>
-          </Link>
-          <Link className="p-2 underline" href="#publications">
-            <li>Publications</li>
-          </Link>
-          <Link className="p-2 underline" href="#resume">
-            <li>Resume</li>
-          </Link>
-        </ul>
+      <div className="text-center mt-2 xl:flex xl:justify-between mx-auto max-w-[80rem] px-20 border-t border-border py-2">
         <div className="mt-2">
           <GitHubStarCount
             username="LugawPlain"
@@ -65,26 +81,13 @@ const Footer = () => {
             Stars on Github
           </GitHubButton>
         </div>
-      </div>
-      <div className="flex flex-col justify-center items-center font-inter gap-2">
-        <div className="flex flex-col items-center px-8">
-          <div>
-            <DotLottieReact
-              src="https://lottie.host/480ba756-90d7-4ba6-bd6c-5167f02d7187/V1fklWpnHV.lottie"
-              loop
-              autoplay
-            />
-          </div>
-          <div className="max-w-">
-            <BuyMeACoffeeButton />
-          </div>
+        <div className="text-xs text-muted-foreground">
+          <p className="text-xs text-muted-foreground">© 2025 Troy Sarinas</p>
+          <p>troysarinas22@gmail.com</p>
+          <p className="text-xs text-muted-foreground">
+            Built with React Next & Tailwind
+          </p>
         </div>
-      </div>
-      <div className="text-center mt-2">
-        <p className="text-xs text-muted-foreground">© 2025 Troy Sarinas</p>
-        <p className="text-xs text-muted-foreground">
-          Built with React Next & Tailwind
-        </p>
       </div>
     </footer>
   );

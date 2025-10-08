@@ -147,7 +147,7 @@ const HeroSection = () => {
               </div>
 
               {/* Social Links */}
-              <SocialLinks className="mt-4" size={24} />
+              <SocialLinks className="mt-4" size={28} />
 
               {/* CTA Buttons */}
               <div className="flex justify-center gap-4 mt-8">
