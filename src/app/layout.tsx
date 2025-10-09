@@ -9,6 +9,7 @@ import {
 } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
+import { CursorProvider } from "@/components/CursorProvider";
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -67,7 +68,7 @@ export default function RootLayout({
           "antialiased"
         )}
       >
-        {children}
+        <CursorProvider>{children}</CursorProvider>
       </body>
     </html>
   );

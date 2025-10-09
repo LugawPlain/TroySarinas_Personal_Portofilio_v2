@@ -6,11 +6,16 @@ import { X } from "lucide-react";
 // Mock components - replace with your actual imports
 import NameTitle from "./NameTitle";
 import { Button } from "./ui/button";
+import { CiSettings } from "react-icons/ci";
+import { useCursor } from "./CursorProvider";
 
 const Header = () => {
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(false);
+  const { isCursorEffectEnabled, setIsCursorEffectEnabled } = useCursor();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -32,6 +37,19 @@ const Header = () => {
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+
+  const toggleSettings = () => {
+    setIsSettingsOpen(!isSettingsOpen);
+  };
+
+  const toggleDarkMode = () => {
+    setIsDarkMode(!isDarkMode);
+    // TODO: Implement dark mode logic
+  };
+
+  const toggleCursorEffect = () => {
+    setIsCursorEffectEnabled(!isCursorEffectEnabled);
   };
 
   const navLinks = [
@@ -63,7 +81,7 @@ const Header = () => {
   return (
     <>
       <div
-        className={`Header top-0 bg-white z-50 backdrop-blur-2xl sticky flex items-center justify-between px-4 h-20 border-b-2 border-gray-200 transition-transform duration-300 ${
+        className={`lg:px-16 Header top-0 bg-white z-50 backdrop-blur-2xl sticky flex items-center justify-between px-4 h-20 border-b-2 border-gray-200 transition-transform duration-300 ${
           isVisible ? "translate-y-0" : "-translate-y-full"
         }`}
       >
@@ -72,7 +90,7 @@ const Header = () => {
         <div className="flex items-center gap-6">
           {/* Desktop Navigation */}
           <nav className="hidden md:block">
-            <ul className="flex gap-6 text-xl">
+            <ul className="flex gap-6 text-lg">
               {navLinks.map((link) => (
                 <li key={link.name}>
                   <a
@@ -99,6 +117,60 @@ const Header = () => {
           {/* Dark Mode Button */}
           <div className="hidden md:block">
             {/* <Button className="text-xs">Dark Mode</Button> */}
+          </div>
+
+          {/* Settings Dropdown */}
+          <div className="relative">
+            <button
+              onClick={toggleSettings}
+              className="p-1 rounded-md hover:bg-gray-100 transition-colors"
+              aria-label="Settings"
+            >
+              <CiSettings size={30} />
+            </button>
+
+            {/* Settings Dropdown Menu */}
+            {isSettingsOpen && (
+              <div className="absolute right-0 top-full mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-50">
+                <div className="p-2">
+                  {/* Dark Mode Toggle */}
+                  <div className="flex items-center justify-between py-2 px-3">
+                    <span className="text-sm font-medium">Dark Mode</span>
+                    <button
+                      onClick={toggleDarkMode}
+                      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                        isDarkMode ? "bg-blue-600" : "bg-gray-200"
+                      }`}
+                    >
+                      <span
+                        className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                          isDarkMode ? "translate-x-6" : "translate-x-1"
+                        }`}
+                      />
+                    </button>
+                  </div>
+
+                  {/* Cursor Effects Toggle */}
+                  <div className="flex items-center justify-between py-2 px-3 border-t border-gray-100">
+                    <span className="text-sm font-medium">Cursor Effects</span>
+                    <button
+                      onClick={toggleCursorEffect}
+                      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                        isCursorEffectEnabled ? "bg-blue-600" : "bg-gray-200"
+                      }`}
+                    >
+                      <span
+                        className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                          isCursorEffectEnabled
+                            ? "translate-x-6"
+                            : "translate-x-1"
+                        }`}
+                      />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -134,6 +206,14 @@ const Header = () => {
         <div
           className="md:hidden fixed h-full w-full bg-black/20 z-30 top-20"
           onClick={() => setIsMobileMenuOpen(false)}
+        />
+      )}
+
+      {/* Overlay to close settings dropdown when clicking outside */}
+      {isSettingsOpen && (
+        <div
+          className="fixed inset-0 z-40"
+          onClick={() => setIsSettingsOpen(false)}
         />
       )}
     </>

@@ -145,7 +145,7 @@ const Technologies = () => {
                 <motion.div
                   variants={variants}
                   animate={isActive ? "active" : "idle"}
-                  className="relative shadow-2xl rounded-2xl w-full h-8 xl:h-10  group-focus-within:scale-120 transform transition duration-500"
+                  className="relative shadow-2xl rounded-2xl w-full h-8 xl:h-10 hover:scale-105 hover:-translate-y-1 hover:-translate-x-1  group-focus-within:scale-120 transform transition duration-500"
                   style={{ transformStyle: "preserve-3d" }}
                 >
                   <div
