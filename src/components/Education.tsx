@@ -25,7 +25,7 @@ const Education = () => {
         </div>
         <div className="flex flex-col xl:flex-row py-4">
           <div className="p-4 gap-2 flex flex-col grow">
-            <h2 className="text-2xl text-bold">
+            <h2 className="text-2xl font-semibold text-secondary">
               San Sebastian College Recoletos de Cavite
             </h2>
             <div>
@@ -41,7 +41,7 @@ const Education = () => {
           </div>
           <div className="flex flex-col px-4 border-l border-border xl:min-w-80 xl:max-w-80">
             <div className="mb-4">
-              <h2 className="text-xl font-bold text-start mt-2">
+              <h2 className="text-xl font-bold text-start mt-2  text-secondary">
                 Key Courses & Highlights
               </h2>
               <ul className="text-sm mt-2 gap-2">

@@ -36,7 +36,7 @@ const experienceData: ExperienceItem[] = [
     showHighlights: true,
     highlights: [
       {
-        icon: <FaStar size="40" className="text-primary-500" />,
+        icon: <FaStar size="40" className="text-accent" />,
         title: "Improved app load time by 20%",
         label: "App Performance",
       },
@@ -87,7 +87,13 @@ const experienceData: ExperienceItem[] = [
         label: "App Performance",
       },
     ],
-    technologies: ["Next Js", "Javascript", "Python", "Tailwind CSS"],
+    technologies: [
+      "Next Js",
+      "Javascript",
+      "Python",
+      "Tailwind CSS",
+      "REST APIs",
+    ],
   },
 ];
 
@@ -95,7 +101,7 @@ const Experience = () => {
   return (
     <div
       id="experience"
-      className="px-4 font-inter flex flex-col space-y-4 justify-center items-center"
+      className="px-4 font-inter flex flex-col space-y-8 justify-center items-center"
     >
       <h1 className="text-center text-3xl sm:text-4xl font-bold mb-6">
         Experience
@@ -104,13 +110,13 @@ const Experience = () => {
       {experienceData.map((exp, index) => (
         <div
           key={index}
-          className="shadow-2xl overflow-clip rounded-2xl max-w-[80rem] w-full grid grid-cols-1 xl:grid-cols-[minmax(0,160px)_1fr] xl:grid-rows-1"
+          className="shadow-lg hover:shadow-2xl transtion duration-150 border-border border overflow-clip rounded-2xl max-w-[80rem] w-full grid grid-cols-1 xl:grid-cols-[minmax(0,160px)_1fr] xl:grid-rows-1"
         >
           {/* Logo Section */}
           <div
-            className={`${exp.logoBgColor} flex justify-center items-center h-full shrink`}
+            className={`${exp.logoBgColor} flex justify-center items-center h-full shrink xl:border-r-2 border-border`}
           >
-            <div className="h-20 w-20 bg-white rounded-full flex items-center justify-center">
+            <div className="h-20 w-20  bg-white rounded-full flex items-center justify-center">
               <Image
                 src={exp.logo}
                 height={exp.logoSize.height}
@@ -124,8 +130,12 @@ const Experience = () => {
           <div className="flex flex-col xl:flex-row py-4">
             {/* Main Info */}
             <div className="flex grow flex-col px-4">
-              <h2 className="text-2xl font-semibold">{exp.title}</h2>
-              <h3 className="text-lg font-medium">{exp.company}</h3>
+              <h2 className="text-2xl text-secondary font-semibold">
+                {exp.title}
+              </h2>
+              <h3 className="text-lg text-secondary font-medium">
+                {exp.company}
+              </h3>
               <p className="mt-2 font-medium">{exp.period}</p>
               <p className="text-sm text-muted-foreground">{exp.location}</p>
               <p className="mt-2 font-fraunces text-md">{exp.description}</p>
@@ -135,17 +145,17 @@ const Experience = () => {
             <div className="flex flex-col px-4 border-l border-border xl:min-w-80 xl:max-w-80">
               {exp.showHighlights && exp.highlights.length > 0 && (
                 <div className="mb-4">
-                  <h2 className="text-xl font-bold text-start mt-2">
+                  <h2 className="text-xl text-secondary font-bold text-start mt-2">
                     Highlights
                   </h2>
                   <div className="space-y-2 mt-2">
                     {exp.highlights.map((highlight, idx) => (
                       <div
                         key={idx}
-                        className="mx-auto min-w-full flex bg-gray-200 border-border min-h-20 items-center rounded-lg p-3"
+                        className="mx-auto  min-w-full flex bg-gray-200/50 hover:bg-gray-200 hover:-translate-x-1 transition duration-300 hover:-translate-y-1 border-border min-h-20 items-center rounded-lg p-3"
                       >
                         <div className="flex items-center">
-                          <div className="shrink min-w-fit">
+                          <div className="shrink min-w-fit text-accent">
                             {highlight.icon}
                           </div>
                           <div className="grow text-start ml-2">
@@ -164,12 +174,14 @@ const Experience = () => {
               )}
 
               <div>
-                <h3 className="text-lg font-semibold mt-2">Technologies</h3>
-                <div className="flex flex-wrap text-xs text-white gap-2">
+                <h3 className="text-lg text-secondary font-semibold mt-2">
+                  Technologies
+                </h3>
+                <div className="flex flex-wrap  text-xs text-white gap-2">
                   {exp.technologies.map((tech, idx) => (
                     <div
                       key={idx}
-                      className="bg-gray-500 px-2 py-0.5 rounded-full"
+                      className="bg-secondary/80 px-2 py-0.5 rounded-full"
                     >
                       {tech}
                     </div>

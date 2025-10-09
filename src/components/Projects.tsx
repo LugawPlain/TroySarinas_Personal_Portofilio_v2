@@ -81,7 +81,9 @@ const Projects = () => {
               </div>
               <div className="px-2 xl:px-4 mt-2 mb-2 text-center flex h-full flex-col flex-1">
                 <div className="space-y-2 mb-2">
-                  <h3 className="font-semibold text-2xl">{project.title}</h3>
+                  <h3 className="font-semibold text-2xl text-secondary">
+                    {project.title}
+                  </h3>
                   <p className="text-start text-muted-foreground">
                     &emsp; {project.description}
                   </p>
@@ -102,7 +104,7 @@ const Projects = () => {
                       <Link href={project.liveUrl} className="flex-1">
                         <Button
                           variant={"default"}
-                          className="w-full text-sm cursor-pointer font-semibold px-4 py-2.5 rounded-lg hover:scale-[1.02] transition-transform duration-200 flex items-center justify-center gap-2"
+                          className="w-full text-secondary text-sm cursor-pointer font-semibold px-4 py-2.5 rounded-lg hover:scale-[1.02] transition-transform duration-200 flex items-center justify-center gap-2"
                         >
                           <FiExternalLink size={18} />
                           Live Demo
@@ -114,7 +116,7 @@ const Projects = () => {
                       <Link href={project.githubUrl} className="flex-1">
                         <Button
                           variant={"outline"}
-                          className="w-full text-sm cursor-pointer font-semibold px-4 py-2.5 rounded-lg hover:scale-[1.02] transition-transform duration-200 flex items-center justify-center gap-2"
+                          className="w-full text-secondary text-sm cursor-pointer font-semibold px-4 py-2.5 rounded-lg hover:scale-[1.02] transition-transform duration-200 flex items-center justify-center gap-2"
                         >
                           <FiGithub size={18} />
                           Code
@@ -123,11 +125,11 @@ const Projects = () => {
                     )}
 
                     {!project.githubUrl && project.liveUrl && (
-                      <div className="flex-1 opacity-50 cursor-not-allowed">
+                      <div className="flex-1 opacity-50  cursor-not-allowed">
                         <Button
                           variant={"outline"}
                           disabled
-                          className="w-full text-sm font-semibold px-4 py-2.5 rounded-lg flex items-center justify-center gap-2"
+                          className="w-full text-secondary text-sm font-semibold px-4 py-2.5 rounded-lg flex items-center justify-center gap-2"
                         >
                           <FiGithub size={18} />
                           Private

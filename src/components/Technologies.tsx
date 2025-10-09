@@ -43,7 +43,6 @@ import { SiAframe } from "react-icons/si";
 import { SiThreedotjs } from "react-icons/si";
 import { FaWordpress } from "react-icons/fa";
 import { motion } from "framer-motion";
-import { Button } from "./ui/button";
 import { PiOpenAiLogo } from "react-icons/pi";
 import { SiGooglegemini } from "react-icons/si";
 import { SiClaude } from "react-icons/si";
@@ -51,10 +50,12 @@ import { RiPerplexityLine } from "react-icons/ri";
 import { SiOllama } from "react-icons/si";
 import { SiHuggingface } from "react-icons/si";
 import { RiSupabaseLine } from "react-icons/ri";
+import { FaHtml5 } from "react-icons/fa";
+import { IoLogoCss3 } from "react-icons/io5";
 
 const technologies = [
-  { name: "HTML", IconComponent: HtmlIcon, Percent: 100 },
-  { name: "CSS", IconComponent: CssIcon, Percent: 95 },
+  { name: "HTML", IconComponent: FaHtml5, Percent: 100 },
+  { name: "CSS", IconComponent: IoLogoCss3, Percent: 95 },
   { name: "JavaScript", IconComponent: IoLogoJavascript, Percent: 90 },
   { name: "TypeScript", IconComponent: SiTypescript, Percent: 90 },
   { name: "React", IconComponent: FaReact, Percent: 90 },
@@ -152,11 +153,7 @@ const Technologies = () => {
                     className="absolute px-4 py-2 flex items-center justify-between inset-0 rounded-lg bg-secondary text-secondary-foreground"
                     style={{ backfaceVisibility: "hidden" }}
                   >
-                    {name === "HTML" || name === "CSS" ? (
-                      <IconComponent />
-                    ) : (
-                      <IconComponent size={24} />
-                    )}
+                    {<IconComponent size={24} />}
                     <p className="text-sm font-medium font-inter">{name}</p>
                   </div>
                   <div
