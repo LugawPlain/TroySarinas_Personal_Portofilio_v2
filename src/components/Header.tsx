@@ -120,10 +120,10 @@ const Header = () => {
           </div>
 
           {/* Settings Dropdown */}
-          <div className="relative">
+          <div className="relative ">
             <button
               onClick={toggleSettings}
-              className="p-1 rounded-md hover:bg-gray-100 transition-colors"
+              className="p-1 rounded-md cursor-pointer  hover:bg-gray-100 transition-colors"
               aria-label="Settings"
             >
               <CiSettings size={30} />
@@ -131,14 +131,14 @@ const Header = () => {
 
             {/* Settings Dropdown Menu */}
             {isSettingsOpen && (
-              <div className="absolute right-0 top-full mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-50">
+              <div className="absolute  right-0 top-full mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-50">
                 <div className="p-2">
                   {/* Dark Mode Toggle */}
                   <div className="flex items-center justify-between py-2 px-3">
                     <span className="text-sm font-medium">Dark Mode</span>
                     <button
                       onClick={toggleDarkMode}
-                      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                      className={`relative cursor-pointer inline-flex h-6 w-11 items-center rounded-full transition-colors ${
                         isDarkMode ? "bg-blue-600" : "bg-gray-200"
                       }`}
                     >
@@ -151,16 +151,16 @@ const Header = () => {
                   </div>
 
                   {/* Cursor Effects Toggle */}
-                  <div className="flex items-center justify-between py-2 px-3 border-t border-gray-100">
+                  <div className="flex items-center   justify-between py-2 px-3 border-t border-gray-100">
                     <span className="text-sm font-medium">Cursor Effects</span>
                     <button
                       onClick={toggleCursorEffect}
-                      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                      className={`relative cursor-pointer inline-flex h-6 w-11 items-center rounded-full transition-colors ${
                         isCursorEffectEnabled ? "bg-blue-600" : "bg-gray-200"
                       }`}
                     >
                       <span
-                        className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                        className={`inline-block  h-4 w-4 transform rounded-full bg-white transition-transform ${
                           isCursorEffectEnabled
                             ? "translate-x-6"
                             : "translate-x-1"
