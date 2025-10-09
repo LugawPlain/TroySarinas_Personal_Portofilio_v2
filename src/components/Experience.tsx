@@ -103,7 +103,7 @@ const Experience = () => {
       id="experience"
       className="px-4 font-inter flex flex-col space-y-8 justify-center items-center"
     >
-      <h1 className="text-center text-3xl sm:text-4xl font-bold mb-6">
+      <h1 className="text-center text-3xl sm:text-4xl font-bold mb-6 text-foreground/90">
         Experience
       </h1>
 
@@ -130,7 +130,7 @@ const Experience = () => {
           <div className="flex flex-col xl:flex-row py-4">
             {/* Main Info */}
             <div className="flex grow flex-col px-4">
-              <h2 className="text-2xl text-secondary font-semibold">
+              <h2 className="text-2xl text-secondary font-semibold ">
                 {exp.title}
               </h2>
               <h3 className="text-lg text-secondary font-medium">

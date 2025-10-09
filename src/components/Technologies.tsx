@@ -116,7 +116,9 @@ const Technologies = () => {
       className="mt-4"
     >
       <h2 className="text-center mb-10 font-bold">
-        <span className="text-3xl sm:text-4xl">Technologies I use 🧑‍💻</span>
+        <span className="text-3xl sm:text-4xl text-foreground/90">
+          Technologies I use 🧑‍💻
+        </span>
       </h2>
       <div className="relative">
         <motion.div
@@ -205,7 +207,7 @@ const Technologies = () => {
       </div>
       <button
         onClick={() => setShowAll(!showAll)}
-        className="block mx-auto font-semibold text-sm mt-4 px-4 py-2 rounded-md border border-input bg-blue-600 text-white hover:bg-blue-700 font-montserrat"
+        className="block mx-auto font-semibold text-sm mt-4 px-4 py-2 rounded-md border border-input bg-accent text-white hover:scale-110 transition duration-200 font-montserrat"
       >
         {showAll ? "Show Less" : "Show More"}
       </button>

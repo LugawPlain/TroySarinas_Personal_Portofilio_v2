@@ -60,7 +60,7 @@ const Projects = () => {
   return (
     <div id="projects" className="items-center flex flex-col py-2 px-4">
       <div className="space-y-8 flex flex-col justify-center items-center max-w-[90rem]">
-        <h1 className="text-center font-bold text-3xl sm:text-4xl mt-2">
+        <h1 className="text-center font-bold text-3xl sm:text-4xl mt-2 text-foreground/90">
           Projects
         </h1>
         <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8">
