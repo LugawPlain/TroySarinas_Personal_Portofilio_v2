@@ -4,9 +4,7 @@ import NameTitle from "./NameTitle";
 import SocialLinks from "./SocialLinks";
 import GitHubStarCount from "./GithubStarCount";
 import GitHubButton from "react-github-btn";
-import { Button } from "./ui/button";
 import Link from "next/link";
-import { Link2 } from "lucide-react";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import BuyMeACoffeeButton from "./BuyMeACoffeeButton";
 
@@ -37,11 +35,12 @@ const Footer = () => {
             />
           </Link>
           <p className="text-sm font-medium font-montserrat text-justify">
-            Ready to collaborate on something extraordinary? I'm always excited
-            to connect with fellow innovators, explore cutting-edge projects,
-            and push the boundaries of what's possible with technology. Let's
-            build the future together.
+            Ready to collaborate on something extraordinary? I&apos;m always
+            excited to connect with fellow innovators, explore cutting-edge
+            projects, and push the boundaries of what&apos;s possible with
+            technology. Let&apos;s build the future together.
           </p>
+
           <SocialLinks className="mt-4" size={24} />
         </div>
         <div className="flex flex-col mt-4 xl:mt-0 justify-center pl-8 items-center font-inter max-w-80 min-w-80 xl:block oirder-2 xl:order-3">

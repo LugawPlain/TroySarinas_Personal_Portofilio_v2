@@ -1,13 +1,15 @@
 import * as React from "react";
-const UndrawDevProductivity = (props: any) => (
+const UndrawDevProductivity: React.FC<React.SVGProps<SVGSVGElement>> = (
+  props
+) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 829.692 684.73"
     className="w-full h-auto max-w-full"
     xmlnsXlink="http://www.w3.org/1999/xlink"
     role="img"
-    artist="Katerina Limpitsouni"
-    source="https://undraw.co/"
+    data-artist="Katerina Limpitsouni"
+    data-source="https://undraw.co/"
     {...props}
   >
     <g

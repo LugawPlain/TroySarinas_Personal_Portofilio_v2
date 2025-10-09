@@ -2,8 +2,6 @@ import React from "react";
 import Image from "next/image";
 import { Button } from "./ui/button";
 import { MdArrowOutward } from "react-icons/md";
-import { CiLink } from "react-icons/ci";
-import { PiGithubLogoLight } from "react-icons/pi";
 import { FiExternalLink, FiGithub } from "react-icons/fi";
 import Link from "next/link";
 
@@ -51,7 +49,7 @@ const projectsData: Project[] = [
       "Creating automations for streamlining workflows and integrating various APIs to enhance productivity. Using AI Agents to automate tasks and improve efficiency.",
     image: "/AgentsN8n.png",
     technologies: ["N8n", "Javascript", "Python", "API Integrations"],
-    liveUrl: "https://vr-sscr.netlify.app/",
+    liveUrl: "#",
     githubUrl: "",
   },
 ];
@@ -70,7 +68,11 @@ const Projects = () => {
               className="pb-2 card font-fraunces flex-col flex shadow-2xl rounded-2xl overflow-hidden hover:shadow-3xl transition-shadow duration-300"
             >
               <div className="relative w-full aspect-video overflow-hidden bg-gray-500 border-b border-border">
-                <Link href={project.liveUrl || "#"}>
+                <Link
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  href={project.liveUrl || "#"}
+                >
                   <Image
                     src={project.image}
                     alt={project.title}
@@ -101,7 +103,12 @@ const Projects = () => {
                   </div>
                   <div className="flex gap-3 mt-4">
                     {project.liveUrl && (
-                      <Link href={project.liveUrl} className="flex-1">
+                      <Link
+                        href={project.liveUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex-1"
+                      >
                         <Button
                           variant={"default"}
                           className="w-full text-secondary text-sm cursor-pointer font-semibold px-4 py-2.5 rounded-lg hover:scale-[1.02] transition-transform duration-200 flex items-center justify-center gap-2"
@@ -113,7 +120,12 @@ const Projects = () => {
                     )}
 
                     {project.githubUrl && (
-                      <Link href={project.githubUrl} className="flex-1">
+                      <Link
+                        href={project.githubUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex-1"
+                      >
                         <Button
                           variant={"outline"}
                           className="w-full text-secondary text-sm cursor-pointer font-semibold px-4 py-2.5 rounded-lg hover:scale-[1.02] transition-transform duration-200 flex items-center justify-center gap-2"

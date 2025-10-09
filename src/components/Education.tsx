@@ -27,7 +27,11 @@ const Education = () => {
         <div className="flex flex-col xl:flex-row py-4">
           <div className="p-4 gap-2 flex flex-col grow">
             <h2 className="text-2xl font-semibold text-secondary">
-              <Link href="https://sscr.edu/Beta/">
+              <Link
+                href="https://sscr.edu/Beta/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 San Sebastian College Recoletos de Cavite
               </Link>
             </h2>

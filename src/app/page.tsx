@@ -2,7 +2,7 @@ import Technologies from "../components/Technologies";
 import Footer from "@/components/Footer";
 import Experience from "@/components/Experience";
 import Education from "@/components/Education";
-import Certifications from "@/components/Certifications";
+// import Certifications from "@/components/Certifications";
 import Projects from "@/components/Projects";
 import Header from "@/components/Header";
 import HeroSection from "@/components/HeroSection";
@@ -132,7 +132,7 @@ export default function Home() {
         </div> */}
         <Education />
         <Technologies />
-        <Certifications />
+        {/* <Certifications /> */}
         <ChatWidget />
         <Footer />
       </div>

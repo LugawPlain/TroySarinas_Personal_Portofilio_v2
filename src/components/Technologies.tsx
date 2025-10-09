@@ -1,47 +1,30 @@
 "use client";
 
 import React, { useState } from "react";
-import HtmlIcon from "./Icons/HtmlIcon";
-import CssIcon from "./Icons/CssIcon";
 import CloudfareIcon from "./Icons/CloudfareIcon";
 import { SiFramer } from "react-icons/si";
 import { IoLogoJavascript } from "react-icons/io5";
 import { SiTypescript } from "react-icons/si";
 import { FaPython } from "react-icons/fa";
-import { FaGolang } from "react-icons/fa6";
-import { FaRust } from "react-icons/fa";
-import { RiSvelteFill } from "react-icons/ri";
+
 import { FaReact } from "react-icons/fa";
 import { FaNodeJs } from "react-icons/fa";
 import { SiNextdotjs } from "react-icons/si";
-import { DiRuby } from "react-icons/di";
-import { FaSwift } from "react-icons/fa";
-import { SiKotlin } from "react-icons/si";
-import { SiJest } from "react-icons/si";
+
 import { FaDocker } from "react-icons/fa";
 import { RiTailwindCssFill } from "react-icons/ri";
 import { SiN8N } from "react-icons/si";
 import { SiMake } from "react-icons/si";
 import { SiZapier } from "react-icons/si";
 import { FaHubspot } from "react-icons/fa";
-import { IoLogoFigma } from "react-icons/io5";
-import { FaGithub } from "react-icons/fa6";
-import { BiLogoGit } from "react-icons/bi";
-import { IoLogoFirebase } from "react-icons/io5";
+
 import { SiMongodb } from "react-icons/si";
-import { SiNetlify } from "react-icons/si";
 import { FaAws } from "react-icons/fa6";
 import { BiLogoPostgresql } from "react-icons/bi";
 import { SiPrisma } from "react-icons/si";
-import { FaFlutter } from "react-icons/fa6";
-import { FaWix } from "react-icons/fa";
-import { FaShopify } from "react-icons/fa";
-import { SiWoocommerce } from "react-icons/si";
-import { FaSquarespace } from "react-icons/fa";
+
 import { SiMysql } from "react-icons/si";
-import { SiAframe } from "react-icons/si";
 import { SiThreedotjs } from "react-icons/si";
-import { FaWordpress } from "react-icons/fa";
 import { motion } from "framer-motion";
 import { PiOpenAiLogo } from "react-icons/pi";
 import { SiGooglegemini } from "react-icons/si";

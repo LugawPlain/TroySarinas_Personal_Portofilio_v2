@@ -5,8 +5,6 @@ import { X } from "lucide-react";
 
 // Mock components - replace with your actual imports
 import NameTitle from "./NameTitle";
-import { Button } from "./ui/button";
-import { CiSettings } from "react-icons/ci";
 import { useCursor } from "./CursorProvider";
 import { RiSettings5Fill } from "react-icons/ri";
 

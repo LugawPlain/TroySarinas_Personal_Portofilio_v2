@@ -9,7 +9,7 @@ import { motion } from "framer-motion";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 
 const HeroSection = () => {
-  const handleSplineLoad = (spline: any) => {
+  const handleSplineLoad = () => {
     setTimeout(() => {
       const viewer = document.querySelector("spline-viewer");
       if (viewer?.shadowRoot) {

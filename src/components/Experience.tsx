@@ -32,7 +32,8 @@ const experienceData: ExperienceItem[] = [
     company: "Freelancer",
     period: "June 2024 - Present",
     location: "Remote",
-    description: "Provided clients with Custom Websites and Custom Automations",
+    description:
+      "Designed and implemented end-to-end software and automation solutions for clients, combining web development with AI automation. Projects include building custom web applications, integrating APIs, and automating workflows across platforms such as Slack, Airtable, and GoHighLevel to improve productivity and scalability.",
     showHighlights: true,
     highlights: [
       {
@@ -57,8 +58,8 @@ const experienceData: ExperienceItem[] = [
     highlights: [
       {
         icon: <MdStars size="40" className="text-primary-500 " />,
-        title: "Improved app load time by 20%",
-        label: "App Performance",
+        title: "Resolve 97% of technical support tickets",
+        label: "Reducing downtime and improving productivity",
       },
     ],
     technologies: [
@@ -78,13 +79,13 @@ const experienceData: ExperienceItem[] = [
     period: "April 2024 - June 2024",
     location: "Manila, Philippines",
     description:
-      "I developed a web application for creating penetration testing documents for clients",
+      "Collaborated with the cybersecurity team to design and implement a web tool that simplified and standardized client penetration testing documentation workflows.",
     showHighlights: true,
     highlights: [
       {
         icon: <RiTimer2Line size="40" className="text-primary-500" />,
-        title: "Improved app load",
-        label: "App Performance",
+        title: "Time Saved",
+        label: "+50% faster document generation",
       },
     ],
     technologies: [
