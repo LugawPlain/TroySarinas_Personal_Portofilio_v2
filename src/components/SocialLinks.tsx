@@ -19,7 +19,7 @@ const SocialLinks: React.FC<SocialLinksProps> = ({ className, size = 24 }) => {
     <div className={cn("flex gap-4", className)}>
       <Link
         href={"https://github.com/LugawPlain"}
-        className="flex p-2 bg-gray-50 justify-center items-center rounded-lg shadow-xl"
+        className="flex p-2 bg-gray-50 justify-center items-center rounded-lg shadow-xl shadow-red-500/80 "
       >
         <FaGithub size={size} />
       </Link>

@@ -25,8 +25,8 @@ const HeroSection = () => {
     <div className="flex flex-col items-center px-8 min-h-screen">
       <div className="flex flex-col justify-center items-center max-w-[90rem]">
         {/* Avatar Section */}
-        <div className="mt-4 w-40 h-40 xl:w-50 xl:h-50 overflow-hidden rounded-full bg-test flex items-center justify-center">
-          <Avatar className="w-38 h-38 xl:w-48 xl:h-48">
+        <div className="mt-4 w-40 h-40 xl:w-52 xl:h-52 overflow-hidden rounded-full bg-secondary flex items-center justify-center">
+          <Avatar className="w-38 h-38 xl:w-48 xl:h-48 bg-primary">
             <motion.div
               style={{ perspective: "1000px" }}
               className="w-full h-full"
@@ -124,7 +124,7 @@ const HeroSection = () => {
                 </div>
 
                 {/* Response Time Card */}
-                <div className="backdrop-blur-[20%] bg-gradient-to-br from-[rgba(102,126,234,0.15)] to-[rgba(118,75,162,0.1)] shadow-2xl border-[rgba(102,126,234,0.3)] border-2 rounded-3xl flex flex-col px-4 py-4 gap-2">
+                <div className="backdrop-blur-[20%] bg-gradient-to-br from-[rgba(102,126,234,0.15)] to-[rgba(118,75,162,0.1)] shadow-2xl  border-[rgba(102,126,234,0.3)] border-2 rounded-3xl flex flex-col px-4 py-4 gap-2">
                   <div className="flex flex-row gap-4">
                     <InfoIcon className="text-violet-500" />
                     <div className="bg-violet-600/10 rounded-full text-sm px-3 py-1">
@@ -150,8 +150,8 @@ const HeroSection = () => {
               <SocialLinks className="mt-4" size={28} />
 
               {/* CTA Buttons */}
-              <div className="flex justify-center gap-4 mt-8">
-                <Button className="text-md font-semibold px-5 py-5 uppercase tracking-tight shadow-2xl">
+              <div className="flex justify-center gap-4 mt-8 ">
+                <Button className="text-md font-semibold px-5 py-5 bg-secondary text-secondary-foreground uppercase tracking-tight shadow-2xl">
                   Get in Touch
                 </Button>
                 <Button
