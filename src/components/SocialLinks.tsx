@@ -19,37 +19,37 @@ const SocialLinks: React.FC<SocialLinksProps> = ({ className, size = 24 }) => {
     <div className={cn("flex gap-4", className)}>
       <Link
         href={"https://github.com/LugawPlain"}
-        className="flex p-2 bg-gray-50 justify-center items-center rounded-lg shadow-xl shadow-red-500/80 "
+        className="flex p-2 bg-primary justify-center items-center rounded-lg shadow-lg border-[0.5px] border-border hover:-translate-y-1 transition duration-300    "
       >
         <FaGithub size={size} />
       </Link>
       <Link
         href={"https://www.linkedin.com/in/troy-sarinas-47062b1ba/"}
-        className="flex p-2 bg-gray-50 justify-center items-center rounded-lg shadow-xl"
+        className="flex p-2 bg-primary justify-center items-center rounded-lg shadow-lg border-[0.5px] border-border hover:-translate-y-1 transition duration-300    "
       >
         <FaLinkedin className="text-blue-400" size={size} />
       </Link>
       <Link
         href={"mailto:troysarinas22@gmail.com"}
-        className="flex p-2 bg-gray-50 justify-center items-center rounded-lg shadow-xl"
+        className="flex p-2 bg-primary justify-center items-center rounded-lg shadow-lg border-[0.5px] border-border hover:-translate-y-1 transition duration-300    "
       >
         <FaEnvelope className="text-red-400" size={size} />
       </Link>
       <Link
         href={"https://www.instagram.com/troysarinas/"}
-        className="flex p-2 bg-gray-50 justify-center items-center rounded-lg shadow-xl"
+        className="flex p-2 bg-primary justify-center items-center rounded-lg shadow-lg border-[0.5px] border-border hover:-translate-y-1 transition duration-300    "
       >
         <FaInstagram className="" size={size} />
       </Link>
       <Link
         href={"https://www.facebook.com/TroyGwapoOmsim/"}
-        className="flex p-2 bg-gray-50 justify-center items-center rounded-lg shadow-xl"
+        className="flex p-2 bg-primary justify-center items-center rounded-lg shadow-lg border-[0.5px] border-border hover:-translate-y-1 transition duration-300     "
       >
         <FaFacebook className="text-blue-400" size={size} />
       </Link>
       <Link
         href={"#"}
-        className="flex p-2 bg-gray-50 justify-center items-center rounded-lg shadow-xl"
+        className="flex p-2 bg-primary justify-center items-center rounded-lg shadow-lg border-[0.5px] border-border hover:-translate-y-1 transition duration-300     "
       >
         <FaXTwitter className="" size={size} />
       </Link>

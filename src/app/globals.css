@@ -43,25 +43,6 @@
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
     "Liberation Mono", "Courier New", monospace;
   --radius: 0.625rem;
-  --shadow-x: 0;
-  --shadow-y: 1px;
-  --shadow-blur: 3px;
-  --shadow-spread: 0px;
-  --shadow-opacity: 0.1;
-  --shadow-color: oklch(0 0 0);
-  --shadow-2xs: 0 1px 0 var(--tw-shadow-color, rgb(0 0 0 / 0.05));
-  --shadow-xs: 0 1px 2px 0 var(--tw-shadow-color, rgb(0 0 0 / 0.05));
-  --shadow-sm: 0 1px 3px 0 var(--tw-shadow-color, rgb(0 0 0 / 0.1)),
-    0 1px 2px -1px var(--tw-shadow-color, rgb(0 0 0 / 0.1));
-  --shadow: 0 1px 3px 0 var(--tw-shadow-color, rgb(0 0 0 / 0.1)),
-    0 1px 2px -1px var(--tw-shadow-color, rgb(0 0 0 / 0.1));
-  --shadow-md: 0 4px 6px -1px var(--tw-shadow-color, rgb(0 0 0 / 0.1)),
-    0 2px 4px -2px var(--tw-shadow-color, rgb(0 0 0 / 0.1));
-  --shadow-lg: 0 10px 15px -3px var(--tw-shadow-color, rgb(0 0 0 / 0.1)),
-    0 4px 6px -4px var(--tw-shadow-color, rgb(0 0 0 / 0.1));
-  --shadow-xl: 0 20px 25px -5px var(--tw-shadow-color, rgb(0 0 0 / 0.1)),
-    0 8px 10px -6px var(--tw-shadow-color, rgb(0 0 0 / 0.1));
-  --shadow-2xl: 0 25px 50px -12px var(--tw-shadow-color, rgb(0 0 0 / 0.25));
   --tracking-normal: 0em;
   --spacing: 0.25rem;
   --test: oklch(0.3772 0.0795 33.97);
@@ -108,25 +89,6 @@
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
     "Liberation Mono", "Courier New", monospace;
   --radius: 0.625rem;
-  --shadow-x: 0;
-  --shadow-y: 1px;
-  --shadow-blur: 3px;
-  --shadow-spread: 0px;
-  --shadow-opacity: 0.1;
-  --shadow-color: oklch(0 0 0);
-  --shadow-2xs: 0 1px 0 var(--tw-shadow-color, rgb(0 0 0 / 0.05));
-  --shadow-xs: 0 1px 2px 0 var(--tw-shadow-color, rgb(0 0 0 / 0.05));
-  --shadow-sm: 0 1px 3px 0 var(--tw-shadow-color, rgb(0 0 0 / 0.1)),
-    0 1px 2px -1px var(--tw-shadow-color, rgb(0 0 0 / 0.1));
-  --shadow: 0 1px 3px 0 var(--tw-shadow-color, rgb(0 0 0 / 0.1)),
-    0 1px 2px -1px var(--tw-shadow-color, rgb(0 0 0 / 0.1));
-  --shadow-md: 0 4px 6px -1px var(--tw-shadow-color, rgb(0 0 0 / 0.1)),
-    0 2px 4px -2px var(--tw-shadow-color, rgb(0 0 0 / 0.1));
-  --shadow-lg: 0 10px 15px -3px var(--tw-shadow-color, rgb(0 0 0 / 0.1)),
-    0 4px 6px -4px var(--tw-shadow-color, rgb(0 0 0 / 0.1));
-  --shadow-xl: 0 20px 25px -5px var(--tw-shadow-color, rgb(0 0 0 / 0.1)),
-    0 8px 10px -6px var(--tw-shadow-color, rgb(0 0 0 / 0.1));
-  --shadow-2xl: 0 25px 50px -12px var(--tw-shadow-color, rgb(0 0 0 / 0.25));
 }
 
 @theme inline {
@@ -180,15 +142,6 @@
   --font-inter: var(--font-inter);
   --font-fraunces: var(--font-fraunces);
   --font-montserrat: var(--font-montserrat);
-
-  --shadow-2xs: var(--shadow-2xs);
-  --shadow-xs: var(--shadow-xs);
-  --shadow-sm: var(--shadow-sm);
-  --shadow: var(--shadow);
-  --shadow-md: var(--shadow-md);
-  --shadow-lg: var(--shadow-lg);
-  --shadow-xl: var(--shadow-xl);
-  --shadow-2xl: var(--shadow-2xl);
 
   --animate-progress-bar: progress-bar 2.5s ease-in-out infinite;
   @keyframes progress-bar {

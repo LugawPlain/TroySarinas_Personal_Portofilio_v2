@@ -99,7 +99,7 @@ const HeroSection = () => {
               {/* Status Cards */}
               <div className="grid grid-flow-col grid-rows-2 lg:grid-cols-2 lg:grid-rows-1 font-inter font-semibold gap-8 mt-4 w-full">
                 {/* Available Card */}
-                <div className="backdrop-blur-[20%] bg-gradient-to-br from-[rgba(17,153,142,0.15)] to-[rgba(56,239,125,0.1)] shadow-2xl border-[rgba(17,153,142,0.3)] border-2 rounded-3xl flex flex-col px-4 py-4 gap-2">
+                <div className="backdrop-blur-[20%] bg-gradient-to-br from-[rgba(17,153,142,0.15)] to-[rgba(56,239,125,0.1)] hover:from-[rgba(17,153,142,0.10)] hover:to-[rgba(56,239,125,0.10)] shadow-2xl hover:shadow-[rgba(56,239,125,0.8)] transition-all duration-150 shadow-[rgba(56,239,125,0.4)] border-[rgba(17,153,142,0.3)] border-2 rounded-3xl flex flex-col px-4 py-4 gap-2">
                   <div className="flex flex-row gap-4">
                     <div className="flex items-center relative justify-center">
                       <div className="bg-green-600 ml-2 w-3 h-3 rounded-full"></div>
@@ -114,17 +114,17 @@ const HeroSection = () => {
                     Full-time opportunities and Freelance projects
                   </p>
                   <div className="flex gap-2">
-                    <div className="shadow-sm rounded-full bg-white/20 p-2 text-nowrap text-sm">
+                    <div className="shadow-sm hover:bg-white/30 rounded-full bg-white/20 p-2 hover:shadow-lg hover:-translate-y-1 transition duration-300 text-nowrap text-sm">
                       💼 Open to work
                     </div>
-                    <div className="shadow-sm rounded-full bg-white/20 p-2 text-nowrap text-sm">
+                    <div className="shadow-sm hover:bg-white/30 rounded-full bg-white/20 hover:shadow-lg hover:-translate-y-1 transition duration-300  p-2 text-nowrap text-sm">
                       🌍 Remote Friendly
                     </div>
                   </div>
                 </div>
 
                 {/* Response Time Card */}
-                <div className="backdrop-blur-[20%] bg-gradient-to-br from-[rgba(102,126,234,0.15)] to-[rgba(118,75,162,0.1)] shadow-2xl  border-[rgba(102,126,234,0.3)] border-2 rounded-3xl flex flex-col px-4 py-4 gap-2">
+                <div className="backdrop-blur-[20%] bg-gradient-to-br from-[rgba(102,126,234,0.15)] to-[rgba(118,75,162,0.1)] hover:from-[rgba(102,126,234,0.10)] hover:to-[rgba(118,75,162,0.1)] hover:shadow-[rgba(118,75,162,0.8)] transition-all duration-150 shadow-2xl shadow-[rgba(118,75,162,0.4)] border-[rgba(102,126,234,0.3)] border-2 rounded-3xl flex flex-col px-4 py-4 gap-2">
                   <div className="flex flex-row gap-4">
                     <InfoIcon className="text-violet-500" />
                     <div className="bg-violet-600/10 rounded-full text-sm px-3 py-1">
@@ -136,10 +136,10 @@ const HeroSection = () => {
                     Average response time on business days
                   </p>
                   <div className="flex gap-2 mt-auto">
-                    <div className="shadow-sm rounded-full bg-white/20 p-2 text-nowrap text-sm">
+                    <div className="shadow-sm hover:bg-white/30 rounded-full bg-white/20 hover:shadow-lg hover:-translate-y-1 transition duration-300 p-2 text-nowrap text-sm">
                       ⚡ Quick Turnaround
                     </div>
-                    <div className="shadow-sm rounded-full bg-white/20 p-2 text-nowrap text-sm">
+                    <div className="shadow-sm hover:bg-white/30 rounded-full bg-white/20 hover:shadow-lg hover:-translate-y-1 transition duration-300 p-2 text-nowrap text-sm">
                       🔄️ Regular Updates
                     </div>
                   </div>
@@ -147,16 +147,16 @@ const HeroSection = () => {
               </div>
 
               {/* Social Links */}
-              <SocialLinks className="mt-4" size={28} />
+              <SocialLinks className="mt-8" size={28} />
 
               {/* CTA Buttons */}
               <div className="flex justify-center gap-4 mt-8 ">
-                <Button className="text-md font-semibold px-5 py-5 bg-secondary text-secondary-foreground uppercase tracking-tight shadow-2xl">
+                <Button className="text-md font-semibold px-5 py-5 bg-secondary inset-ring-secondary inset-ring  text-secondary-foreground uppercase tracking-tight shadow-lg">
                   Get in Touch
                 </Button>
                 <Button
                   variant="outline"
-                  className="text-md font-semibold px-5 py-5 uppercase tracking-tight shadow-2xl"
+                  className="text-md font-semibold px-5 py-5 border-border border-2 uppercase tracking-tight shadow-lg"
                 >
                   Resume
                 </Button>
