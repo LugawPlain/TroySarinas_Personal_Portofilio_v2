@@ -7,6 +7,7 @@ import Projects from "@/components/Projects";
 import Header from "@/components/Header";
 import HeroSection from "@/components/HeroSection";
 import SplashCursor from "@/components/SplashCursor";
+import ChatWidget from "@/components/ChatWidget";
 
 export default function Home() {
   return (
@@ -132,6 +133,7 @@ export default function Home() {
         <Education />
         <Technologies />
         <Certifications />
+        <ChatWidget />
         <Footer />
       </div>
     </>
