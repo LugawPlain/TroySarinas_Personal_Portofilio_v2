@@ -8,6 +8,7 @@ import NameTitle from "./NameTitle";
 import { Button } from "./ui/button";
 import { CiSettings } from "react-icons/ci";
 import { useCursor } from "./CursorProvider";
+import { RiSettings5Fill } from "react-icons/ri";
 
 const Header = () => {
   const [isVisible, setIsVisible] = useState(true);
@@ -126,7 +127,7 @@ const Header = () => {
               className="p-1 rounded-md cursor-pointer  hover:bg-gray-100 transition-colors"
               aria-label="Settings"
             >
-              <CiSettings size={30} />
+              <RiSettings5Fill className="text-accent" size={30} />
             </button>
 
             {/* Settings Dropdown Menu */}
@@ -139,7 +140,7 @@ const Header = () => {
                     <button
                       onClick={toggleDarkMode}
                       className={`relative cursor-pointer inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                        isDarkMode ? "bg-blue-600" : "bg-gray-200"
+                        isDarkMode ? "bg-secondary" : "bg-gray-200"
                       }`}
                     >
                       <span
@@ -156,7 +157,7 @@ const Header = () => {
                     <button
                       onClick={toggleCursorEffect}
                       className={`relative cursor-pointer inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                        isCursorEffectEnabled ? "bg-blue-600" : "bg-gray-200"
+                        isCursorEffectEnabled ? "bg-secondary" : "bg-gray-200"
                       }`}
                     >
                       <span
