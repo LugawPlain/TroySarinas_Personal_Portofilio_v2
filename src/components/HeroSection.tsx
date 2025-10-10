@@ -48,7 +48,7 @@ const HeroSection = () => {
                   className="absolute inset-0"
                   style={{ backfaceVisibility: "hidden" }}
                 >
-                  <AvatarImage src="/me2.webp" />
+                  <AvatarImage src="/Me2.webp" />
                   <AvatarFallback>CN</AvatarFallback>
                 </div>
 

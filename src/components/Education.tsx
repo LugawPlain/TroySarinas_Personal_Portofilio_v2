@@ -16,7 +16,7 @@ const Education = () => {
         >
           <div className="h-22 w-22 bg-white rounded-full flex items-center justify-center">
             <Image
-              src="/SSCRLOGO1.png"
+              src="/SSCRLogo1.png"
               height="80"
               width="80"
               alt="SSCRDCLOGO"
