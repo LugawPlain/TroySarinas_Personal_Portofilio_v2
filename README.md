@@ -1,36 +1,100 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Troy Sarinas - Personal Portfolio
 
-## Getting Started
+![Portfolio Preview](public/SoftwareEngineerDeveloperSarinas.png)
 
-First, run the development server:
+A modern, responsive personal portfolio website built with Next.js 15, showcasing Troy Sarinas' skills, experience, and projects as an AI Automation & Full Stack Engineer.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 🚀 Live Demo
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Visit the live portfolio: [https://troysarinas.vercel.app](https://troysarinas.vercel.app)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 📋 About
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+This portfolio represents Troy Sarinas - a Computer Engineering graduate passionate about technology and design. The website showcases his expertise in AI automation, full-stack development, and his collaborative work with companies worldwide to create visually stunning, highly functional digital experiences.
 
-## Learn More
+## ✨ Features
 
-To learn more about Next.js, take a look at the following resources:
+### 🎨 Modern Design
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- **Responsive Design**: Optimized for all devices and screen sizes
+- **Interactive Animations**: Smooth transitions and hover effects using Framer Motion
+- **Custom Cursor Effects**: Interactive cursor with particle effects
+- **3D Elements**: Spline 3D animations and interactive components
+- **Lottie Animations**: Engaging animated illustrations throughout the site
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### 🛠️ Technical Features
 
-## Deploy on Vercel
+- **Next.js 15**: Latest React framework with App Router
+- **TypeScript**: Type-safe development
+- **Tailwind CSS 4**: Modern utility-first CSS framework
+- **Radix UI**: Accessible component primitives
+- **Framer Motion**: Advanced animations and interactions
+- **Spline**: 3D design integration
+- **Responsive Navigation**: Mobile-friendly hamburger menu
+- **Smooth Scrolling**: Enhanced user experience
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### 📱 Sections
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **Hero Section**: Introduction with animated avatar and status indicators
+- **Projects**: Showcase of featured projects with live demos
+- **Experience**: Professional work history with company highlights
+- **Education**: Academic background and achievements
+- **Technologies**: Interactive skills showcase with proficiency levels
+- **Resume**: Downloadable PDF and full-size view
+- **Contact**: Social links and contact information
+
+## 🛠️ Tech Stack
+
+### Frontend
+
+- **Framework**: Next.js 15.5.4
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS 4
+- **UI Components**: Radix UI
+- **Animations**: Framer Motion
+- **3D Graphics**: Spline, Three.js
+- **Icons**: React Icons, Lucide React
+
+### Development Tools
+
+- **Package Manager**: npm
+- **Linting**: ESLint
+- **Build Tool**: Turbopack
+- **Fonts**: Google Fonts (Inter, Fraunces, Montserrat, Geist)
+
+### Integrations
+
+- **Analytics**: GitHub Stars integration
+- **Social**: Social media links
+- **Payments**: Buy Me a Coffee integration
+- **Hosting**: Vercel (optimized for Next.js)
+
+## 📱 Responsive Design
+
+The portfolio is fully responsive and optimized for:
+
+- **Desktop**: Full feature experience with hover effects
+- **Tablet**: Adapted layouts with touch-friendly interactions
+- **Mobile**: Collapsible navigation and optimized touch targets
+
+## 🤝 Contributing
+
+While this is a personal portfolio, suggestions and improvements are welcome! Feel free to:
+
+- Report bugs
+- Suggest new features
+- Submit pull requests
+
+## 📞 Contact
+
+Troy Sarinas
+
+- 📧 Email: troysarinas22@gmail.com
+- 📱 Phone: +639569878251
+- 🌐 Portfolio: [troysarinas.vercel.app](https://troysarinas.vercel.app)
+- 💼 LinkedIn: [Troy Sarinas](https://linkedin.com/in/troysarinas)
+- 🐙 GitHub: [@LugawPlain](https://github.com/LugawPlain)
+
+---
+
+**Built with ❤️ using Next.js, TypeScript, and Tailwind CSS**
