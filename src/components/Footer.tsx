@@ -7,8 +7,10 @@ import GitHubButton from "react-github-btn";
 import Link from "next/link";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import BuyMeACoffeeButton from "./BuyMeACoffeeButton";
+import { useRouter } from "next/navigation";
 
 const Footer = () => {
+  const router = useRouter();
   return (
     <footer id="contacts" className="bg-gray-200 py-4 mt-12">
       <div className="py-4 xl:flex-row max-w-[80rem] mx-auto flex flex-col justify-between items-center px-8 gap-4">
@@ -61,12 +63,15 @@ const Footer = () => {
             <Link className="underline" href="#technologies">
               <li className="py-2 text-secondary">Technologies</li>
             </Link>
-            <Link className="underline" href="#resume">
+            <Link className="underline" href="#certifications">
+              <li className="py-2 text-secondary">Certifications</li>
+            </Link>
+            <button
+              onClick={() => router.push("/?resume=true")}
+              className="underline"
+            >
               <li className="py-2 text-secondary">Resume</li>
-            </Link>
-            <Link className="underline" href="#aichatbot">
-              <li className="py-2 text-secondary">AI chatbot</li>
-            </Link>
+            </button>
           </ul>
         </div>
       </div>

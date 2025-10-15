@@ -7,8 +7,10 @@ import { Button } from "./ui/button";
 import Spline from "@splinetool/react-spline";
 import { motion } from "framer-motion";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
+import { useRouter } from "next/navigation";
 
 const HeroSection = () => {
+  const router = useRouter();
   const handleSplineLoad = () => {
     setTimeout(() => {
       const viewer = document.querySelector("spline-viewer");
@@ -155,6 +157,7 @@ const HeroSection = () => {
                   Get in Touch
                 </Button>
                 <Button
+                  onClick={() => router.push("/?resume=true")}
                   variant="outline"
                   className="text-md font-semibold px-5 py-5 border-border border-2 uppercase tracking-tight shadow-lg"
                 >

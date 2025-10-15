@@ -8,128 +8,25 @@ import Header from "@/components/Header";
 import HeroSection from "@/components/HeroSection";
 import SplashCursor from "@/components/SplashCursor";
 import ChatWidget from "@/components/ChatWidget";
+import Resume from "@/components/Resume";
 
-export default function Home() {
+export default async function Home({
+  searchParams,
+}: {
+  searchParams: Promise<{ resume?: string }>;
+}) {
+  const params = await searchParams;
+  const showResume = params.resume === "true";
+
   return (
     <>
       <SplashCursor />
+      {showResume && <Resume />}
       <div className="flex flex-col space-y-8 font-inter relative">
         <Header />
-
         <HeroSection />
         <Projects />
         <Experience />
-        {/* <div className="flex flex-col items-center">
-          <h1 className="text-center text-3xl font-bold">
-            Technical Proficiency
-          </h1>
-          <div className="text-center">
-            <h2 className="">Web Development</h2>
-            <div className="flex gap-2 flex-wrap items-center justify-center">
-              <div className="">
-                <Image
-                  className="mx-auto"
-                  src="/Icons/HTML5.svg"
-                  alt="s"
-                  width={60}
-                  height={60}
-                ></Image>
-                <p className="text-center">HTML</p>
-              </div>
-              <div className="">
-                <div className="h-20 w-20 mx-auto bg-gray-500"></div>
-                <p>HTML</p>
-              </div>
-              <div className="">
-                <div className="h-20 w-20 mx-auto bg-gray-500"></div>
-                <p>HTML</p>
-              </div>
-              <div className="">
-                <div className="h-20 w-20 mx-auto bg-gray-500"></div>
-                <p>HTML</p>
-              </div>
-              <div className="">
-                <div className="h-20 w-20 mx-auto bg-gray-500"></div>
-                <p>HTML</p>
-              </div>
-            </div>
-          </div>
-          <div className="text-center">
-            <h2 className="">Backend & Databases</h2>
-            <div className="flex gap-2 flex-wrap items-center justify-center">
-              <div className="">
-                <div className="h-20 w-20 mx-auto bg-gray-500"></div>
-                <p>HTML</p>
-              </div>
-              <div className="">
-                <div className="h-20 w-20 mx-auto bg-gray-500"></div>
-                <p>HTML</p>
-              </div>
-              <div className="">
-                <div className="h-20 w-20 mx-auto bg-gray-500"></div>
-                <p>HTML</p>
-              </div>
-              <div className="">
-                <div className="h-20 w-20 mx-auto bg-gray-500"></div>
-                <p>HTML</p>
-              </div>
-              <div className="">
-                <div className="h-20 w-20 mx-auto bg-gray-500"></div>
-                <p>HTML</p>
-              </div>
-            </div>
-          </div>
-          <div className="text-center">
-            <h2 className="">Cloud and Devops</h2>
-            <div className="flex gap-2 flex-wrap items-center justify-center">
-              <div className="">
-                <div className="h-20 w-20 mx-auto bg-gray-500"></div>
-                <p>HTML</p>
-              </div>
-              <div className="">
-                <div className="h-20 w-20 mx-auto bg-gray-500"></div>
-                <p>HTML</p>
-              </div>
-              <div className="">
-                <div className="h-20 w-20 mx-auto bg-gray-500"></div>
-                <p>HTML</p>
-              </div>
-              <div className="">
-                <div className="h-20 w-20 mx-auto bg-gray-500"></div>
-                <p>HTML</p>
-              </div>
-              <div className="">
-                <div className="h-20 w-20 mx-auto bg-gray-500"></div>
-                <p>HTML</p>
-              </div>
-            </div>
-          </div>
-          <div className="text-center">
-            <h2 className="">AI & Automations</h2>
-            <div className="flex gap-2 flex-wrap items-center justify-center">
-              <div className="">
-                <div className="h-20 w-20 mx-auto bg-gray-500"></div>
-                <p>HTML</p>
-              </div>
-              <div className="">
-                <div className="h-20 w-20 mx-auto bg-gray-500"></div>
-                <p>HTML</p>
-              </div>
-              <div className="">
-                <div className="h-20 w-20 mx-auto bg-gray-500"></div>
-                <p>HTML</p>
-              </div>
-              <div className="">
-                <div className="h-20 w-20 mx-auto bg-gray-500"></div>
-                <p>HTML</p>
-              </div>
-              <div className="">
-                <div className="h-20 w-20 mx-auto bg-gray-500"></div>
-                <p>HTML</p>
-              </div>
-            </div>
-          </div>
-        </div> */}
         <Education />
         <Technologies />
         {/* <Certifications /> */}

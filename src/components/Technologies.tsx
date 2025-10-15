@@ -66,6 +66,7 @@ const technologies = [
   { name: "Perplexity", IconComponent: RiPerplexityLine, Percent: 80 },
   { name: "Ollama", IconComponent: SiOllama, Percent: 98 },
   { name: "Huggingface", IconComponent: SiHuggingface, Percent: 95 },
+  { name: "GoHighLevel,", IconComponent: SiOllama, Percent: 95 },
 ];
 
 const Technologies = () => {
