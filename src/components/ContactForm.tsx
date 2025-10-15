@@ -100,7 +100,7 @@ const ContactForm = () => {
             <div className="space-y-2">
               <label
                 htmlFor="name"
-                className="block text-sm font-medium text-gray-700"
+                className="block text-sm font-medium text-secondary"
               >
                 Full Name *
               </label>
@@ -115,7 +115,7 @@ const ContactForm = () => {
                   value={formData.name}
                   onChange={handleChange}
                   required
-                  className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                  className="block w-full pl-10 pr-3 py-2 border border-secondary rounded-lg focus:outline-accent focus:ring-2 focus:ring-primary focus:border-transparent"
                   placeholder="Your full name"
                 />
               </div>
@@ -125,7 +125,7 @@ const ContactForm = () => {
             <div className="space-y-2">
               <label
                 htmlFor="email"
-                className="block text-sm font-medium text-gray-700"
+                className="block text-sm font-medium text-secondary"
               >
                 Email Address *
               </label>
@@ -140,7 +140,7 @@ const ContactForm = () => {
                   value={formData.email}
                   onChange={handleChange}
                   required
-                  className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                  className="block w-full pl-10 pr-3 py-2 border border-secondary rounded-lg focus:outline-accent focus:ring-2 focus:ring-primary focus:border-transparent"
                   placeholder="your.email@example.com"
                 />
               </div>
@@ -151,7 +151,7 @@ const ContactForm = () => {
           <div className="space-y-2">
             <label
               htmlFor="subject"
-              className="block text-sm font-medium text-gray-700"
+              className="block text-sm font-medium text-secondary"
             >
               Subject *
             </label>
@@ -166,7 +166,7 @@ const ContactForm = () => {
                 value={formData.subject}
                 onChange={handleChange}
                 required
-                className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                className="block w-full pl-10 pr-3 py-2 border border-secondary rounded-lg focus:outline-accent focus:ring-2 focus:ring-primary focus:border-transparent"
                 placeholder="What's this about?"
               />
             </div>
@@ -176,7 +176,7 @@ const ContactForm = () => {
           <div className="space-y-2">
             <label
               htmlFor="message"
-              className="block text-sm font-medium text-gray-700"
+              className="block text-sm font-medium text-secondary"
             >
               Message *
             </label>
@@ -187,7 +187,7 @@ const ContactForm = () => {
               onChange={handleChange}
               required
               rows={6}
-              className="block w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent resize-none"
+              className="block w-full px-3 py-2 border border-secondary rounded-lg focus:outline-accent focus:ring-2 focus:ring-primary focus:border-transparent resize-none"
               placeholder="Tell me about your project, timeline, and any specific requirements..."
             />
           </div>
@@ -197,7 +197,7 @@ const ContactForm = () => {
             <Button
               type="submit"
               disabled={isSubmitting}
-              className="px-8 py-3 bg-primary text-white rounded-lg hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
+              className="px-8 py-3 bg-secondary text-white rounded-lg hover:bg-accent/90 hover:text-secondary disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
             >
               {isSubmitting ? (
                 <>
@@ -220,19 +220,19 @@ const ContactForm = () => {
       </div>
 
       {/* Alternative Contact Info */}
-      <div className="max-w-2xl mx-auto mt-8 text-center">
+      <div className="max-lg mx-auto mt-8 text-center">
         <p className="text-gray-600">
-          Prefer to reach out directly? Email me at{" "}
+          Prefer to reach out directly? Email me at <br />
           <a
             href="mailto:troysarinas22@gmail.com"
-            className="text-primary hover:underline font-medium"
+            className="text-accent hover:underline font-medium"
           >
             troysarinas22@gmail.com
           </a>{" "}
           or call{" "}
           <a
             href="tel:+639569878251"
-            className="text-primary hover:underline font-medium"
+            className="text-accent hover:underline font-medium"
           >
             +63 956 987 8251
           </a>

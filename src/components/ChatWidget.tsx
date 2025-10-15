@@ -43,21 +43,60 @@ const ChatWidget = () => {
     };
 
     setMessages((prev) => [...prev, userMessage]);
+    const messageText = inputValue;
     setInputValue("");
     setIsTyping(true);
 
-    // TODO: Replace with actual API call to your backend
-    // Simulating AI response for now
-    setTimeout(() => {
+    try {
+      const response = await fetch("/api/chat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          chatInput: messageText,
+          sessionId: userMessage.id,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error("Chat API error:", response.status, errorData);
+        throw new Error(
+          errorData.error || `HTTP error! status: ${response.status}`
+        );
+      }
+
+      const data = await response.json();
+      console.log("Chat API response:", data);
+
+      // Display AI response - try multiple possible response fields
       const aiMessage: Message = {
         id: (Date.now() + 1).toString(),
-        text: "Thanks for your message! This is a placeholder response. The backend integration is coming soon.",
+        text:
+          data.output ||
+          data.response ||
+          data.message ||
+          data.text ||
+          "Thank you for your message! I'll get back to you soon.",
         sender: "ai",
         timestamp: new Date(),
       };
       setMessages((prev) => [...prev, aiMessage]);
+    } catch (error) {
+      console.error("Error sending message:", error);
+
+      // Display error message to user
+      const errorMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        text: "Sorry, I'm having trouble connecting right now. Please try again later or contact me directly via email.",
+        sender: "ai",
+        timestamp: new Date(),
+      };
+      setMessages((prev) => [...prev, errorMessage]);
+    } finally {
       setIsTyping(false);
-    }, 1000);
+    }
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {

@@ -65,8 +65,8 @@ const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose }) => {
                 transition={{ delay: 0.1, duration: 0.2 }}
                 className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between z-10"
               >
-                <h2 className="text-2xl font-bold text-gray-900">
-                  Get In Touch
+                <h2 className="text-3xl font-bold text-secondary font-inter">
+                  Contact Form
                 </h2>
                 <motion.button
                   whileHover={{ scale: 1.05 }}
