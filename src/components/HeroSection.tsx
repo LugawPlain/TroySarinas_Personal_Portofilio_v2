@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import InfoIcon from "../../public/Icons/InformationIcon";
 import SocialLinks from "./SocialLinks";
@@ -8,9 +8,11 @@ import Spline from "@splinetool/react-spline";
 import { motion } from "framer-motion";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import { useRouter } from "next/navigation";
+import ContactModal from "./ContactModal";
 
 const HeroSection = () => {
   const router = useRouter();
+  const [isContactModalOpen, setIsContactModalOpen] = useState(false);
   const handleSplineLoad = () => {
     setTimeout(() => {
       const viewer = document.querySelector("spline-viewer");
@@ -153,7 +155,10 @@ const HeroSection = () => {
 
               {/* CTA Buttons */}
               <div className="flex justify-center gap-4 mt-8 ">
-                <Button className="text-md font-semibold px-5 py-5 bg-secondary inset-ring-secondary inset-ring  text-secondary-foreground uppercase tracking-tight shadow-lg">
+                <Button
+                  onClick={() => setIsContactModalOpen(true)}
+                  className="text-md font-semibold px-5 py-5 bg-secondary inset-ring-secondary inset-ring  text-secondary-foreground uppercase tracking-tight shadow-lg"
+                >
                   Get in Touch
                 </Button>
                 <Button
@@ -177,6 +182,12 @@ const HeroSection = () => {
           </div>
         </div>
       </div>
+
+      {/* Contact Modal */}
+      <ContactModal
+        isOpen={isContactModalOpen}
+        onClose={() => setIsContactModalOpen(false)}
+      />
     </div>
   );
 };

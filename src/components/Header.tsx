@@ -7,6 +7,8 @@ import { X } from "lucide-react";
 import NameTitle from "./NameTitle";
 import { useCursor } from "./CursorProvider";
 import { RiSettings5Fill } from "react-icons/ri";
+import { Button } from "./ui/button";
+import ContactModal from "./ContactModal";
 
 const Header = () => {
   const [isVisible, setIsVisible] = useState(true);
@@ -14,6 +16,7 @@ const Header = () => {
   const [isSettingsOpen, setIsSettingsOpen] = useState(true);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isContactModalOpen, setIsContactModalOpen] = useState(false);
   const { isCursorEffectEnabled, setIsCursorEffectEnabled } = useCursor();
 
   useEffect(() => {
@@ -89,7 +92,7 @@ const Header = () => {
         <div className="flex items-center gap-6">
           {/* Desktop Navigation */}
           <nav className="hidden md:block">
-            <ul className="flex gap-6 text-lg">
+            <ul className="flex gap-6 text-lg items-center">
               {navLinks.map((link) => (
                 <li key={link.name}>
                   <a
@@ -101,6 +104,14 @@ const Header = () => {
                   </a>
                 </li>
               ))}
+              <li>
+                <Button
+                  onClick={() => setIsContactModalOpen(true)}
+                  className="text-md font-semibold px-4 py-2 bg-secondary text-secondary-foreground uppercase tracking-tight shadow-lg"
+                >
+                  Get in Touch
+                </Button>
+              </li>
             </ul>
           </nav>
 
@@ -194,7 +205,15 @@ const Header = () => {
               </li>
             ))}
             <li className="pt-4 border-t border-gray-200">
-              {/* <Button className="text-xs w-full">Dark Mode</Button> */}
+              <Button
+                onClick={() => {
+                  setIsContactModalOpen(true);
+                  setIsMobileMenuOpen(false);
+                }}
+                className="text-md font-semibold w-full bg-secondary text-secondary-foreground uppercase tracking-tight shadow-lg"
+              >
+                Get in Touch
+              </Button>
             </li>
           </ul>
         </nav>
@@ -215,6 +234,12 @@ const Header = () => {
           onClick={() => setIsSettingsOpen(false)}
         />
       )}
+
+      {/* Contact Modal */}
+      <ContactModal
+        isOpen={isContactModalOpen}
+        onClose={() => setIsContactModalOpen(false)}
+      />
     </>
   );
 };
