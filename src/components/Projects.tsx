@@ -65,7 +65,7 @@ const Projects = () => {
           {projectsData.map((project) => (
             <div
               key={project.id}
-              className="pb-2 card font-fraunces flex-col flex shadow-2xl rounded-2xl overflow-hidden hover:shadow-3xl transition-shadow duration-300"
+              className="pb-2 card bg-primary font-fraunces flex-col flex shadow-2xl rounded-2xl overflow-hidden hover:shadow-3xl transition-shadow duration-300"
             >
               <div className="relative w-full aspect-video overflow-hidden bg-gray-500 border-b border-border">
                 <Link

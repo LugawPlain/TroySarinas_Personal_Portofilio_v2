@@ -10,7 +10,7 @@ const Education = () => {
       <h1 className="text-center text-3xl sm:text-4xl mb-10 font-bold text-foreground/90">
         Education 🎓
       </h1>
-      <div className="shadow-2xl overflow-clip rounded-2xl font-inter relative max-w-[80rem] w-full grid grid-cols-1 xl:grid-cols-[minmax(0,160px)_1fr] xl:grid-rows-1">
+      <div className="shadow-2xl bg-primary overflow-clip rounded-2xl font-inter relative max-w-[80rem] w-full grid grid-cols-1 xl:grid-cols-[minmax(0,160px)_1fr] xl:grid-rows-1">
         <div
           className={`bg-[#6a0106] flex justify-center items-center h-full shrink`}
         >

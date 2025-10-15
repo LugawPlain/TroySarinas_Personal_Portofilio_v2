@@ -111,7 +111,7 @@ const Experience = () => {
       {experienceData.map((exp, index) => (
         <div
           key={index}
-          className="shadow-lg hover:shadow-2xl transtion duration-150 border-border border overflow-clip rounded-2xl max-w-[80rem] w-full grid grid-cols-1 xl:grid-cols-[minmax(0,160px)_1fr] xl:grid-rows-1"
+          className="shadow-lg bg-primary hover:shadow-2xl transtion duration-150 border-border border overflow-clip rounded-2xl max-w-[80rem] w-full grid grid-cols-1 xl:grid-cols-[minmax(0,160px)_1fr] xl:grid-rows-1"
         >
           {/* Logo Section */}
           <div

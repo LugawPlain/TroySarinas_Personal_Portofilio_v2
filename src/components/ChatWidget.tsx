@@ -15,11 +15,24 @@ const ChatWidget = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState("");
   const [isTyping, setIsTyping] = useState(false);
+  const [isOnline, setIsOnline] = useState<boolean | null>(null);
+  const [sessionId, setSessionId] = useState<string>("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  const checkHealthStatus = async () => {
+    try {
+      const response = await fetch("/api/chat/status");
+      const data = await response.json();
+      setIsOnline(data.status === "online");
+    } catch (error) {
+      console.error("Health check failed:", error);
+      setIsOnline(false);
+    }
   };
 
   useEffect(() => {
@@ -31,6 +44,38 @@ const ChatWidget = () => {
       inputRef.current.focus();
     }
   }, [isOpen]);
+
+  // Check health status only when chat widget is opened
+  useEffect(() => {
+    if (isOpen) {
+      checkHealthStatus();
+    }
+  }, [isOpen]);
+
+  // Generate or retrieve session ID
+  useEffect(() => {
+    const getOrCreateSessionId = () => {
+      if (typeof window !== "undefined") {
+        // Try to get existing session ID from localStorage
+        const existingSessionId = localStorage.getItem("chatSessionId");
+        if (existingSessionId) {
+          setSessionId(existingSessionId);
+          return existingSessionId;
+        } else {
+          // Generate new session ID
+          const newSessionId = `session_${Date.now()}_${Math.random()
+            .toString(36)
+            .substr(2, 9)}`;
+          localStorage.setItem("chatSessionId", newSessionId);
+          setSessionId(newSessionId);
+          return newSessionId;
+        }
+      }
+      return `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    };
+
+    getOrCreateSessionId();
+  }, []);
 
   const handleSendMessage = async () => {
     if (!inputValue.trim()) return;
@@ -55,7 +100,7 @@ const ChatWidget = () => {
         },
         body: JSON.stringify({
           chatInput: messageText,
-          sessionId: userMessage.id,
+          sessionId: sessionId,
         }),
       });
 
@@ -128,9 +173,26 @@ const ChatWidget = () => {
             </div>
             <div>
               <h3 className="font-semibold text-secondary">Troy Sarinas AI</h3>
-              <p className="text-xs opacity-90 text-secondary">
-                {isTyping ? "Typing..." : "Offline"}
-              </p>
+              <div className="flex items-center gap-2">
+                <div
+                  className={`w-2 h-2 rounded-full ${
+                    isOnline === null
+                      ? "bg-gray-400"
+                      : isOnline
+                      ? "bg-green-500"
+                      : "bg-red-500"
+                  }`}
+                />
+                <p className="text-xs opacity-90 text-secondary">
+                  {isTyping
+                    ? "Typing..."
+                    : isOnline === null
+                    ? "Checking..."
+                    : isOnline
+                    ? "Online"
+                    : "Offline"}
+                </p>
+              </div>
             </div>
           </div>
           <button

@@ -20,7 +20,12 @@ export default async function Home({
 
   return (
     <>
-      <SplashCursor />
+      <SplashCursor
+        DENSITY_DISSIPATION={2}
+        VELOCITY_DISSIPATION={1}
+        PRESSURE_ITERATIONS={30}
+        CURL={5}
+      />
       {showResume && <Resume />}
       <div className="flex flex-col space-y-8 font-inter relative">
         <Header />
