@@ -20,6 +20,16 @@ const ChatWidget = () => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
+  // Client-side Chat cooldown
+  const [lastMessageTime, setLastMessageTime] = useState<number>(0);
+  const MESSAGE_COOLDOWN = 1000;
+
+  // Disable button during chat processing
+  const [isSending, setIsSending] = useState(false);
+
+  // Session chat message limit
+  const MAX_MESSAGES_PER_SESSION = 20;
+
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
@@ -45,7 +55,7 @@ const ChatWidget = () => {
     }
   }, [isOpen]);
 
-  // Check health status only when chat widget is opened
+  // Check health status when chat widget is opened
   useEffect(() => {
     if (isOpen) {
       checkHealthStatus();
@@ -76,9 +86,43 @@ const ChatWidget = () => {
 
     getOrCreateSessionId();
   }, []);
-
   const handleSendMessage = async () => {
-    if (!inputValue.trim()) return;
+    // Prevent sending if already processing
+    if (!inputValue.trim() || isSending) return;
+
+    // Check message limit per session
+    if (messages.length >= MAX_MESSAGES_PER_SESSION) {
+      const errorMessage: Message = {
+        id: Date.now().toString(),
+        text: "You've reached the maximum number of messages for this session. Please refresh the page to start a new conversation.",
+        sender: "ai",
+        timestamp: new Date(),
+      };
+      setMessages((prev) => [...prev, errorMessage]);
+      return;
+    }
+
+    // Check cooldown
+    const now = Date.now();
+    if (now - lastMessageTime < MESSAGE_COOLDOWN) {
+      const waitTime = Math.ceil(
+        (MESSAGE_COOLDOWN - (now - lastMessageTime)) / 1000
+      );
+      const cooldownMessage: Message = {
+        id: Date.now().toString(),
+        text: `Please wait ${waitTime} second${
+          waitTime > 1 ? "s" : ""
+        } before sending another message.`,
+        sender: "ai",
+        timestamp: new Date(),
+      };
+      setMessages((prev) => [...prev, cooldownMessage]);
+      return;
+    }
+    setLastMessageTime(now);
+
+    // Set sending state
+    setIsSending(true);
 
     const userMessage: Message = {
       id: Date.now().toString(),
@@ -107,6 +151,14 @@ const ChatWidget = () => {
       if (!response.ok) {
         const errorData = await response.json();
         console.error("Chat API error:", response.status, errorData);
+
+        // Handle rate limit error specifically
+        if (response.status === 429) {
+          throw new Error(
+            errorData.error || "Too many requests. Please try again later."
+          );
+        }
+
         throw new Error(
           errorData.error || `HTTP error! status: ${response.status}`
         );
@@ -134,13 +186,17 @@ const ChatWidget = () => {
       // Display error message to user
       const errorMessage: Message = {
         id: (Date.now() + 1).toString(),
-        text: "Sorry, I'm having trouble connecting right now. Please try again later or contact me directly via email.",
+        text:
+          error instanceof Error
+            ? error.message
+            : "Sorry, I'm having trouble connecting right now. Please try again later or contact me directly via email.",
         sender: "ai",
         timestamp: new Date(),
       };
       setMessages((prev) => [...prev, errorMessage]);
     } finally {
       setIsTyping(false);
+      setIsSending(false); // Option 2: Reset sending state
     }
   };
 
@@ -273,7 +329,7 @@ const ChatWidget = () => {
             />
             <Button
               onClick={handleSendMessage}
-              disabled={!inputValue.trim()}
+              disabled={!inputValue.trim() || isSending}
               className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               <IoSend size="20" />

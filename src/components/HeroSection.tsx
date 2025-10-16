@@ -85,7 +85,7 @@ const HeroSection = () => {
               Troy Sarinas
             </h2>
             <p className="text-sm xl:text-base text-muted-foreground text-center">
-              AI Automation & Full Stack Engineer
+              AI Automation & Software Engineer
             </p>
           </div>
 
