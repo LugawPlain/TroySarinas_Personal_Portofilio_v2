@@ -121,10 +121,10 @@ const HeroSection = () => {
                     Full-time opportunities and Freelance projects
                   </p>
                   <div className="flex gap-2">
-                    <div className="shadow-sm pointer-events-none hover:bg-white/30 rounded-full bg-white/20 p-2 hover:shadow-lg hover:-translate-y-1 transition duration-300 text-nowrap text-sm">
+                    <div className="shadow-sm hover:bg-white/30 rounded-full bg-white/20 p-2 hover:shadow-lg hover:-translate-y-1 transition duration-300 text-nowrap text-sm">
                       💼 Open to work
                     </div>
-                    <div className="shadow-sm pointer-events-none hover:bg-white/30 rounded-full bg-white/20 hover:shadow-lg hover:-translate-y-1 transition duration-300  p-2 text-nowrap text-sm">
+                    <div className="shadow-sm  hover:bg-white/30 rounded-full bg-white/20 hover:shadow-lg hover:-translate-y-1 transition duration-300  p-2 text-nowrap text-sm">
                       🌍 Remote Friendly
                     </div>
                   </div>
@@ -143,10 +143,10 @@ const HeroSection = () => {
                     Average response time on business days
                   </p>
                   <div className="flex gap-2 mt-auto">
-                    <div className="shadow-sm pointer-events-none hover:bg-white/30 rounded-full bg-white/20 hover:shadow-lg hover:-translate-y-1 transition duration-300 p-2 text-nowrap text-sm">
+                    <div className="shadow-sm hover:bg-white/30 rounded-full bg-white/20 hover:shadow-lg hover:-translate-y-1 transition duration-300 p-2 text-nowrap text-sm">
                       ⚡ Quick Turnaround
                     </div>
-                    <div className="shadow-sm pointer-events-none hover:bg-white/30 rounded-full bg-white/20 hover:shadow-lg hover:-translate-y-1 transition duration-300 p-2 text-nowrap text-sm">
+                    <div className="shadow-sm hover:bg-white/30 rounded-full bg-white/20 hover:shadow-lg hover:-translate-y-1 transition duration-300 p-2 text-nowrap text-sm">
                       🔄️ Regular Updates
                     </div>
                   </div>
