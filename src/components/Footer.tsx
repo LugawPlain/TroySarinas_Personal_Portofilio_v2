@@ -14,7 +14,7 @@ const Footer = () => {
   return (
     <footer id="contacts" className="bg-gray-200 py-4 mt-12">
       <div className="py-4 xl:flex-row max-w-[80rem] mx-auto flex flex-col justify-between items-center px-8 gap-4">
-        <div className="flex flex-col justify-center items-center font-inter gap-2 max-w-80 min-w-80 order-3 xl:order-1">
+        <div className="flex flex-col justify-center items-center font-inter gap-2 max-w-80 min-w-80 order-2 xl:order-1">
           <div className="flex flex-col items-center">
             <div>
               <DotLottieReact
@@ -30,7 +30,7 @@ const Footer = () => {
         </div>
 
         <div className="flex flex-col justify-center items-center gap-2 font-inter order-1 xl:order-2 ">
-          <Link href="#">
+          <Link href="#herosection">
             <NameTitle
               className="font-medium"
               size="xl:text-7xl text-5xl lg:text-6xl "
@@ -45,7 +45,7 @@ const Footer = () => {
 
           <SocialLinks className="mt-4" size={24} />
         </div>
-        <div className="flex flex-col mt-4 xl:mt-0 justify-center pl-8 items-center font-inter max-w-80 min-w-80 xl:block oirder-2 xl:order-3">
+        <div className="flex flex-col mt-4 xl:mt-0 justify-center pl-8 items-center font-inter max-w-80 min-w-80 xl:block order-3 xl:order-3">
           <h3 className="font-semibold text-xl text-secondary">Quick Links</h3>
           <ul className="flex flex-wrap justify-center gap-3 mt-4 text-sm xl:block ">
             <Link className="underline" href="#hero">
@@ -58,7 +58,7 @@ const Footer = () => {
               <li className="py-2 text-secondary">Experience</li>
             </Link>
             <Link className="underline" href="#education">
-              <li className="py-2 text-secondary">Projects</li>
+              <li className="py-2 text-secondary">Education</li>
             </Link>
             <Link className="underline" href="#technologies">
               <li className="py-2 text-secondary">Technologies</li>

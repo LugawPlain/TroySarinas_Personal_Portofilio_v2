@@ -95,7 +95,7 @@ const Projects = () => {
                     {project.technologies.map((tech) => (
                       <div
                         key={tech}
-                        className="bg-secondary/80 text-secondary-foreground px-2 py-0.5 rounded-full"
+                        className="bg-secondary/80 pointer-events-none text-secondary-foreground px-2 py-0.5 rounded-full"
                       >
                         {tech}
                       </div>

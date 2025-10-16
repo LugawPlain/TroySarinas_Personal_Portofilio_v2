@@ -26,7 +26,10 @@ const HeroSection = () => {
   };
 
   return (
-    <div className="flex flex-col items-center px-8 min-h-screen">
+    <div
+      id="herosection"
+      className="flex flex-col items-center px-8 min-h-screen"
+    >
       <div className="flex flex-col justify-center items-center max-w-[90rem]">
         {/* Avatar Section */}
         <div className="mt-4 w-40 h-40 xl:w-52 xl:h-52 overflow-hidden rounded-full bg-secondary flex items-center justify-center">
@@ -109,7 +112,7 @@ const HeroSection = () => {
                       <div className="bg-green-600 ml-2 w-3 h-3 rounded-full"></div>
                       <div className="bg-green-300 ml-2 absolute w-4 h-4 rounded-full animate-ping"></div>
                     </div>
-                    <div className="bg-green-400/20 rounded-full text-sm px-3 py-1">
+                    <div className="bg-green-400/20 pointer-events-none rounded-full text-sm px-3 py-1">
                       Available
                     </div>
                   </div>
@@ -118,10 +121,10 @@ const HeroSection = () => {
                     Full-time opportunities and Freelance projects
                   </p>
                   <div className="flex gap-2">
-                    <div className="shadow-sm hover:bg-white/30 rounded-full bg-white/20 p-2 hover:shadow-lg hover:-translate-y-1 transition duration-300 text-nowrap text-sm">
+                    <div className="shadow-sm pointer-events-none hover:bg-white/30 rounded-full bg-white/20 p-2 hover:shadow-lg hover:-translate-y-1 transition duration-300 text-nowrap text-sm">
                       💼 Open to work
                     </div>
-                    <div className="shadow-sm hover:bg-white/30 rounded-full bg-white/20 hover:shadow-lg hover:-translate-y-1 transition duration-300  p-2 text-nowrap text-sm">
+                    <div className="shadow-sm pointer-events-none hover:bg-white/30 rounded-full bg-white/20 hover:shadow-lg hover:-translate-y-1 transition duration-300  p-2 text-nowrap text-sm">
                       🌍 Remote Friendly
                     </div>
                   </div>
@@ -131,8 +134,8 @@ const HeroSection = () => {
                 <div className="backdrop-blur-[20%] bg-gradient-to-br from-[rgba(102,126,234,0.15)] to-[rgba(118,75,162,0.1)] hover:from-[rgba(102,126,234,0.10)] hover:to-[rgba(118,75,162,0.1)] hover:shadow-[rgba(118,75,162,0.8)] transition-all duration-150 shadow-2xl shadow-[rgba(118,75,162,0.4)] border-[rgba(102,126,234,0.3)] border-2 rounded-3xl flex flex-col px-4 py-4 gap-2">
                   <div className="flex flex-row gap-4">
                     <InfoIcon className="text-violet-500" />
-                    <div className="bg-violet-600/10 rounded-full text-sm px-3 py-1">
-                      Available
+                    <div className="pointer-events-none bg-violet-600/10 rounded-full text-sm px-3 py-1">
+                      Fast Response
                     </div>
                   </div>
                   <h2 className="text-2xl">2-4 Hours</h2>
@@ -140,10 +143,10 @@ const HeroSection = () => {
                     Average response time on business days
                   </p>
                   <div className="flex gap-2 mt-auto">
-                    <div className="shadow-sm hover:bg-white/30 rounded-full bg-white/20 hover:shadow-lg hover:-translate-y-1 transition duration-300 p-2 text-nowrap text-sm">
+                    <div className="shadow-sm pointer-events-none hover:bg-white/30 rounded-full bg-white/20 hover:shadow-lg hover:-translate-y-1 transition duration-300 p-2 text-nowrap text-sm">
                       ⚡ Quick Turnaround
                     </div>
-                    <div className="shadow-sm hover:bg-white/30 rounded-full bg-white/20 hover:shadow-lg hover:-translate-y-1 transition duration-300 p-2 text-nowrap text-sm">
+                    <div className="shadow-sm pointer-events-none hover:bg-white/30 rounded-full bg-white/20 hover:shadow-lg hover:-translate-y-1 transition duration-300 p-2 text-nowrap text-sm">
                       🔄️ Regular Updates
                     </div>
                   </div>
@@ -157,14 +160,14 @@ const HeroSection = () => {
               <div className="flex justify-center gap-4 mt-8 ">
                 <Button
                   onClick={() => setIsContactModalOpen(true)}
-                  className="text-md font-semibold px-5 py-5 bg-secondary inset-ring-secondary inset-ring  text-secondary-foreground uppercase tracking-tight shadow-lg"
+                  className="text-md  cursor-pointer font-semibold px-5 py-5 bg-secondary inset-ring-secondary inset-ring  text-secondary-foreground uppercase tracking-tight shadow-lg"
                 >
                   Get in Touch
                 </Button>
                 <Button
                   onClick={() => router.push("/?resume=true")}
                   variant="outline"
-                  className="text-md font-semibold px-5 py-5 border-border border-2 uppercase tracking-tight shadow-lg"
+                  className="text-md cursor-pointer font-semibold px-5 py-5 border-border border-2 uppercase tracking-tight shadow-lg"
                 >
                   Resume
                 </Button>

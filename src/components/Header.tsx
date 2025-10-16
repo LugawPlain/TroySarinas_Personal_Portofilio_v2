@@ -87,7 +87,7 @@ const Header = () => {
           isVisible ? "translate-y-0" : "-translate-y-full"
         }`}
       >
-        <NameTitle />
+        <NameTitle className="cursor-pointer" />
 
         <div className="flex items-center gap-6">
           {/* Desktop Navigation */}

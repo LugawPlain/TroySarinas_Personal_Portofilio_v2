@@ -8,6 +8,7 @@ interface Message {
   text: string;
   sender: "user" | "ai";
   timestamp: Date;
+  isHtml?: boolean;
 }
 
 const ChatWidget = () => {
@@ -20,14 +21,11 @@ const ChatWidget = () => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Client-side Chat cooldown
   const [lastMessageTime, setLastMessageTime] = useState<number>(0);
   const MESSAGE_COOLDOWN = 1000;
 
-  // Disable button during chat processing
   const [isSending, setIsSending] = useState(false);
 
-  // Session chat message limit
   const MAX_MESSAGES_PER_SESSION = 20;
 
   const scrollToBottom = () => {
@@ -55,24 +53,20 @@ const ChatWidget = () => {
     }
   }, [isOpen]);
 
-  // Check health status when chat widget is opened
   useEffect(() => {
     if (isOpen) {
       checkHealthStatus();
     }
   }, [isOpen]);
 
-  // Generate or retrieve session ID
   useEffect(() => {
     const getOrCreateSessionId = () => {
       if (typeof window !== "undefined") {
-        // Try to get existing session ID from localStorage
         const existingSessionId = localStorage.getItem("chatSessionId");
         if (existingSessionId) {
           setSessionId(existingSessionId);
           return existingSessionId;
         } else {
-          // Generate new session ID
           const newSessionId = `session_${Date.now()}_${Math.random()
             .toString(36)
             .substring(2, 11)}`;
@@ -88,11 +82,10 @@ const ChatWidget = () => {
 
     getOrCreateSessionId();
   }, []);
+
   const handleSendMessage = async () => {
-    // Prevent sending if already processing
     if (!inputValue.trim() || isSending) return;
 
-    // Check message limit per session
     if (messages.length >= MAX_MESSAGES_PER_SESSION) {
       const errorMessage: Message = {
         id: Date.now().toString(),
@@ -104,7 +97,6 @@ const ChatWidget = () => {
       return;
     }
 
-    // Check cooldown
     const now = Date.now();
     if (now - lastMessageTime < MESSAGE_COOLDOWN) {
       const waitTime = Math.ceil(
@@ -123,7 +115,6 @@ const ChatWidget = () => {
     }
     setLastMessageTime(now);
 
-    // Set sending state
     setIsSending(true);
 
     const userMessage: Message = {
@@ -154,7 +145,6 @@ const ChatWidget = () => {
         const errorData = await response.json();
         console.error("Chat API error:", response.status, errorData);
 
-        // Handle rate limit error specifically
         if (response.status === 429) {
           throw new Error(
             errorData.error || "Too many requests. Please try again later."
@@ -169,7 +159,6 @@ const ChatWidget = () => {
       const data = await response.json();
       console.log("Chat API response:", data);
 
-      // Display AI response - try multiple possible response fields
       const aiMessage: Message = {
         id: (Date.now() + 1).toString(),
         text:
@@ -180,12 +169,12 @@ const ChatWidget = () => {
           "Thank you for your message! I'll get back to you soon.",
         sender: "ai",
         timestamp: new Date(),
+        isHtml: true, // Mark as HTML content
       };
       setMessages((prev) => [...prev, aiMessage]);
     } catch (error) {
       console.error("Error sending message:", error);
 
-      // Display error message to user
       const errorMessage: Message = {
         id: (Date.now() + 1).toString(),
         text:
@@ -198,7 +187,7 @@ const ChatWidget = () => {
       setMessages((prev) => [...prev, errorMessage]);
     } finally {
       setIsTyping(false);
-      setIsSending(false); // Option 2: Reset sending state
+      setIsSending(false);
     }
   };
 
@@ -214,14 +203,12 @@ const ChatWidget = () => {
   };
 
   const restartSession = () => {
-    // Clear messages
     setMessages([]);
     setInputValue("");
     setIsTyping(false);
     setIsSending(false);
     setLastMessageTime(0);
 
-    // Generate new session ID
     if (typeof window !== "undefined") {
       const newSessionId = `session_${Date.now()}_${Math.random()
         .toString(36)
@@ -230,7 +217,6 @@ const ChatWidget = () => {
       setSessionId(newSessionId);
     }
 
-    // Focus on input after restart
     if (inputRef.current) {
       inputRef.current.focus();
     }
@@ -357,9 +343,16 @@ const ChatWidget = () => {
                     : "bg-white text-black border-2 border-accent/50 rounded-bl-none"
                 } shadow-md`}
               >
-                <div className="text-sm chat-prose whitespace-pre-wrap">
-                  {message.text}
-                </div>
+                {message.isHtml ? (
+                  <div
+                    className="text-sm prose prose-sm max-w-none"
+                    dangerouslySetInnerHTML={{ __html: message.text }}
+                  />
+                ) : (
+                  <div className="text-sm chat-prose whitespace-pre-wrap">
+                    {message.text}
+                  </div>
+                )}
                 <p
                   className={`text-xs mt-2 ${
                     message.sender === "user"
