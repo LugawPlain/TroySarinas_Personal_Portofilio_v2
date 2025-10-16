@@ -70,7 +70,7 @@ const ContactForm = () => {
             Message Sent Successfully!
           </h3>
           <p className="text-gray-600 mb-6">
-            Thank you for reaching out! I'll get back to you as soon as
+            Thank you for reaching out! I&aposll get back to you as soon as
             possible.
           </p>
           <Button
@@ -88,8 +88,8 @@ const ContactForm = () => {
     <div className="w-full">
       <div className="text-center mb-8">
         <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-          Ready to collaborate on something extraordinary? Let's discuss your
-          project and bring your ideas to life.
+          Ready to collaborate on something extraordinary? Let&aposs discuss
+          your project and bring your ideas to life.
         </p>
       </div>
 

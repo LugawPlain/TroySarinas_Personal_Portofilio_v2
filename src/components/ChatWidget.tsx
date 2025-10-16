@@ -75,13 +75,15 @@ const ChatWidget = () => {
           // Generate new session ID
           const newSessionId = `session_${Date.now()}_${Math.random()
             .toString(36)
-            .substr(2, 9)}`;
+            .substring(2, 11)}`;
           localStorage.setItem("chatSessionId", newSessionId);
           setSessionId(newSessionId);
           return newSessionId;
         }
       }
-      return `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+      return `session_${Date.now()}_${Math.random()
+        .toString(36)
+        .substring(2, 11)}`;
     };
 
     getOrCreateSessionId();
@@ -223,7 +225,7 @@ const ChatWidget = () => {
     if (typeof window !== "undefined") {
       const newSessionId = `session_${Date.now()}_${Math.random()
         .toString(36)
-        .substr(2, 9)}`;
+        .substring(2, 11)}`;
       localStorage.setItem("chatSessionId", newSessionId);
       setSessionId(newSessionId);
     }
@@ -355,10 +357,9 @@ const ChatWidget = () => {
                     : "bg-white text-black border-2 border-accent/50 rounded-bl-none"
                 } shadow-md`}
               >
-                <div
-                  className="text-sm chat-prose"
-                  dangerouslySetInnerHTML={{ __html: message.text }}
-                />
+                <div className="text-sm chat-prose whitespace-pre-wrap">
+                  {message.text}
+                </div>
                 <p
                   className={`text-xs mt-2 ${
                     message.sender === "user"
@@ -405,7 +406,7 @@ const ChatWidget = () => {
               type="text"
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
-              onKeyPress={handleKeyPress}
+              onKeyDown={handleKeyPress}
               placeholder="Type your message..."
               className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
             />

@@ -42,6 +42,7 @@ This portfolio represents Troy Sarinas - a Computer Engineering graduate passion
 - **Technologies**: Interactive skills showcase with proficiency levels
 - **Resume**: Downloadable PDF and full-size view
 - **Contact**: Social links and contact information
+- **AI Chat**: Interactive chat widget with AI assistant
 
 ## 🛠️ Tech Stack
 
@@ -67,6 +68,7 @@ This portfolio represents Troy Sarinas - a Computer Engineering graduate passion
 - **Analytics**: GitHub Stars integration
 - **Social**: Social media links
 - **Payments**: Buy Me a Coffee integration
+- **AI Chat**: Interactive AI assistant with session management
 - **Hosting**: Vercel (optimized for Next.js)
 
 ## 📱 Responsive Design
@@ -76,6 +78,25 @@ The portfolio is fully responsive and optimized for:
 - **Desktop**: Full feature experience with hover effects
 - **Tablet**: Adapted layouts with touch-friendly interactions
 - **Mobile**: Collapsible navigation and optimized touch targets
+
+## 🤖 AI Chat Functionality
+
+The portfolio includes an interactive AI chat widget that allows visitors to engage with an AI assistant. The chat system provides:
+
+### Features
+
+- **Real-time Conversations**: Interactive chat interface with typing indicators
+- **Session Management**: Persistent chat sessions with localStorage
+- **Rate Limiting**: Message cooldown and session limits for optimal performance
+- **Health Monitoring**: Real-time status checking of the AI service
+- **Accessibility**: Keyboard navigation and screen reader support
+
+### Usage
+
+- Click the chat button in the bottom-right corner
+- Choose from predefined questions or type your own
+- Engage in conversation with the AI assistant
+- Restart conversation anytime with the "Restart" button
 
 ## 🤝 Contributing
 
