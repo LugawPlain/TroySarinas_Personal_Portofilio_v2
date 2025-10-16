@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { marked } from "marked";
 
 // Option 3: Server-side rate limiting with session-based tracking
 // In-memory rate limiter (for production, consider using Redis)
@@ -113,6 +114,23 @@ export async function POST(request: NextRequest) {
     }
 
     const data = await n8nResponse.json();
+
+    // Convert markdown to HTML if response contains markdown
+    if (data.output || data.response || data.message || data.text) {
+      const markdownText =
+        data.output || data.response || data.message || data.text;
+      const htmlContent = await marked(markdownText);
+
+      // Return the response with HTML content
+      return NextResponse.json({
+        ...data,
+        output: htmlContent,
+        response: htmlContent,
+        message: htmlContent,
+        text: htmlContent,
+      });
+    }
+
     return NextResponse.json(data);
   } catch (error) {
     console.error("Chat API error:", error);

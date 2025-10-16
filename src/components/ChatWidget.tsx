@@ -211,11 +211,34 @@ const ChatWidget = () => {
     setIsOpen(!isOpen);
   };
 
+  const restartSession = () => {
+    // Clear messages
+    setMessages([]);
+    setInputValue("");
+    setIsTyping(false);
+    setIsSending(false);
+    setLastMessageTime(0);
+
+    // Generate new session ID
+    if (typeof window !== "undefined") {
+      const newSessionId = `session_${Date.now()}_${Math.random()
+        .toString(36)
+        .substr(2, 9)}`;
+      localStorage.setItem("chatSessionId", newSessionId);
+      setSessionId(newSessionId);
+    }
+
+    // Focus on input after restart
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+  };
+
   return (
     <>
       {/* Chat Window */}
       <div
-        className={`fixed bottom-20 right-10 w-96 h-[500px] bg-white border-2 border-gray-200 rounded-lg shadow-2xl flex flex-col transition-all duration-300 z-50 ${
+        className={`fixed bottom-20 right-10 w-[500px] h-[600px] bg-white border-2 border-gray-200 rounded-lg shadow-2xl flex flex-col transition-all duration-300 z-50 ${
           isOpen
             ? "opacity-100 translate-y-0 pointer-events-auto"
             : "opacity-0 translate-y-4 pointer-events-none"
@@ -251,37 +274,96 @@ const ChatWidget = () => {
               </div>
             </div>
           </div>
-          <button
-            onClick={toggleChat}
-            className="hover:bg-white/20 p-1 rounded transition-colors"
-            aria-label="Close chat"
-          >
-            <IoClose size="24" />
-          </button>
+          <div className="flex items-center gap-2">
+            {messages.length > 0 && (
+              <button
+                onClick={restartSession}
+                className="text-xs bg-accent hover:bg-accent/80 text-white px-3 py-1 rounded transition-colors"
+                aria-label="Restart conversation"
+              >
+                Restart
+              </button>
+            )}
+            <button
+              onClick={toggleChat}
+              className="hover:bg-black/20 text-black/50 p-1 rounded transition-colors"
+              aria-label="Close chat"
+            >
+              <IoClose size="24" />
+            </button>
+          </div>
         </div>
 
         {/* Messages Container */}
         <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50">
+          {/* Predefined Messages - Show only when no messages exist */}
+          {messages.length === 0 && (
+            <div className="space-y-3">
+              <p className="text-sm text-gray-500 text-center mb-4">
+                Try asking me:
+              </p>
+              <div className="grid grid-cols-1 gap-2">
+                <button
+                  onClick={() => setInputValue("Tell me about yourself")}
+                  className="text-left p-3 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors text-sm text-gray-700"
+                >
+                  👋 Tell me about yourself
+                </button>
+                <button
+                  onClick={() => setInputValue("What do you do for fun?")}
+                  className="text-left p-3 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors text-sm text-gray-700"
+                >
+                  🎮 What do you do for fun?
+                </button>
+                <button
+                  onClick={() =>
+                    setInputValue("What are your technical skills?")
+                  }
+                  className="text-left p-3 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors text-sm text-gray-700"
+                >
+                  💻 What are your technical skills?
+                </button>
+                <button
+                  onClick={() =>
+                    setInputValue("What projects have you worked on?")
+                  }
+                  className="text-left p-3 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors text-sm text-gray-700"
+                >
+                  🚀 What projects have you worked on?
+                </button>
+                <button
+                  onClick={() => setInputValue("How can I contact you?")}
+                  className="text-left p-3 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors text-sm text-gray-700"
+                >
+                  📧 How can I contact you?
+                </button>
+              </div>
+            </div>
+          )}
+
           {messages.map((message) => (
             <div
               key={message.id}
-              className={`flex ${
+              className={`flex font-inter tracking-wide ${
                 message.sender === "user" ? "justify-end" : "justify-start"
               }`}
             >
               <div
-                className={`max-w-[80%] rounded-lg border border-border bg-gray-50 p-3 ${
+                className={`max-w-[85%] rounded-2xl p-4 ${
                   message.sender === "user"
-                    ? "bg-primary text-white"
-                    : "bg-white border border-gray-200"
-                }`}
+                    ? "bg-primary text-black ml-auto border-2 border-secondary/50 rounded-br-none"
+                    : "bg-white text-black border-2 border-accent/50 rounded-bl-none"
+                } shadow-md`}
               >
-                <p className="text-sm text-black">{message.text}</p>
+                <div
+                  className="text-sm chat-prose"
+                  dangerouslySetInnerHTML={{ __html: message.text }}
+                />
                 <p
-                  className={`text-xs mt-1 ${
+                  className={`text-xs mt-2 ${
                     message.sender === "user"
-                      ? "text-black/70"
-                      : "text-black-500"
+                      ? "text-gray-500"
+                      : "text-gray-500"
                   }`}
                 >
                   {message.timestamp.toLocaleTimeString([], {
@@ -329,8 +411,8 @@ const ChatWidget = () => {
             />
             <Button
               onClick={handleSendMessage}
-              disabled={!inputValue.trim() || isSending}
-              className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              disabled={isSending}
+              className="px-4 py-2 bg-accent text-white cursor-pointer rounded-lg hover:bg-accent hover:text-secondary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               <IoSend size="20" />
             </Button>

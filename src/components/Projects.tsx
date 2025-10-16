@@ -30,7 +30,7 @@ const projectsData: Project[] = [
       "Firebase",
     ],
     liveUrl: "https://Yorticia.com/",
-    githubUrl: "sample",
+    githubUrl: "",
   },
   {
     id: "vr-sscr",

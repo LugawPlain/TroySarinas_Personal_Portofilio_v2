@@ -168,3 +168,87 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Custom prose styles for chat messages */
+.chat-prose {
+  line-height: 1.6;
+}
+
+.chat-prose p {
+  margin: 0.5rem 0;
+}
+
+.chat-prose strong {
+  font-weight: 700;
+  color: inherit;
+}
+
+.chat-prose em {
+  font-style: italic;
+}
+
+.chat-prose ul,
+.chat-prose ol {
+  margin: 0.5rem 0;
+  padding-left: 1.5rem;
+}
+
+.chat-prose li {
+  margin: 0.25rem 0;
+}
+
+.chat-prose ul {
+  list-style-type: disc;
+}
+
+.chat-prose ol {
+  list-style-type: decimal;
+}
+
+.chat-prose a {
+  color: var(--color-accent);
+  text-decoration: underline;
+}
+
+.chat-prose a:hover {
+  opacity: 0.8;
+}
+
+.chat-prose code {
+  background-color: rgba(0, 0, 0, 0.05);
+  padding: 0.125rem 0.25rem;
+  border-radius: 0.25rem;
+  font-family: var(--font-mono);
+  font-size: 0.875em;
+}
+
+.chat-prose pre {
+  background-color: rgba(0, 0, 0, 0.05);
+  padding: 0.75rem;
+  border-radius: 0.375rem;
+  overflow-x: auto;
+  margin: 0.5rem 0;
+}
+
+.chat-prose pre code {
+  background-color: transparent;
+  padding: 0;
+}
+
+.chat-prose h1,
+.chat-prose h2,
+.chat-prose h3,
+.chat-prose h4,
+.chat-prose h5,
+.chat-prose h6 {
+  font-weight: 600;
+  margin: 0.75rem 0 0.5rem 0;
+}
+
+.chat-prose blockquote {
+  border-left: 3px solid var(--color-accent);
+  padding-left: 1rem;
+  margin: 0.5rem 0;
+  font-style: italic;
+  opacity: 0.9;
+}
