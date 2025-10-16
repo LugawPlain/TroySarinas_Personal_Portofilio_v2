@@ -2,11 +2,11 @@
 
 ![Portfolio Preview](public/SoftwareEngineerDeveloperSarinas.png)
 
-A modern, responsive personal portfolio website built with Next.js 15, showcasing Troy Sarinas' skills, experience, and projects as an AI Automation & Full Stack Engineer.
+A modern, responsive personal portfolio website built with Next.js 15, showcasing my skills, experience, and projects as an AI Automation & Full Stack Engineer.
 
 ## 🚀 Live Demo
 
-Visit the live portfolio: [https://troysarinas.vercel.app](https://troysarinas.vercel.app)
+Visit the live portfolio: [https://www.troysarinas.dev](https://www.troysarinas.dev)
 
 ## 📋 About
 
@@ -112,8 +112,8 @@ Troy Sarinas
 
 - 📧 Email: troysarinas22@gmail.com
 - 📱 Phone: +639569878251
-- 🌐 Portfolio: [troysarinas.vercel.app](https://troysarinas.vercel.app)
-- 💼 LinkedIn: [Troy Sarinas](https://linkedin.com/in/troysarinas)
+- 🌐 Portfolio: [troysarinas.vercel.app](https://www.troysarinas.dev)
+- 💼 LinkedIn: [Troy Sarinas](https://www.linkedin.com/in/troy-sarinas-47062b1ba/)
 - 🐙 GitHub: [@LugawPlain](https://github.com/LugawPlain)
 
 ---
