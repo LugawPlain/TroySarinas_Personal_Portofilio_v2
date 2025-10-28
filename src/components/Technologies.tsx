@@ -17,12 +17,12 @@ import { SiN8N } from "react-icons/si";
 import { SiMake } from "react-icons/si";
 import { SiZapier } from "react-icons/si";
 import { FaHubspot } from "react-icons/fa";
-
+import { FaVuejs } from "react-icons/fa";
 import { SiMongodb } from "react-icons/si";
 import { FaAws } from "react-icons/fa6";
 import { BiLogoPostgresql } from "react-icons/bi";
 import { SiPrisma } from "react-icons/si";
-
+import { FaWordpress } from "react-icons/fa";
 import { SiMysql } from "react-icons/si";
 import { SiThreedotjs } from "react-icons/si";
 import { motion } from "framer-motion";
@@ -35,18 +35,20 @@ import { SiHuggingface } from "react-icons/si";
 import { RiSupabaseLine } from "react-icons/ri";
 import { FaHtml5 } from "react-icons/fa";
 import { IoLogoCss3 } from "react-icons/io5";
-
+import { FaArrowsUpToLine } from "react-icons/fa6";
+import { FaShopify } from "react-icons/fa";
+import { SiWoocommerce } from "react-icons/si";
 const technologies = [
   { name: "HTML", IconComponent: FaHtml5, Percent: 100 },
   { name: "CSS", IconComponent: IoLogoCss3, Percent: 95 },
   { name: "JavaScript", IconComponent: IoLogoJavascript, Percent: 90 },
   { name: "TypeScript", IconComponent: SiTypescript, Percent: 90 },
   { name: "React", IconComponent: FaReact, Percent: 90 },
+  { name: "Vue", IconComponent: FaVuejs, Percent: 70 },
   { name: "Node.js", IconComponent: FaNodeJs, Percent: 85 },
   { name: "Next.js", IconComponent: SiNextdotjs, Percent: 90 },
   { name: "Python", IconComponent: FaPython, Percent: 95 },
   { name: "Docker", IconComponent: FaDocker, Percent: 80 },
-  { name: "Framer", IconComponent: SiFramer, Percent: 60 },
   { name: "Tailwind CSS", IconComponent: RiTailwindCssFill, Percent: 92 },
   { name: "Three.js", IconComponent: SiThreedotjs, Percent: 60 },
   { name: "MongoDB", IconComponent: SiMongodb, Percent: 80 },
@@ -56,6 +58,10 @@ const technologies = [
   { name: "Prisma", IconComponent: SiPrisma, Percent: 50 },
   { name: "AWS", IconComponent: FaAws, Percent: 60 },
   { name: "Cloudfare", IconComponent: CloudfareIcon, Percent: 70 },
+  { name: "WordPress", IconComponent: FaWordpress, Percent: 80 },
+  { name: "Framer", IconComponent: SiFramer, Percent: 60 },
+  { name: "Shopify", IconComponent: FaShopify, Percent: 80 },
+  { name: "WooCommerce", IconComponent: SiWoocommerce, Percent: 75 },
   { name: "n8n", IconComponent: SiN8N, Percent: 98 },
   { name: "Make", IconComponent: SiMake, Percent: 80 },
   { name: "Zapier", IconComponent: SiZapier, Percent: 40 },
@@ -66,7 +72,7 @@ const technologies = [
   { name: "Perplexity", IconComponent: RiPerplexityLine, Percent: 80 },
   { name: "Ollama", IconComponent: SiOllama, Percent: 98 },
   { name: "Huggingface", IconComponent: SiHuggingface, Percent: 95 },
-  { name: "GoHighLevel,", IconComponent: SiOllama, Percent: 95 },
+  { name: "GoHighLevel,", IconComponent: FaArrowsUpToLine, Percent: 80 },
 ];
 
 const Technologies = () => {

@@ -18,6 +18,7 @@ const ChatWidget = () => {
   const [isTyping, setIsTyping] = useState(false);
   const [isOnline, setIsOnline] = useState<boolean | null>(null);
   const [sessionId, setSessionId] = useState<string>("");
+  const [showHelpPopup, setShowHelpPopup] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -81,6 +82,15 @@ const ChatWidget = () => {
     };
 
     getOrCreateSessionId();
+  }, []);
+
+  useEffect(() => {
+    setShowHelpPopup(true);
+    const timer = setTimeout(() => {
+      setShowHelpPopup(false);
+    }, 10000);
+
+    return () => clearTimeout(timer);
   }, []);
 
   const handleSendMessage = async () => {
@@ -199,6 +209,7 @@ const ChatWidget = () => {
   };
 
   const toggleChat = () => {
+    setShowHelpPopup(false);
     setIsOpen(!isOpen);
   };
 
@@ -414,20 +425,35 @@ const ChatWidget = () => {
         </div>
       </div>
 
-      {/* Chat Button */}
-      <button
-        onClick={toggleChat}
-        className={`w-14 h-14 cursor-pointer fixed rounded-full border-2 border-secondary bg-primary bottom-4 right-10 flex items-center justify-center shadow-lg hover:scale-110 transition-all duration-300 z-50 ${
-          isOpen ? "rotate-0" : "rotate-0"
-        }`}
-        aria-label="Toggle chat"
-      >
-        {isOpen ? (
-          <IoClose size="32" className="text-accent" />
-        ) : (
-          <IoChatbubbles size="32" className="text-accent" />
+      {/* Chat Button with Help Popup */}
+      <div className="fixed bottom-4 right-10 z-50">
+        {/* Help Popup */}
+        {showHelpPopup && (
+          <div className="absolute bottom-1/2 right-full mr-3 transform translate-y-1/2 animate-fade-in-up">
+            <div className="bg-secondary text-white px-4 py-3 rounded-lg shadow-lg max-w-md text-center">
+              <p className="text-sm font-medium text-nowrap">
+                Hello 😊 How can I help you today?
+              </p>
+              <div className="absolute top-1/2 -right-1 transform -translate-y-1/2 w-3 h-3 bg-secondary rotate-45"></div>
+            </div>
+          </div>
         )}
-      </button>
+
+        {/* Chat Button */}
+        <button
+          onClick={toggleChat}
+          className={`w-14 h-14 cursor-pointer rounded-full border-2 border-secondary bg-primary flex items-center justify-center shadow-lg hover:scale-110 transition-all duration-300 ${
+            isOpen ? "rotate-0" : "rotate-0"
+          }`}
+          aria-label="Toggle chat"
+        >
+          {isOpen ? (
+            <IoClose size="32" className="text-accent" />
+          ) : (
+            <IoChatbubbles size="32" className="text-accent" />
+          )}
+        </button>
+      </div>
     </>
   );
 };
