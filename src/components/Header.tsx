@@ -87,11 +87,11 @@ const Header = () => {
           isVisible ? "translate-y-0" : "-translate-y-full"
         }`}
       >
-        <NameTitle className="cursor-pointer" />
+        <NameTitle className="text-nowrap cursor-pointer" />
 
         <div className="flex items-center gap-6">
           {/* Desktop Navigation */}
-          <nav className="hidden md:block">
+          <nav className="hidden xl:block">
             <ul className="flex gap-6 text-lg items-center">
               {navLinks.map((link) => (
                 <li key={link.name}>
@@ -117,7 +117,7 @@ const Header = () => {
 
           {/* Mobile Hamburger Button */}
           <button
-            className="md:hidden text-2xl"
+            className="xl:hidden text-2xl"
             onClick={toggleMobileMenu}
             aria-label="Toggle menu"
           >
@@ -187,7 +187,7 @@ const Header = () => {
 
       {/* Mobile Dropdown Menu */}
       <div
-        className={`md:hidden fixed top-20 left-0 right-0 bg-white border-b-2 border-gray-200 z-40 transition-all duration-300 overflow-hidden ${
+        className={`xl:hidden fixed top-20 left-0 right-0 bg-white border-b-2 border-gray-200 z-40 transition-all duration-300 overflow-hidden ${
           isMobileMenuOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
         }`}
       >
@@ -222,7 +222,7 @@ const Header = () => {
       {/* Overlay to close menu when clicking outside */}
       {isMobileMenuOpen && (
         <div
-          className="md:hidden fixed h-full w-full bg-black/20 z-30 top-20"
+          className="xl:hidden fixed h-full w-full bg-black/20 z-30 top-20"
           onClick={() => setIsMobileMenuOpen(false)}
         />
       )}

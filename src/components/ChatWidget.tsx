@@ -237,7 +237,7 @@ const ChatWidget = () => {
     <>
       {/* Chat Window */}
       <div
-        className={`fixed bottom-4 right-4 left-4 md:bottom-20 md:right-10 md:left-auto w-full md:w-[500px] h-[80vh] md:h-[600px] max-h-[600px] bg-white border-2 border-gray-200 rounded-lg shadow-2xl flex flex-col transition-all duration-300 z-50 ${
+        className={`fixed bottom-18 left-1/2 -translate-x-1/2 md:-translate-x-0  md:bottom-20 md:right-4 md:left-auto w-[95%] md:w-[500px] h-[80vh] md:h-[600px] max-h-[600px] bg-white border-2 border-gray-200 rounded-lg shadow-2xl flex flex-col transition-all duration-300 z-50 ${
           isOpen
             ? "opacity-100 translate-y-0 pointer-events-auto"
             : "opacity-0 translate-y-4 pointer-events-none"
@@ -430,17 +430,17 @@ const ChatWidget = () => {
       {/* Chat Button with Help Popup */}
       <div className="fixed bottom-4 right-4 md:bottom-4 md:right-10 z-50">
         {/* Help Popup */}
-        {showHelpPopup && (
-          <div className="absolute bottom-full right-0 mb-3 md:bottom-1/2 md:right-full md:mr-3 md:transform md:translate-y-1/2 animate-fade-in-up">
-            <div className="bg-secondary text-white px-4 py-3 rounded-lg shadow-lg max-w-xs md:max-w-md text-center">
-              <p className="text-sm font-medium">
-                Hello 😊 How can I help you today?
-              </p>
-              <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-3 h-3 bg-secondary rotate-45 md:hidden"></div>
-              <div className="absolute top-1/2 -right-1 transform -translate-y-1/2 w-3 h-3 bg-secondary rotate-45 hidden md:block"></div>
-            </div>
+        {/* {showHelpPopup && ( */}
+        <div className="absolute right-full -translate-x-3 animate-fade-in-up">
+          <div className="bg-secondary text-white px-4 py-3 rounded-lg shadow-lg max-w-xs md:max-w-md text-center">
+            <p className="text-sm font-medium text-nowrap">
+              Hello 😊 How can I help you today?
+            </p>
+            <div className="absolute   transform right-0 translate-x-1 top-1/2 -translate-y-1/2 w-3 h-3 bg-secondary rotate-45 "></div>
+            {/* <div className="absolute top-1/2 -right-1 transform -translate-y-1/2 w-3 h-3 bg-secondary rotate-45 hidden md:block"></div> */}
           </div>
-        )}
+        </div>
+        {/* )} */}
 
         {/* Chat Button */}
         <button
