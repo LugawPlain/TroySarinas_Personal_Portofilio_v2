@@ -252,3 +252,44 @@
   font-style: italic;
   opacity: 0.9;
 }
+
+/* Mobile-specific improvements for chat widget */
+@media (max-width: 768px) {
+  /* Prevent horizontal scrolling on mobile */
+  .chat-prose {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+
+  /* Improve touch targets for mobile */
+  .chat-prose a {
+    padding: 2px 4px;
+    border-radius: 4px;
+  }
+
+  /* Better scrolling on mobile */
+  .overflow-y-auto {
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Prevent zoom on input focus for iOS */
+  input[type="text"] {
+    font-size: 16px;
+  }
+}
+
+/* Animation for mobile-friendly fade in */
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.3s ease-out;
+}

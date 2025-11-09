@@ -237,21 +237,23 @@ const ChatWidget = () => {
     <>
       {/* Chat Window */}
       <div
-        className={`fixed bottom-20 right-10 w-[500px] h-[600px] bg-white border-2 border-gray-200 rounded-lg shadow-2xl flex flex-col transition-all duration-300 z-50 ${
+        className={`fixed bottom-4 right-4 left-4 md:bottom-20 md:right-10 md:left-auto w-full md:w-[500px] h-[80vh] md:h-[600px] max-h-[600px] bg-white border-2 border-gray-200 rounded-lg shadow-2xl flex flex-col transition-all duration-300 z-50 ${
           isOpen
             ? "opacity-100 translate-y-0 pointer-events-auto"
             : "opacity-0 translate-y-4 pointer-events-none"
         }`}
       >
         {/* Header */}
-        <div className="bg-primary text-white p-4 rounded-t-lg flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-accent rounded-full flex items-center justify-center">
-              <IoChatbubbles size="24" />
+        <div className="bg-primary text-white p-3 md:p-4 rounded-t-lg flex items-center justify-between">
+          <div className="flex items-center gap-2 md:gap-3">
+            <div className="w-8 h-8 md:w-10 md:h-10 bg-accent rounded-full flex items-center justify-center">
+              <IoChatbubbles className="w-4 h-4 md:w-6 md:h-6" />
             </div>
             <div>
-              <h3 className="font-semibold text-secondary">Troy Sarinas AI</h3>
-              <div className="flex items-center gap-2">
+              <h3 className="font-semibold text-secondary text-sm md:text-base">
+                Troy Sarinas AI
+              </h3>
+              <div className="flex items-center gap-1 md:gap-2">
                 <div
                   className={`w-2 h-2 rounded-full ${
                     isOnline === null
@@ -273,11 +275,11 @@ const ChatWidget = () => {
               </div>
             </div>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1 md:gap-2">
             {messages.length > 0 && (
               <button
                 onClick={restartSession}
-                className="text-xs bg-accent hover:bg-accent/80 text-white px-3 py-1 rounded transition-colors"
+                className="text-xs bg-accent hover:bg-accent/80 text-white px-2 py-1 md:px-3 md:py-1 rounded transition-colors"
                 aria-label="Restart conversation"
               >
                 Restart
@@ -288,29 +290,29 @@ const ChatWidget = () => {
               className="hover:bg-black/20 text-black/50 p-1 rounded transition-colors"
               aria-label="Close chat"
             >
-              <IoClose size="24" />
+              <IoClose className="w-4 h-4 md:w-6 md:h-6" />
             </button>
           </div>
         </div>
 
         {/* Messages Container */}
-        <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50">
+        <div className="flex-1 overflow-y-auto p-3 md:p-4 space-y-3 md:space-y-4 bg-gray-50">
           {/* Predefined Messages - Show only when no messages exist */}
           {messages.length === 0 && (
-            <div className="space-y-3">
-              <p className="text-sm text-gray-500 text-center mb-4">
+            <div className="space-y-2 md:space-y-3">
+              <p className="text-xs md:text-sm text-gray-500 text-center mb-3 md:mb-4">
                 Try asking me:
               </p>
-              <div className="grid grid-cols-1 gap-2">
+              <div className="grid grid-cols-1 gap-1 md:gap-2">
                 <button
                   onClick={() => setInputValue("Tell me about yourself")}
-                  className="text-left p-3 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors text-sm text-gray-700"
+                  className="text-left p-2 md:p-3 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors text-xs md:text-sm text-gray-700"
                 >
                   👋 Tell me about yourself
                 </button>
                 <button
                   onClick={() => setInputValue("What do you do for fun?")}
-                  className="text-left p-3 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors text-sm text-gray-700"
+                  className="text-left p-2 md:p-3 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors text-xs md:text-sm text-gray-700"
                 >
                   🎮 What do you do for fun?
                 </button>
@@ -318,7 +320,7 @@ const ChatWidget = () => {
                   onClick={() =>
                     setInputValue("What are your technical skills?")
                   }
-                  className="text-left p-3 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors text-sm text-gray-700"
+                  className="text-left p-2 md:p-3 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors text-xs md:text-sm text-gray-700"
                 >
                   💻 What are your technical skills?
                 </button>
@@ -326,13 +328,13 @@ const ChatWidget = () => {
                   onClick={() =>
                     setInputValue("What projects have you worked on?")
                   }
-                  className="text-left p-3 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors text-sm text-gray-700"
+                  className="text-left p-2 md:p-3 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors text-xs md:text-sm text-gray-700"
                 >
                   🚀 What projects have you worked on?
                 </button>
                 <button
                   onClick={() => setInputValue("How can I contact you?")}
-                  className="text-left p-3 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors text-sm text-gray-700"
+                  className="text-left p-2 md:p-3 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors text-xs md:text-sm text-gray-700"
                 >
                   📧 How can I contact you?
                 </button>
@@ -348,7 +350,7 @@ const ChatWidget = () => {
               }`}
             >
               <div
-                className={`max-w-[85%] rounded-2xl p-4 ${
+                className={`max-w-[90%] md:max-w-[85%] rounded-2xl p-3 md:p-4 ${
                   message.sender === "user"
                     ? "bg-primary text-black ml-auto border-2 border-secondary/50 rounded-br-none"
                     : "bg-white text-black border-2 border-accent/50 rounded-bl-none"
@@ -356,16 +358,16 @@ const ChatWidget = () => {
               >
                 {message.isHtml ? (
                   <div
-                    className="text-sm prose prose-sm max-w-none"
+                    className="text-xs md:text-sm prose prose-sm max-w-none"
                     dangerouslySetInnerHTML={{ __html: message.text }}
                   />
                 ) : (
-                  <div className="text-sm chat-prose whitespace-pre-wrap">
+                  <div className="text-xs md:text-sm chat-prose whitespace-pre-wrap">
                     {message.text}
                   </div>
                 )}
                 <p
-                  className={`text-xs mt-2 ${
+                  className={`text-xs mt-1 md:mt-2 ${
                     message.sender === "user"
                       ? "text-gray-500"
                       : "text-gray-500"
@@ -383,7 +385,7 @@ const ChatWidget = () => {
           {/* Typing Indicator */}
           {isTyping && (
             <div className="flex justify-start">
-              <div className="bg-white border border-gray-200 rounded-lg p-3">
+              <div className="bg-white border border-gray-200 rounded-lg p-2 md:p-3">
                 <div className="flex gap-1">
                   <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
                   <div
@@ -403,7 +405,7 @@ const ChatWidget = () => {
         </div>
 
         {/* Input Area */}
-        <div className="p-4 bg-white border-t border-gray-200 rounded-b-lg">
+        <div className="p-3 md:p-4 bg-white border-t border-gray-200 rounded-b-lg">
           <div className="flex gap-2">
             <input
               ref={inputRef}
@@ -412,29 +414,30 @@ const ChatWidget = () => {
               onChange={(e) => setInputValue(e.target.value)}
               onKeyDown={handleKeyPress}
               placeholder="Type your message..."
-              className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+              className="flex-1 px-3 py-2 md:px-4 md:py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm md:text-base"
             />
             <Button
               onClick={handleSendMessage}
               disabled={isSending}
-              className="px-4 py-2 bg-accent text-white cursor-pointer rounded-lg hover:bg-accent hover:text-secondary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="px-3 py-2 md:px-4 md:py-2 bg-accent text-white cursor-pointer rounded-lg hover:bg-accent hover:text-secondary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
-              <IoSend size="20" />
+              <IoSend className="w-4 h-4 md:w-5 md:h-5" />
             </Button>
           </div>
         </div>
       </div>
 
       {/* Chat Button with Help Popup */}
-      <div className="fixed bottom-4 right-10 z-50">
+      <div className="fixed bottom-4 right-4 md:bottom-4 md:right-10 z-50">
         {/* Help Popup */}
         {showHelpPopup && (
-          <div className="absolute bottom-1/2 right-full mr-3 transform translate-y-1/2 animate-fade-in-up">
-            <div className="bg-secondary text-white px-4 py-3 rounded-lg shadow-lg max-w-md text-center">
-              <p className="text-sm font-medium text-nowrap">
+          <div className="absolute bottom-full right-0 mb-3 md:bottom-1/2 md:right-full md:mr-3 md:transform md:translate-y-1/2 animate-fade-in-up">
+            <div className="bg-secondary text-white px-4 py-3 rounded-lg shadow-lg max-w-xs md:max-w-md text-center">
+              <p className="text-sm font-medium">
                 Hello 😊 How can I help you today?
               </p>
-              <div className="absolute top-1/2 -right-1 transform -translate-y-1/2 w-3 h-3 bg-secondary rotate-45"></div>
+              <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-3 h-3 bg-secondary rotate-45 md:hidden"></div>
+              <div className="absolute top-1/2 -right-1 transform -translate-y-1/2 w-3 h-3 bg-secondary rotate-45 hidden md:block"></div>
             </div>
           </div>
         )}
@@ -442,15 +445,15 @@ const ChatWidget = () => {
         {/* Chat Button */}
         <button
           onClick={toggleChat}
-          className={`w-14 h-14 cursor-pointer rounded-full border-2 border-secondary bg-primary flex items-center justify-center shadow-lg hover:scale-110 transition-all duration-300 ${
+          className={`w-12 h-12 md:w-14 md:h-14 cursor-pointer rounded-full border-2 border-secondary bg-primary flex items-center justify-center shadow-lg hover:scale-110 transition-all duration-300 ${
             isOpen ? "rotate-0" : "rotate-0"
           }`}
           aria-label="Toggle chat"
         >
           {isOpen ? (
-            <IoClose size="32" className="text-accent" />
+            <IoClose className="text-accent w-6 h-6 md:w-8 md:h-8" />
           ) : (
-            <IoChatbubbles size="32" className="text-accent" />
+            <IoChatbubbles className="text-accent w-6 h-6 md:w-8 md:h-8" />
           )}
         </button>
       </div>
