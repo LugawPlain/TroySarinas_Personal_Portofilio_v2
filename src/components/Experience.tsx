@@ -1,6 +1,5 @@
 import Image from "next/image";
 import React from "react";
-import { FaGear, FaGears, FaStar } from "react-icons/fa6";
 import { MdStars } from "react-icons/md";
 import { RiTimer2Line } from "react-icons/ri";
 import { MdImageNotSupported } from "react-icons/md";

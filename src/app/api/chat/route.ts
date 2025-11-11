@@ -105,10 +105,9 @@ export async function POST(request: NextRequest) {
     );
 
     if (!n8nResponse.ok) {
-      const errorText = await n8nResponse.text();
-      console.error("n8n webhook error:", n8nResponse.status, errorText);
+      console.error("Offline try again later");
       return NextResponse.json(
-        { error: "Failed to get response from AI agent" },
+        { error: "Offline try again later" },
         { status: n8nResponse.status }
       );
     }
@@ -133,7 +132,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(data);
   } catch (error) {
-    console.error("Chat API error:", error);
+    console.error("Chat API error:");
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }
