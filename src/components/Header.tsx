@@ -98,7 +98,7 @@ const Header = () => {
                   <a
                     href={link.href}
                     onClick={(e) => handleSmoothScroll(e, link.href)}
-                    className="hover:text-gray-600 transition-colors"
+                    className="hover:text-gray-600 font-inter transition-colors"
                   >
                     {link.name}
                   </a>
@@ -191,20 +191,20 @@ const Header = () => {
           isMobileMenuOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
         }`}
       >
-        <nav className="px-4 py-6">
-          <ul className="flex flex-col gap-4">
+        <nav className="">
+          <ul className="flex flex-col divide-y-[0.5px] divide-gray-200">
             {navLinks.map((link) => (
-              <li key={link.name}>
+              <li key={link.name} className="active:bg-secondary ">
                 <a
                   href={link.href}
                   onClick={(e) => handleSmoothScroll(e, link.href)}
-                  className="block text-lg hover:text-gray-600 transition-colors py-2"
+                  className="block text-lg hover:text-gray-600 px-4 py-3 active:text-white font-inter transition-colors "
                 >
                   {link.name}
                 </a>
               </li>
             ))}
-            <li className="pt-4 border-t border-gray-200">
+            <li className=" border-t border-gray-200">
               <Button
                 onClick={() => {
                   setIsContactModalOpen(true);
