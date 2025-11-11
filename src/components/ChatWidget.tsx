@@ -2,7 +2,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { IoChatbubbles, IoSend, IoClose } from "react-icons/io5";
 import { Button } from "./ui/button";
-
+import TextType from "./TextType";
 interface Message {
   id: string;
   text: string;
@@ -88,7 +88,7 @@ const ChatWidget = () => {
     setShowHelpPopup(true);
     const timer = setTimeout(() => {
       setShowHelpPopup(false);
-    }, 10000);
+    }, 20000);
 
     return () => clearTimeout(timer);
   }, []);
@@ -301,7 +301,7 @@ const ChatWidget = () => {
           {messages.length === 0 && (
             <div className="space-y-2 md:space-y-3">
               <p className="text-xs md:text-sm text-gray-500 text-center mb-3 md:mb-4">
-                Try asking me:
+                I am Troy Sarinas (definitely not a bot🤖) Try asking me:
               </p>
               <div className="grid grid-cols-1 gap-1 md:gap-2">
                 <button
@@ -430,17 +430,24 @@ const ChatWidget = () => {
       {/* Chat Button with Help Popup */}
       <div className="fixed bottom-4 right-4 md:bottom-4 md:right-10 z-50">
         {/* Help Popup */}
-        {/* {showHelpPopup && ( */}
-        <div className="absolute right-full -translate-x-3 animate-fade-in-up">
-          <div className="bg-secondary text-white px-4 py-3 rounded-lg shadow-lg max-w-xs md:max-w-md text-center">
-            <p className="text-sm font-medium text-nowrap">
-              Hello 😊 How can I help you today?
-            </p>
-            <div className="absolute   transform right-0 translate-x-1 top-1/2 -translate-y-1/2 w-3 h-3 bg-secondary rotate-45 "></div>
-            {/* <div className="absolute top-1/2 -right-1 transform -translate-y-1/2 w-3 h-3 bg-secondary rotate-45 hidden md:block"></div> */}
+        {showHelpPopup && (
+          <div className="absolute right-full -translate-x-3 animate-fade-in-up">
+            <div className="bg-secondary/90 backdrop-blur-xs text-white px-4 py-3 rounded-lg shadow-lg max-w-xs md:max-w-md text-center">
+              <TextType
+                className="text-nowrap "
+                text={["Hello How are you 😊 How can I help you today?"]}
+                typingSpeed={75}
+                pauseDuration={1500}
+                showCursor={true}
+                cursorCharacter="|"
+                variableSpeed={undefined}
+                onSentenceComplete={undefined}
+              />
+              <div className="absolute   transform right-0 translate-x-1 top-1/2 -translate-y-1/2 w-3 h-3 bg-secondary/90 rotate-45 "></div>
+              {/* <div className="absolute top-1/2 -right-1 transform -translate-y-1/2 w-3 h-3 bg-secondary rotate-45 hidden md:block"></div> */}
+            </div>
           </div>
-        </div>
-        {/* )} */}
+        )}
 
         {/* Chat Button */}
         <button

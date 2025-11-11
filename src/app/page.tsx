@@ -28,7 +28,6 @@ export default async function Home({
       />
       {showResume && <Resume />}
       <div className="flex flex-col space-y-8 font-inter relative">
-        <Header />
         <HeroSection />
         <Projects />
         <Experience />
@@ -36,7 +35,6 @@ export default async function Home({
         <Technologies />
         {/* <Certifications /> */}
         <ChatWidget />
-        <Footer />
       </div>
     </>
   );
