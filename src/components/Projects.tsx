@@ -155,7 +155,7 @@ const Projects = () => {
           ))}
         </div>
       </div>
-      <Link href="/projects">
+      <Link href="/">
         <Button className="mx-auto mt-4" variant={"outline"}>
           See more <MdArrowOutward />
         </Button>
