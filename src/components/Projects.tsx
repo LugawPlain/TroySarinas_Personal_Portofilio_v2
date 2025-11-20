@@ -46,7 +46,7 @@ const projectsData: Project[] = [
     id: "n8n-automations",
     title: "N8n Automations",
     description:
-      "Creating automations for streamlining workflows and integrating various APIs to enhance productivity. Using AI Agents to automate tasks and improve efficiency.",
+      "Creating automations for business to streamline complex process by buildings workflows and integrating various APIs to enhance productivity. Using AI Agents to automate tasks and improve efficiency.",
     image: "/AgentsN8n.png",
     technologies: ["N8n", "Javascript", "Python", "API Integrations"],
     liveUrl: "#",

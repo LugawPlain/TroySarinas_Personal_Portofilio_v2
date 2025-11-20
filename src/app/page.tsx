@@ -1,14 +1,13 @@
 import Technologies from "../components/Technologies";
-import Footer from "@/components/Footer";
 import Experience from "@/components/Experience";
 import Education from "@/components/Education";
 // import Certifications from "@/components/Certifications";
 import Projects from "@/components/Projects";
-import Header from "@/components/Header";
 import HeroSection from "@/components/HeroSection";
 import SplashCursor from "@/components/SplashCursor";
 import ChatWidget from "@/components/ChatWidget";
 import Resume from "@/components/Resume";
+import Certifications from "@/components/Certifications";
 
 export default async function Home({
   searchParams,

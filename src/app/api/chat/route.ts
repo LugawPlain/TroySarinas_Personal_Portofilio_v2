@@ -105,6 +105,7 @@ export async function POST(request: NextRequest) {
     );
 
     if (!n8nResponse.ok) {
+      const errorText = await n8nResponse.text();
       console.error("Offline try again later");
       return NextResponse.json(
         { error: "Offline try again later" },
