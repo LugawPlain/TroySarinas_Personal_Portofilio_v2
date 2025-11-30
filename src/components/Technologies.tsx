@@ -38,6 +38,7 @@ import { IoLogoCss3 } from "react-icons/io5";
 import { FaArrowsUpToLine } from "react-icons/fa6";
 import { FaShopify } from "react-icons/fa";
 import { SiWoocommerce } from "react-icons/si";
+import LayeredSlants from "./Icons/LayeredSlants";
 const technologies = [
   { name: "HTML", IconComponent: FaHtml5, Percent: 100 },
   { name: "CSS", IconComponent: IoLogoCss3, Percent: 95 },
@@ -103,8 +104,9 @@ const Technologies = () => {
       whileInView={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
       transition={{ duration: 0.5 }}
-      className="mt-4"
+      className="mt-4 pb-4 relative overflow-clip"
     >
+      <LayeredSlants className="bottom-0 absolute -z-10" />
       <h2 className="text-center mb-10 font-bold">
         <span className="text-3xl sm:text-4xl text-foreground/90">
           Technologies I use 🧑‍💻

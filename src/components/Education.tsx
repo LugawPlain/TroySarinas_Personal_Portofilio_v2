@@ -1,11 +1,12 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
+import MountainDivider2 from "./Icons/MountainDivider2";
 const Education = () => {
   return (
     <div
       id="education"
-      className="px-4 flex-col flex items-center justify-center"
+      className="px-4 flex-col flex items-center justify-center relative"
     >
       <h1 className="text-center text-3xl sm:text-4xl mb-10 font-bold text-foreground/90">
         Education 🎓

@@ -10,6 +10,7 @@ import {
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { CursorProvider } from "@/components/CursorProvider";
+import { ContactModalProvider } from "@/contexts/ContactModalContext";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
@@ -99,9 +100,11 @@ export default function RootLayout({
         )}
       >
         <CursorProvider>
-          <Header />
-          {children}
-          <Footer />
+          <ContactModalProvider>
+            <Header />
+            {children}
+            <Footer />
+          </ContactModalProvider>
         </CursorProvider>
       </body>
     </html>

@@ -26,7 +26,7 @@ export default async function Home({
         CURL={5}
       />
       {showResume && <Resume />}
-      <div className="flex flex-col space-y-8 font-inter relative">
+      <div className="flex flex-col gap-8 font-inter relative">
         <HeroSection />
         <Projects />
         <Experience />

@@ -8,11 +8,14 @@ import Link from "next/link";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import BuyMeACoffeeButton from "./BuyMeACoffeeButton";
 import { useRouter } from "next/navigation";
+import { Button } from "./ui/button";
+import { useContactModal } from "@/contexts/ContactModalContext";
 
 const Footer = () => {
   const router = useRouter();
+  const { setIsContactModalOpen } = useContactModal();
   return (
-    <footer id="contacts" className="bg-gray-200 py-4 mt-12">
+    <footer id="contacts" className="bg-gray-200 py-4">
       <div className="py-4 xl:flex-row max-w-[80rem] mx-auto flex flex-col justify-between items-center px-8 gap-4">
         <div className="flex flex-col justify-center items-center font-inter gap-2 max-w-80 min-w-80 order-2 xl:order-1">
           <div className="flex flex-col items-center">
@@ -44,6 +47,14 @@ const Footer = () => {
           </p>
 
           <SocialLinks className="mt-4" size={24} />
+          <Button
+            onClick={() => {
+              setIsContactModalOpen(true);
+            }}
+            className="text-lg font-semibold w-42 py-4 m-4 bg-secondary text-secondary-foreground uppercase tracking-tight shadow-lg"
+          >
+            Contact Me
+          </Button>
         </div>
         <div className="flex flex-col mt-4 xl:mt-0 justify-center pl-8 items-center font-inter max-w-80 min-w-80 xl:block order-3 xl:order-3">
           <h3 className="font-semibold text-xl text-secondary">Quick Links</h3>

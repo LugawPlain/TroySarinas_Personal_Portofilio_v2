@@ -56,7 +56,11 @@ const projectsData: Project[] = [
 
 const Projects = () => {
   return (
-    <div id="projects" className="items-center flex flex-col py-2 px-4">
+    <div
+      id="projects"
+      className="items-center flex flex-col py-2 px-4 relative overflow-x-clip"
+    >
+      <div className="absolute top-20 bg-secondary/50 h-100 w-900 -skew-12 -z-10 "></div>
       <div className="space-y-8 flex flex-col justify-center items-center max-w-[90rem]">
         <h1 className="text-center font-bold text-3xl sm:text-4xl mt-2 text-foreground/90">
           Projects
@@ -155,7 +159,7 @@ const Projects = () => {
           ))}
         </div>
       </div>
-      <Link href="/">
+      <Link href="/projects">
         <Button className="mx-auto mt-4" variant={"outline"}>
           See more <MdArrowOutward />
         </Button>

@@ -9,6 +9,7 @@ import { useCursor } from "./CursorProvider";
 import { RiSettings5Fill } from "react-icons/ri";
 import { Button } from "./ui/button";
 import ContactModal from "./ContactModal";
+import { useContactModal } from "@/contexts/ContactModalContext";
 
 const Header = () => {
   const [isVisible, setIsVisible] = useState(true);
@@ -16,7 +17,7 @@ const Header = () => {
   const [isSettingsOpen, setIsSettingsOpen] = useState(true);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
-  const [isContactModalOpen, setIsContactModalOpen] = useState(false);
+  const { isContactModalOpen, setIsContactModalOpen } = useContactModal();
   const { isCursorEffectEnabled, setIsCursorEffectEnabled } = useCursor();
 
   useEffect(() => {
