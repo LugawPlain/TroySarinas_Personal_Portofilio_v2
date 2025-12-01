@@ -1,7 +1,6 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import MountainDivider2 from "./Icons/MountainDivider2";
 const Education = () => {
   return (
     <div

@@ -1,5 +1,5 @@
 import * as React from "react";
-const MountainDivider = (props: any) => (
+const MountainDivider = (props: React.SVGProps<SVGSVGElement>) => (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 100" {...props}>
     <g fill="#FFFFFF">
       <rect fill="#2E186A" width="100%" height="100%" />

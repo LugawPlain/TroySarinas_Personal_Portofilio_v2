@@ -21,7 +21,7 @@ const projectsData: Project[] = [
     title: "Yorticia.com",
     description:
       "Created a stunning personal portfolio website for model Yorticia, enhancing her online presence and providing a dedicated space to display her work and connect with industry professionals. The site features an image-rich gallery and detailed service listings",
-    image: "/YorticiaWebsite.png",
+    image: "/YorticiaWebsiteThumbnail.png",
     technologies: [
       "Next.js",
       "Tailwind CSS",
@@ -43,7 +43,7 @@ const projectsData: Project[] = [
     githubUrl: "",
   },
   {
-    id: "n8n-automations",
+    id: "LeadEntryAutomation",
     title: "N8n Automations",
     description:
       "Creating automations for business to streamline complex process by buildings workflows and integrating various APIs to enhance productivity. Using AI Agents to automate tasks and improve efficiency.",
@@ -75,7 +75,7 @@ const Projects = () => {
                 <Link
                   target="_blank"
                   rel="noopener noreferrer"
-                  href={project.liveUrl || "#"}
+                  href={`/projects?id=${project.id}`}
                 >
                   <Image
                     src={project.image}

@@ -158,6 +158,14 @@
       filter: hue-rotate(180deg);
     }
   }
+  --animate-slowping: slowping 4s cubic-bezier(0, 0, 0.2, 1) infinite;
+  @keyframes slowping {
+    18.75%,
+    100% {
+      transform: scale(2);
+      opacity: 0;
+    }
+  }
 }
 
 @layer base {

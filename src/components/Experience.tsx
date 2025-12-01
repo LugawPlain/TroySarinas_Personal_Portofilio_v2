@@ -5,8 +5,6 @@ import { RiTimer2Line } from "react-icons/ri";
 import { MdImageNotSupported } from "react-icons/md";
 import { FaBolt } from "react-icons/fa";
 import { FaGears, FaStar } from "react-icons/fa6";
-import MountainDivider from "./Icons/MountainDivider";
-import MountainDivider2 from "./Icons/MountainDivider2";
 interface Highlight {
   icon?: React.ReactNode;
   title: string;
@@ -175,6 +173,7 @@ const Experience = () => {
       id="experience"
       className="px-4 font-inter flex relative flex-col space-y-8 justify-center overflow-x-clip items-center"
     >
+      <div className="absolute top-1/2 bg-secondary/50 h-100 w-900 skew-12 -z-10 "></div>
       <h1 className="text-center text-3xl sm:text-4xl font-bold mb-6 text-foreground/90">
         Experience
       </h1>

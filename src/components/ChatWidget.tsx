@@ -1,10 +1,10 @@
 "use client";
 import React, { useState, useRef, useEffect } from "react";
-import { MessageCircle, Send, X } from "lucide-react";
+import { Send, X } from "lucide-react";
 // 1. IMPORT MARKDOWN LIBRARIES
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-
+import { LuBotMessageSquare } from "react-icons/lu";
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   className?: string;
   children: React.ReactNode;
@@ -92,27 +92,31 @@ const TextType = ({
 // 2. DEFINE MARKDOWN STYLES
 // Custom components to ensure markdown looks good in small chat bubbles
 const MarkdownComponents = {
-  p: ({ node, ...props }: any) => <p className="mb-2 last:mb-0" {...props} />,
-  ul: ({ node, ...props }: any) => (
+  p: (props: React.ComponentPropsWithoutRef<"p">) => (
+    <p className="mb-2 last:mb-0" {...props} />
+  ),
+  ul: (props: React.ComponentPropsWithoutRef<"ul">) => (
     <ul className="list-disc pl-4 mb-2 space-y-1" {...props} />
   ),
-  ol: ({ node, ...props }: any) => (
+  ol: (props: React.ComponentPropsWithoutRef<"ol">) => (
     <ol className="list-decimal pl-4 mb-2 space-y-1" {...props} />
   ),
-  li: ({ node, ...props }: any) => <li className="pl-1" {...props} />,
-  h1: ({ node, ...props }: any) => (
+  li: (props: React.ComponentPropsWithoutRef<"li">) => (
+    <li className="pl-1" {...props} />
+  ),
+  h1: (props: React.ComponentPropsWithoutRef<"h1">) => (
     <h1 className="text-lg font-bold mb-2" {...props} />
   ),
-  h2: ({ node, ...props }: any) => (
+  h2: (props: React.ComponentPropsWithoutRef<"h2">) => (
     <h2 className="text-base font-bold mb-2" {...props} />
   ),
-  h3: ({ node, ...props }: any) => (
+  h3: (props: React.ComponentPropsWithoutRef<"h3">) => (
     <h3 className="text-sm font-bold mb-1" {...props} />
   ),
-  strong: ({ node, ...props }: any) => (
+  strong: (props: React.ComponentPropsWithoutRef<"strong">) => (
     <strong className="font-bold text-current" {...props} />
   ),
-  a: ({ node, ...props }: any) => (
+  a: (props: React.ComponentPropsWithoutRef<"a">) => (
     <a
       className="text-blue-500 hover:underline"
       target="_blank"
@@ -120,11 +124,17 @@ const MarkdownComponents = {
       {...props}
     />
   ),
-  code: ({ node, className, children, ...props }: any) => {
+  code: ({
+    className,
+    children,
+    ...props
+  }: React.ComponentPropsWithoutRef<"code">) => {
     // Simple inline code styling
     return (
       <code
-        className="bg-black/10 rounded px-1 py-0.5 text-xs font-mono"
+        className={`bg-black/10 rounded px-1 py-0.5 text-xs font-mono ${
+          className || ""
+        }`}
         {...props}
       >
         {children}
@@ -183,7 +193,7 @@ const ChatWidget = () => {
   const [inputValue, setInputValue] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const [isOnline, setIsOnline] = useState<boolean | null>(null);
-  const [sessionId, setSessionId] = useState<string>("");
+  const [, setSessionId] = useState<string>("");
   const [showHelpPopup, setShowHelpPopup] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -402,7 +412,7 @@ const ChatWidget = () => {
           {/* ... header content ... */}
           <div className="flex items-center gap-2 md:gap-3">
             <div className="w-8 h-8 md:w-10 md:h-10 bg-accent rounded-full flex items-center justify-center">
-              <MessageCircle className="w-4 h-4 md:w-6 md:h-6 text-white" />
+              <LuBotMessageSquare className="w-4 h-4 md:w-6 md:h-6 text-white" />
             </div>
             <div>
               <h3 className="font-semibold text-secondary text-sm md:text-base">
@@ -458,7 +468,7 @@ const ChatWidget = () => {
                 <div className="max-w-[90%] md:max-w-[85%] bg-white text-black border-2 border-accent/50 rounded-2xl p-3 md:p-4 rounded-bl-none shadow-md">
                   <div className="text-xs md:text-sm chat-prose">
                     <p className="mb-2">
-                      👋 Hi there! I'm Troy Sarinas. You can ask more about my
+                      👋 Hi there! I&aposm Troy Sarinas. You can ask more about my
                       background, skills, and projects.
                     </p>
                     <p className="mb-3">
@@ -605,12 +615,13 @@ const ChatWidget = () => {
 
         <button
           onClick={toggleChat}
-          className={`w-12 h-12 md:w-14 md:h-14 cursor-pointer rounded-full border-2 border-secondary bg-primary flex items-center justify-center shadow-lg hover:scale-110 transition-all duration-300`}
+          className={`w-12 h-12 md:w-14 md:h-14 cursor-pointer rounded-full relative border-2 border-secondary bg-primary flex items-center justify-center shadow-lg hover:scale-110 transition-all duration-300`}
         >
+          <div className="absolute top-1/2 left-1/2 -translate-y-1/2  -translate-x-1/2 w-8 h-8 md:w-10 md:h-10 animate-[var(--animate-slowping)] rounded-full -z-10 bg-secondary"></div>
           {isOpen ? (
             <X className="text-accent w-6 h-6 md:w-8 md:h-8" />
           ) : (
-            <MessageCircle className="text-accent w-6 h-6 md:w-8 md:h-8" />
+            <LuBotMessageSquare className="text-accent w-6 h-6 md:w-8 md:h-8" />
           )}
         </button>
       </div>

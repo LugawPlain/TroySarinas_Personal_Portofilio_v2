@@ -1,13 +1,12 @@
 import Technologies from "../components/Technologies";
 import Experience from "@/components/Experience";
 import Education from "@/components/Education";
-// import Certifications from "@/components/Certifications";
 import Projects from "@/components/Projects";
 import HeroSection from "@/components/HeroSection";
 import SplashCursor from "@/components/SplashCursor";
 import ChatWidget from "@/components/ChatWidget";
 import Resume from "@/components/Resume";
-import Certifications from "@/components/Certifications";
+
 
 export default async function Home({
   searchParams,

@@ -78,7 +78,7 @@ export async function POST(request: NextRequest) {
 
     // 2. Format history for the Google Gen AI SDK
     const formattedHistory = history
-      ? history.map((msg: any) => ({
+      ? history.map((msg: { sender: string; text: string }) => ({
           role: msg.sender === "user" ? "user" : "model",
           parts: [{ text: msg.text }],
         }))

@@ -100,11 +100,12 @@ const Technologies = () => {
 
   return (
     <motion.div
+    id="technologies"
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
       transition={{ duration: 0.5 }}
-      className="mt-4 pb-4 relative overflow-clip"
+      className="mt-4 pb-8 relative overflow-clip"
     >
       <LayeredSlants className="bottom-0 absolute -z-10" />
       <h2 className="text-center mb-10 font-bold">

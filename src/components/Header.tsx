@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
+import { usePathname } from "next/navigation";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { X } from "lucide-react";
 
@@ -12,6 +13,7 @@ import ContactModal from "./ContactModal";
 import { useContactModal } from "@/contexts/ContactModalContext";
 
 const Header = () => {
+  const pathname = usePathname();
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
   const [isSettingsOpen, setIsSettingsOpen] = useState(true);
@@ -63,21 +65,24 @@ const Header = () => {
     { name: "Contacts", href: "#contacts" },
   ];
   const handleSmoothScroll = (e: React.MouseEvent, href: string) => {
-    e.preventDefault();
-    const targetId = href.substring(1);
-    const targetElement = document.getElementById(targetId);
+    if (pathname === "/") {
+      e.preventDefault();
+      const targetId = href.substring(1);
+      const targetElement = document.getElementById(targetId);
 
-    if (targetElement) {
-      const headerOffset = 80; // Height of your header
-      const elementPosition = targetElement.getBoundingClientRect().top;
-      const offsetPosition =
-        elementPosition + window.pageYOffset - headerOffset;
+      if (targetElement) {
+        const headerOffset = 80; // Height of your header
+        const elementPosition = targetElement.getBoundingClientRect().top;
+        const offsetPosition =
+          elementPosition + window.pageYOffset - headerOffset;
 
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: "smooth",
-      });
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: "smooth",
+        });
+      }
     }
+    // If not on home page, let the default link behavior happen (navigate to /#section)
 
     setIsMobileMenuOpen(false);
   };
@@ -97,7 +102,7 @@ const Header = () => {
               {navLinks.map((link) => (
                 <li key={link.name}>
                   <a
-                    href={link.href}
+                    href={"/" + link.href}
                     onClick={(e) => handleSmoothScroll(e, link.href)}
                     className="hover:text-gray-600 font-inter transition-colors"
                   >
@@ -197,7 +202,7 @@ const Header = () => {
             {navLinks.map((link) => (
               <li key={link.name} className="active:bg-secondary ">
                 <a
-                  href={link.href}
+                  href={"/" + link.href}
                   onClick={(e) => handleSmoothScroll(e, link.href)}
                   className="block text-lg hover:text-gray-600 px-4 py-3 active:text-white font-inter transition-colors "
                 >
