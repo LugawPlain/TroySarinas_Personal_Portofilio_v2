@@ -58,23 +58,26 @@ const Footer = () => {
         </div>
         <div className="flex flex-col mt-4 xl:mt-0 justify-center pl-8 items-center font-inter max-w-80 min-w-80 xl:block order-3 xl:order-3">
           <h3 className="font-semibold text-xl text-secondary">Quick Links</h3>
-          <ul className="flex flex-wrap justify-center gap-3 mt-4 text-sm xl:block ">
-            <Link className="underline" href="#hero">
+          <ul className="flex flex-wrap justify-center gap-2 mt-2 text-sm xl:block ">
+            <Link className="underline" href="/#herosection">
               <li className="py-2 text-secondary">About</li>
             </Link>
-            <Link className="underline" href="#projects">
+            <Link className="underline" href="/blog">
+              <li className="py-2 text-secondary">Blogs</li>
+            </Link>
+            <Link className="underline" href="/projects">
               <li className="py-2 text-secondary">Projects</li>
             </Link>
-            <Link className="underline" href="#experience">
+            <Link className="underline" href="/#experience">
               <li className="py-2 text-secondary">Experience</li>
             </Link>
-            <Link className="underline" href="#education">
+            <Link className="underline" href="/#education">
               <li className="py-2 text-secondary">Education</li>
             </Link>
-            <Link className="underline" href="#technologies">
+            <Link className="underline" href="/#technologies">
               <li className="py-2 text-secondary">Technologies</li>
             </Link>
-            <Link className="underline" href="#certifications">
+            <Link className="underline" href="/#certifications">
               <li className="py-2 text-secondary">Certifications</li>
             </Link>
             <button

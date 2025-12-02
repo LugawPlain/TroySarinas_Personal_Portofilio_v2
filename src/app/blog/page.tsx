@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 
 const BlogPage = () => {
   return (
-    <div className="min-h-screen pt-24 px-4 sm:px-8 max-w-4xl mx-auto font-inter">
+    <div className="min-h-screen pt-8 pb-8 px-4 sm:px-8 max-w-4xl mx-auto font-inter">
       <h1 className="text-3xl sm:text-5xl font-bold font-fraunces text-center mb-4 text-foreground/90">
         Blog
       </h1>

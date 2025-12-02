@@ -58,31 +58,36 @@ const Header = () => {
   };
 
   const navLinks = [
-    { name: "Projects", href: "#projects" },
+    { name: "Projects", href: "/projects" },
+    { name: "Blogs", href: "/blog" },
     { name: "Experience", href: "#experience" },
     { name: "Education", href: "#education" },
     { name: "Certifications", href: "#certifications" },
     { name: "Contacts", href: "#contacts" },
   ];
   const handleSmoothScroll = (e: React.MouseEvent, href: string) => {
-    if (pathname === "/") {
-      e.preventDefault();
-      const targetId = href.substring(1);
-      const targetElement = document.getElementById(targetId);
+    // Only handle smooth scrolling for hash links (starting with #)
+    if (href.startsWith("#")) {
+      if (pathname === "/") {
+        e.preventDefault();
+        const targetId = href.substring(1);
+        const targetElement = document.getElementById(targetId);
 
-      if (targetElement) {
-        const headerOffset = 80; // Height of your header
-        const elementPosition = targetElement.getBoundingClientRect().top;
-        const offsetPosition =
-          elementPosition + window.pageYOffset - headerOffset;
+        if (targetElement) {
+          const headerOffset = 80; // Height of your header
+          const elementPosition = targetElement.getBoundingClientRect().top;
+          const offsetPosition =
+            elementPosition + window.pageYOffset - headerOffset;
 
-        window.scrollTo({
-          top: offsetPosition,
-          behavior: "smooth",
-        });
+          window.scrollTo({
+            top: offsetPosition,
+            behavior: "smooth",
+          });
+        }
       }
+      // If not on home page, let the default link behavior happen (navigate to /#section)
     }
-    // If not on home page, let the default link behavior happen (navigate to /#section)
+    // For non-hash links (/projects, /blog), let them navigate normally
 
     setIsMobileMenuOpen(false);
   };
@@ -102,7 +107,7 @@ const Header = () => {
               {navLinks.map((link) => (
                 <li key={link.name}>
                   <a
-                    href={"/" + link.href}
+                    href={link.href.startsWith("#") ? "/" + link.href : link.href}
                     onClick={(e) => handleSmoothScroll(e, link.href)}
                     className="hover:text-gray-600 font-inter transition-colors"
                   >
@@ -202,7 +207,7 @@ const Header = () => {
             {navLinks.map((link) => (
               <li key={link.name} className="active:bg-secondary ">
                 <a
-                  href={"/" + link.href}
+                  href={link.href.startsWith("#") ? "/" + link.href : link.href}
                   onClick={(e) => handleSmoothScroll(e, link.href)}
                   className="block text-lg hover:text-gray-600 px-4 py-3 active:text-white font-inter transition-colors "
                 >
