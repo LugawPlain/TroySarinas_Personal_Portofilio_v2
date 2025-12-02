@@ -4,55 +4,7 @@ import { Button } from "./ui/button";
 import { MdArrowOutward } from "react-icons/md";
 import { FiExternalLink, FiGithub } from "react-icons/fi";
 import Link from "next/link";
-
-interface Project {
-  id: string;
-  title: string;
-  description: string;
-  image: string;
-  technologies: string[];
-  liveUrl?: string;
-  githubUrl?: string;
-}
-
-const projectsData: Project[] = [
-  {
-    id: "yorticia",
-    title: "Yorticia.com",
-    description:
-      "Created a stunning personal portfolio website for model Yorticia, enhancing her online presence and providing a dedicated space to display her work and connect with industry professionals. The site features an image-rich gallery and detailed service listings",
-    image: "/YorticiaWebsiteThumbnail.png",
-    technologies: [
-      "Next.js",
-      "Tailwind CSS",
-      "Javascript",
-      "Cloudflare",
-      "Firebase",
-    ],
-    liveUrl: "https://Yorticia.com/",
-    githubUrl: "",
-  },
-  {
-    id: "vr-sscr",
-    title: "VR SSCR",
-    description:
-      "Created a VR educational experience for SSCRDC students focused on microcontrollers and logic gates. The simulation allowed students to interactively build virtual circuits, visualize signal flow, and grasp complex digital logic concepts in an intuitive 3D environment",
-    image: "/VRSSCR.webp",
-    technologies: ["Javascript", "Aframe", "Three.js", "Python"],
-    liveUrl: "https://vr-sscr.netlify.app/",
-    githubUrl: "",
-  },
-  {
-    id: "LeadEntryAutomation",
-    title: "N8n Automations",
-    description:
-      "Creating automations for business to streamline complex process by buildings workflows and integrating various APIs to enhance productivity. Using AI Agents to automate tasks and improve efficiency.",
-    image: "/AgentsN8n.png",
-    technologies: ["N8n", "Javascript", "Python", "API Integrations"],
-    liveUrl: "#",
-    githubUrl: "",
-  },
-];
+import { projectsData } from "@/lib/projects";
 
 const Projects = () => {
   return (
@@ -66,17 +18,13 @@ const Projects = () => {
           Projects
         </h1>
         <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8">
-          {projectsData.map((project) => (
+          {projectsData.slice(0, 3).map((project) => (
             <div
               key={project.id}
               className="pb-2 card bg-primary font-fraunces flex-col flex shadow-2xl rounded-2xl overflow-hidden hover:shadow-3xl transition-shadow duration-300"
             >
               <div className="relative w-full aspect-video overflow-hidden bg-gray-500 border-b border-border">
-                <Link
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  href={`/projects?id=${project.id}`}
-                >
+                <Link href={`/projects/${project.id}`}>
                   <Image
                     src={project.image}
                     alt={project.title}

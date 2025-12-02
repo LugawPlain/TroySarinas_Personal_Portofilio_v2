@@ -49,21 +49,37 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Troy Sarinas | SoftWare Engineer",
-  description: "Portfolio of Troy Sarinas.",
+  title: {
+    default: "Troy Sarinas | Software Engineer & Web Developer",
+    template: "%s | Troy Sarinas",
+  },
+  description:
+    "Portfolio of Troy Sarinas, a Software Engineer specializing in Next.js, React, Automation, and Full Stack Development. Explore my projects and technical expertise.",
+  keywords: [
+    "Troy Sarinas",
+    "Software Engineer",
+    "Web Developer",
+    "Next.js",
+    "React",
+    "Automation",
+    "Portfolio",
+  ],
+  authors: [{ name: "Troy Sarinas" }],
+  creator: "Troy Sarinas",
   icons: {
     icon: "/logo.ico",
     shortcut: "/logo.ico",
     apple: "/logo.ico",
   },
   openGraph: {
-    title: "Troy Sarinas | SoftWare Engineer",
-    description: "Portfolio of Troy Sarinas.",
-    url: "https:troysarinas.vercel.app",
+    title: "Troy Sarinas | Software Engineer & Web Developer",
+    description:
+      "Portfolio of Troy Sarinas, a Software Engineer specializing in Next.js, React, Automation, and Full Stack Development.",
+    url: "https://troysarinas.vercel.app",
     siteName: "Troy Sarinas Portfolio",
     images: [
       {
-        url: "",
+        url: "/og-image.png", // Ensure this image exists or use a valid one
         width: 1200,
         height: 630,
         alt: "Troy Sarinas Portfolio Preview",
@@ -74,10 +90,22 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Troy Sarinas | SoftWare Engineer",
-    description: "Portfolio of Troy Sarinas.",
-    images: [""],
-    creator: "@yourtwitterhandle",
+    title: "Troy Sarinas | Software Engineer & Web Developer",
+    description:
+      "Portfolio of Troy Sarinas, a Software Engineer specializing in Next.js, React, Automation, and Full Stack Development.",
+    images: ["/og-image.png"], // Ensure this image exists
+    creator: "@troysarinas", // Updated handle if known, or keep generic
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
   },
 };
 

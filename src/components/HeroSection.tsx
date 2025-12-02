@@ -84,9 +84,9 @@ const HeroSection = () => {
         <div className="space-y-3 flex flex-col lg:justify-center lg:items-center">
           {/* Header */}
           <div>
-            <h2 className="text-3xl xl:text-5xl font-semibold font-fraunces text-center text-foreground/90">
+            <h1 className="text-3xl xl:text-5xl font-semibold font-fraunces text-center text-foreground/90">
               Troy Sarinas
-            </h2>
+            </h1>
             <p className="text-sm xl:text-base text-muted-foreground text-center">
               AI Automation & Software Engineer
             </p>
