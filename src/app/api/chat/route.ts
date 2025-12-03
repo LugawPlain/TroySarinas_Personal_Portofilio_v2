@@ -4,6 +4,86 @@ import { GoogleGenAI } from "@google/genai";
 // Initialize the client
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
+const NOTION_API_KEY = process.env.NOTION_API_KEY;
+const NOTION_DATABASE_ID = process.env.NOTION_DATABASE_ID;
+
+async function logErrorToNotion(error: any, context: any) {
+  // Debug log to check if function is called and credentials exist
+  console.log("Attempting to log to Notion...", { 
+    hasApiKey: !!NOTION_API_KEY, 
+    hasDbId: !!NOTION_DATABASE_ID 
+  });
+
+  if (!NOTION_API_KEY || !NOTION_DATABASE_ID) {
+    console.warn("Notion credentials not set. Skipping error logging to Notion.");
+    return;
+  }
+
+  try {
+    const response = await fetch("https://api.notion.com/v1/pages", {
+  method: "POST",
+  headers: {
+    "Authorization": `Bearer ${NOTION_API_KEY}`,
+    "Content-Type": "application/json",
+    "Notion-Version": "2025-09-03"
+  },
+  body: JSON.stringify({
+    parent: { database_id: NOTION_DATABASE_ID },
+    properties: {
+      "Name": {
+        title: [
+          {
+            text: {
+              content: error.name || "Chat API Error"
+            }
+          }
+        ]
+      },
+      "Timestamp": {
+        date: {
+          start: new Date().toISOString()
+        }
+      },
+      "Error Message": {
+        rich_text: [
+          {
+            text: {
+              content: (
+                (error.message || "Unknown Error") +
+                (error.stack ? `\n\nStack:\n${error.stack}` : "")
+              ).slice(0, 2000)
+            }
+          }
+        ]
+      },
+      "URL": {
+        url: "https://troysarinas.dev/"
+      },
+      "Workflow Name": {
+        rich_text: [
+          {
+            text: {
+              content: "Personal Portfolio Chat API"
+            }
+          }
+        ]
+      }
+    }
+  })
+});
+
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error("Notion API Error:", response.status, errorText);
+    } else {
+      console.log("Successfully logged error to Notion");
+    }
+  } catch (notionError) {
+    console.error("Failed to log error to Notion:", notionError);
+  }
+}
+
 // 🛠️ DEFINING THE PERSONA
 // We define this outside the function to keep things clean.
 const TROY_PERSONA = `
@@ -127,8 +207,15 @@ export async function POST(request: NextRequest) {
         "Cache-Control": "no-cache, no-transform",
       },
     });
-  } catch (error) {
+  } catch (error: any) {
     console.error("Gemini API error:", error);
+    
+    await logErrorToNotion(error, {
+       path: "/api/chat",
+       method: "POST",
+
+    });
+
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }
