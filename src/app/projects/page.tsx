@@ -2,7 +2,6 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import { projectsData } from "@/lib/projects";
-import IntersectingTiltAngles from "@/components/Icons/IntersectingTiltAngles";
 
 export const metadata = {
   title: "Projects | Troy Sarinas",

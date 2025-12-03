@@ -7,7 +7,7 @@ const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 const NOTION_API_KEY = process.env.NOTION_API_KEY;
 const NOTION_DATABASE_ID = process.env.NOTION_DATABASE_ID;
 
-async function logErrorToNotion(error: any, context: any) {
+async function logErrorToNotion(error: unknown) {
   // Debug log to check if function is called and credentials exist
   console.log("Attempting to log to Notion...", { 
     hasApiKey: !!NOTION_API_KEY, 
@@ -21,57 +21,53 @@ async function logErrorToNotion(error: any, context: any) {
 
   try {
     const response = await fetch("https://api.notion.com/v1/pages", {
-  method: "POST",
-  headers: {
-    "Authorization": `Bearer ${NOTION_API_KEY}`,
-    "Content-Type": "application/json",
-    "Notion-Version": "2025-09-03"
-  },
-  body: JSON.stringify({
-    parent: { database_id: NOTION_DATABASE_ID },
-    properties: {
-      "Name": {
-        title: [
-          {
-            text: {
-              content: error.name || "Chat API Error"
-            }
-          }
-        ]
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${NOTION_API_KEY}`,
+        "Content-Type": "application/json",
+        "Notion-Version": "2022-06-28",
       },
-      "Timestamp": {
-        date: {
-          start: new Date().toISOString()
-        }
-      },
-      "Error Message": {
-        rich_text: [
-          {
-            text: {
-              content: (
-                (error.message || "Unknown Error") +
-                (error.stack ? `\n\nStack:\n${error.stack}` : "")
-              ).slice(0, 2000)
-            }
-          }
-        ]
-      },
-      "URL": {
-        url: "https://troysarinas.dev/"
-      },
-      "Workflow Name": {
-        rich_text: [
-          {
-            text: {
-              content: "Personal Portfolio Chat API"
-            }
-          }
-        ]
-      }
-    }
-  })
-});
-
+      body: JSON.stringify({
+        parent: { database_id: NOTION_DATABASE_ID },
+        properties: {
+          "Name": {
+            title: [
+              {
+                text: {
+                  content: error instanceof Error ? error.name : "Chat API Error",
+                },
+              },
+            ],
+          },
+          "Timestamp": {
+            date: {
+              start: new Date().toISOString(),
+            },
+          },
+          "Error Message": {
+            rich_text: [
+              {
+                text: {
+                  content: (error instanceof Error ? (error.message + (error.stack ? `\n\nStack:\n${error.stack}` : "")) : "Unknown Error").slice(0, 2000),
+                },
+              },
+            ],
+          },
+          "URL": {
+            url: "https://troysarinas.dev/",
+          },
+          "Workflow Name": {
+            rich_text: [
+              {
+                text: {
+                  content: "Personal Portfolio Chat API",
+                },
+              },
+            ],
+          },
+        },
+      }),
+    });
 
     if (!response.ok) {
       const errorText = await response.text();
@@ -146,6 +142,7 @@ Value Proposition: If someone asks why they should hire me, the answer is simple
 
 export async function POST(request: NextRequest) {
   try {
+    throw new Error("Something went wrong");
     // 1. We need both the current message AND the history to maintain context
     const { message, history } = await request.json();
 
@@ -207,14 +204,10 @@ export async function POST(request: NextRequest) {
         "Cache-Control": "no-cache, no-transform",
       },
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Gemini API error:", error);
     
-    await logErrorToNotion(error, {
-       path: "/api/chat",
-       method: "POST",
-
-    });
+    await logErrorToNotion(error);
 
     return NextResponse.json(
       { error: "Internal server error" },
