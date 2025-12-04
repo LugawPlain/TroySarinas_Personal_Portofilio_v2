@@ -140,15 +140,68 @@ My Contact Info: If asked, my phone is +63 956 987 8251 and my email is troysari
 Value Proposition: If someone asks why they should hire me, the answer is simple: I’m a self-driven and adaptable developer who brings innovative ideas to life with practical, robust solutions. My diverse skill set allows me to tackle challenges from multiple angles and deliver high-impact results.
 `;
 
+import { rateLimit } from "@/lib/rate-limit";
+
+// Initialize rate limiter: 5 requests per minute per IP
+const limiter = rateLimit({
+  interval: 60 * 1000, // 60 seconds
+  uniqueTokenPerInterval: 500, // Max 500 unique IPs per interval
+});
+
 export async function POST(request: NextRequest) {
   try {
-    throw new Error("Something went wrong");
-    // 1. We need both the current message AND the history to maintain context
+    // 1. Security Checks
+    
+    // A. Origin Check
+    const origin = request.headers.get("origin");
+    const referer = request.headers.get("referer");
+    const host = request.headers.get("host"); // e.g., localhost:3000 or my-site.com
+    
+    // Allow if origin matches host (same-origin) or if it's null (sometimes happens with server-side calls, but be careful)
+    // For strictly browser-based usage, origin should be present.
+    // We can also check against a whitelist of allowed domains.
+    const allowedOrigins = [
+      "http://localhost:3000", 
+      "https://troysarinas.dev", 
+      "https://www.troysarinas.dev"
+    ];
+    
+    const isAllowedOrigin = 
+      (origin && allowedOrigins.includes(origin)) || 
+      (referer && allowedOrigins.some(allowed => referer.startsWith(allowed)));
+
+    // In development, we might be lenient, but for production:
+    if (process.env.NODE_ENV === 'production' && !isAllowedOrigin) {
+       // Optional: Log this attempt
+       console.warn(`Blocked request from unauthorized origin: ${origin || referer}`);
+       return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
+    }
+
+    // B. Rate Limiting
+    const ip = request.headers.get("x-forwarded-for") ?? "127.0.0.1";
+    try {
+      await limiter.check(10, ip); // 5 requests per minute
+    } catch {
+      return NextResponse.json(
+        { error: "Rate limit exceeded. Please try again later." },
+        { status: 429 }
+      );
+    }
+
+    // 2. Parse and Validate Input
     const { message, history } = await request.json();
 
     if (!message) {
       return NextResponse.json(
         { error: "Message is required" },
+        { status: 400 }
+      );
+    }
+
+    // C. Input Validation (Max Length)
+    if (message.length > 500) {
+      return NextResponse.json(
+        { error: "Message is too long (max 500 characters)" },
         { status: 400 }
       );
     }
