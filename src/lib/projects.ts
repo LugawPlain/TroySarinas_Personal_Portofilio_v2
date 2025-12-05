@@ -75,16 +75,27 @@ export const projectsData: Project[] = [
   },
   {
     id: "space-time",
-    title: "Space Time Simulation",
+    title: "Space Time",
     description:
-      "Created a Space Time Simulation that allows users to explore the concept of space and time how the curvature of space-time affects the motion of objects",
+      "A visually stunning, interactive gravity simulation that visualizes the curvature of space-time. This project demonstrates how massive objects (like stars) warp the fabric of space, influencing the motion of smaller objects (like planets) around them, based on General Relativity concepts.",
     image: "/SpaceTimeThumbnail.png",
     clickedImage: "/SpaceTime.png",
     technologies: ["Javascript", "HTML", "CSS"],
     liveUrl: "https://lugawplain.github.io/Space-Time/",
     githubUrl: "https://github.com/LugawPlain/Space-Time",
   },
-
+  {
+    id: "axelrods-tournament",
+    title: "Axelrods Tournament",
+    description:
+      "A comprehensive web-based simulation of Robert Axelrod's famous Prisoner's Dilemma tournament, exploring the evolution of cooperation through game theory This project is based on Robert Axelrod's influential research paper, 'Effective Choice in the Prisoner's Dilemma', which made significant contributions to the fields of game theory, political science, and evolutionary biology.",
+    image: "/AxelrodsTournamentThumbnail.png",
+    clickedImage: "/AxelrodsTournament.png",
+    technologies: ["Javascript", "HTML", "CSS"],
+    liveUrl: "https://lugawplain.github.io/Axelrods-Tournament/",
+    githubUrl: "https://github.com/LugawPlain/Axelrods-Tournament",
+  },
+  
   {
     id: "rag-vector-database-automation",
     title: "RAG Vector Database Automation",
@@ -95,5 +106,16 @@ export const projectsData: Project[] = [
     technologies: ["N8n", "Supabase", "Google Drive", "OpenAI", "Postgres"],
     liveUrl: "#",
     githubUrl: "",
+  },
+   {
+    id: "optical-physics-simulation",
+    title: "Optical Physics Simulation",
+    description:
+      "A comprehensive web-based simulation of Robert Axelrod's famous Prisoner's Dilemma tournament, exploring the evolution of cooperation through game theory This project is based on Robert Axelrod's influential research paper, 'Effective Choice in the Prisoner's Dilemma', which made significant contributions to the fields of game theory, political science, and evolutionary biology.",
+    image: "/OpticalPhysicsSimulationThumbnail.png",
+    clickedImage: "/OpticalPhysicsSimulation.png",
+    technologies: ["Javascript", "HTML", "CSS"],
+    liveUrl: "https://lugawplain.github.io/Optical-Physics-Simulation/",
+    githubUrl: "https://github.com/LugawPlain/Optical-Physics-Simulation",
   },
 ];
