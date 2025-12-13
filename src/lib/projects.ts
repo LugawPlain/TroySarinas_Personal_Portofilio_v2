@@ -66,7 +66,7 @@ export const projectsData: Project[] = [
     id: "hamming-code",
     title: "Hamming Code Parity Error Correction",
     description:
-      "Created a Hamming Code Parity Error Correction System that is fundamental to correct errors in data transmission and storage ",
+      "Created a Hamming Code Parity Error Correction System that is fundamental to correct errors in data transmission and storage. ",
     image: "/HammingCodeThumbnail.png",
     clickedImage: "/HammingCode.png",
     technologies: ["Javascript", "HTML", "CSS"],
@@ -107,11 +107,22 @@ export const projectsData: Project[] = [
     liveUrl: "#",
     githubUrl: "",
   },
-   {
+  {
+    id: "enigma-machine",
+    title: "Enigma Machine",
+    description:
+      "Created a simulation of the Enigma Machine which was used during World War II to encrypt and decrypt messages. This machine is pivotal to the history of cryptography and played a crucial role in the development of modern encryption techniques.",
+    image: "/EnigmaMachineThumbnail.png",
+    clickedImage: "/EnigmaMachine.png",
+    technologies: ["Javascript", "HTML", "CSS"],
+    liveUrl: "https://lugawplain.github.io/Enigma-Machine/",
+    githubUrl: "https://github.com/LugawPlain/Enigma-Machine",
+  },  
+  {
     id: "optical-physics-simulation",
     title: "Optical Physics Simulation",
     description:
-      "A comprehensive web-based simulation of Robert Axelrod's famous Prisoner's Dilemma tournament, exploring the evolution of cooperation through game theory This project is based on Robert Axelrod's influential research paper, 'Effective Choice in the Prisoner's Dilemma', which made significant contributions to the fields of game theory, political science, and evolutionary biology.",
+      "A comprehensive web-based simulation of Optical Physics, how glasses help correct vision and how light travels through different mediums .",
     image: "/OpticalPhysicsSimulationThumbnail.png",
     clickedImage: "/OpticalPhysicsSimulation.png",
     technologies: ["Javascript", "HTML", "CSS"],

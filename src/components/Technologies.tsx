@@ -107,7 +107,7 @@ const Technologies = () => {
       transition={{ duration: 0.5 }}
       className="mt-4 pb-8 relative overflow-clip"
     >
-      <LayeredSlants className="bottom-0 absolute -z-10" />
+      <LayeredSlants className="bottom-0 absolute -z-99" />
       <h2 className="text-center mb-10 font-bold">
         <span className="text-3xl sm:text-4xl text-foreground/90">
           Technologies I use 🧑‍💻

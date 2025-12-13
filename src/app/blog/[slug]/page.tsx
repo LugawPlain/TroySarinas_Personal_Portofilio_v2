@@ -1,23 +1,26 @@
 import React from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { blogPosts } from "@/lib/blog";
+import { getBlogPosts, getBlogPostBySlug } from "@/lib/blog";
 import { FiArrowLeft, FiCalendar, FiClock } from "react-icons/fi";
 import { Metadata } from "next";
-
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import Image from "next/image";
 interface Props {
   params: Promise<{ slug: string }>;
 }
 
 export async function generateStaticParams() {
-  return blogPosts.map((post) => ({
-    slug: post.slug,
+  const posts = await getBlogPosts();
+  return posts.map((post) => ({
+    slug: String(post.slug),
   }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const post = blogPosts.find((p) => p.slug === slug);
+  const post = await getBlogPostBySlug(slug);
 
   if (!post) {
     return {
@@ -40,14 +43,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function BlogPostPage({ params }: Props) {
   const { slug } = await params;
-  const post = blogPosts.find((p) => p.slug === slug);
+  const post = await getBlogPostBySlug(slug);
 
   if (!post) {
     notFound();
   }
 
   return (
-    <div className="min-h-screen pt-8 pb-8 pb-16 px-4 sm:px-8 max-w-3xl mx-auto font-inter">
+    <div className="min-h-screen pt-8 pb-8 pb-16 px-4 sm:px-8 max-w-5xl mx-auto font-inter">
       <Link
         href="/blog"
         className="inline-flex items-center text-muted-foreground hover:text-foreground transition-colors mb-8 group"
@@ -82,9 +85,17 @@ export default async function BlogPostPage({ params }: Props) {
             </div>
           </div>
         </div>
-
+          {post.imageUrl && (
+            <div className="relative w-full aspect-video rounded-xl overflow-hidden border border-border shadow-sm group">
+              <Image
+                src={post.imageUrl} 
+                alt={post.imageAlt || post.title} 
+                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+              />
+            </div>
+          )}
         <div
-          className="blog-content text-foreground/80 leading-relaxed space-y-6 
+            className="blog-content text-foreground/80 leading-relaxed space-y-6 
             [&>h2]:text-2xl [&>h2]:font-bold [&>h2]:text-foreground/90 [&>h2]:mt-8 [&>h2]:mb-4 [&>h2]:font-fraunces
             [&>h3]:text-xl [&>h3]:font-semibold [&>h3]:text-foreground/90 [&>h3]:mt-6 [&>h3]:mb-3
             [&>p]:text-base [&>p]:leading-7 [&>p]:mb-4
@@ -97,8 +108,10 @@ export default async function BlogPostPage({ params }: Props) {
             [&>blockquote]:border-l-4 [&>blockquote]:border-secondary [&>blockquote]:pl-4 [&>blockquote]:italic [&>blockquote]:my-4
             [&>strong]:font-semibold [&>strong]:text-foreground
             [&>a]:text-secondary [&>a]:underline [&>a]:hover:text-secondary/80"
-          dangerouslySetInnerHTML={{ __html: post.content }}
-        />
+         
+        >
+           <ReactMarkdown remarkPlugins={[remarkGfm]}>{post.content}</ReactMarkdown>
+          </div>
       </article>
     </div>
   );

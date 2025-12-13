@@ -49,6 +49,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://troysarinas.vercel.app"),
   title: {
     default: "Troy Sarinas | Software Engineer & Web Developer",
     template: "%s | Troy Sarinas",

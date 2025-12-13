@@ -155,7 +155,6 @@ export async function POST(request: NextRequest) {
     // A. Origin Check
     const origin = request.headers.get("origin");
     const referer = request.headers.get("referer");
-    const host = request.headers.get("host"); // e.g., localhost:3000 or my-site.com
     
     // Allow if origin matches host (same-origin) or if it's null (sometimes happens with server-side calls, but be careful)
     // For strictly browser-based usage, origin should be present.
