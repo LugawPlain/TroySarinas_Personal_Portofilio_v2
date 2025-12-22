@@ -1,0 +1,8 @@
+{
+  "track_id": "ai_chat_widget_20251223",
+  "type": "feature",
+  "status": "new",
+  "created_at": "2025-12-23T06:42:00Z",
+  "updated_at": "2025-12-23T06:42:00Z",
+  "description": "Implement the AI Chat Widget with real-time conversations, session management, and rate limiting."
+}
