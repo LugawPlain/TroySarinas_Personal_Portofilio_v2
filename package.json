@@ -17,6 +17,7 @@
     "@radix-ui/react-avatar": "^1.1.10",
     "@radix-ui/react-slot": "^1.2.3",
     "@splinetool/react-spline": "^4.1.0",
+    "@supabase/mcp-server-supabase": "^0.5.10",
     "@supabase/ssr": "^0.8.0",
     "@supabase/supabase-js": "^2.87.1",
     "@tailwindcss/typography": "^0.5.19",
