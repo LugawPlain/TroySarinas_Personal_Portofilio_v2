@@ -47,26 +47,6 @@ const experienceData: ExperienceItem[] = [
     technologies: ["Next js", "Javascript", "TailwindCSS", "Python", "N8n"],
   },
   {
-    logo: "/FreelanceLogo.png",
-    logoSize: { height: 70, width: 70 },
-    logoBgColor: "bg-black",
-    title: "Software Engineer and Automation Engineer",
-    company: "Freelancer",
-    period: "June 2024 - Present",
-    location: "Remote",
-    description:
-      "Designed and implemented end-to-end software and automation solutions for clients, combining web development with AI automation. Projects include building custom web applications, integrating APIs, and automating workflows across platforms such as Slack, Airtable, and GoHighLevel to improve productivity and scalability.",
-    showHighlights: true,
-    highlights: [
-      {
-        icon: <FaStar size="40" className="text-accent" />,
-        title: "Improved app load time by 20%",
-        label: "App Performance",
-      },
-    ],
-    technologies: ["Next js", "Javascript", "TailwindCSS", "Python", "N8n"],
-  },
-  {
     logo: "",
     logoSize: { height: 70, width: 70 },
     logoBgColor: "bg-gray-600",

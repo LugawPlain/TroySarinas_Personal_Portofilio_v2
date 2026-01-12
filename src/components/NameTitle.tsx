@@ -5,11 +5,12 @@ import Link from "next/link";
 interface NameTitleProps {
   className?: string;
   size?: string;
+  href?: string;
 }
 
-const NameTitle: React.FC<NameTitleProps> = ({ className, size }) => {
+const NameTitle: React.FC<NameTitleProps> = ({ className, size, href = "/" }) => {
   return (
-    <Link href="/">
+    <Link href={href}>
       <h1
         className={cn("text-3xl font-extralight flex items-center", className)}
       >

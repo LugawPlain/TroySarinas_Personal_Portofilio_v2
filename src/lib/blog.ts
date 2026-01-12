@@ -21,6 +21,7 @@ interface SupabaseBlogPost {
   excerpt: string;
   content: string;
   created_at: string;
+  date?: string;
   read_time?: string;
   tags?: string[];
   status: string;
@@ -38,6 +39,7 @@ async function fetchBlogPostsFromDB(): Promise<BlogPost[]> {
     .from("blogs")
     .select("*")
     .eq("status", "published")
+    .order("date", { ascending: false, nullsFirst: false })
     .order("created_at", { ascending: false });
 
   if (error) {
@@ -49,7 +51,7 @@ async function fetchBlogPostsFromDB(): Promise<BlogPost[]> {
     slug: String(post.slug || ''),
     title: post.title,
     excerpt: post.excerpt,
-    date: new Date(post.created_at).toLocaleDateString("en-US", {
+    date: new Date(post.date || post.created_at).toLocaleDateString("en-US", {
       year: "numeric",
       month: "long",
       day: "numeric",
@@ -84,7 +86,7 @@ async function fetchBlogPostBySlugFromDB(slug: string): Promise<BlogPost | null>
     .select("*")
     .eq("slug", slug)
     .eq("status", "published")
-    .single();
+    .maybeSingle();
 
   if (error) {
     console.error("Error fetching blog post:", error);
@@ -97,7 +99,7 @@ async function fetchBlogPostBySlugFromDB(slug: string): Promise<BlogPost | null>
     slug: String(post.slug || ''),
     title: post.title,
     excerpt: post.excerpt,
-    date: new Date(post.created_at).toLocaleDateString("en-US", {
+    date: new Date(post.date || post.created_at).toLocaleDateString("en-US", {
       year: "numeric",
       month: "long",
       day: "numeric",

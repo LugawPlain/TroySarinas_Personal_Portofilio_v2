@@ -1,21 +1,23 @@
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
-import { projectsData } from "@/lib/projects";
+import { getProjects } from "@/lib/projects";
 
 export const metadata = {
   title: "Projects | Troy Sarinas",
   description: "Explore the portfolio projects of Troy Sarinas.",
 };
 
-const ProjectsPage = () => {
+const ProjectsPage = async () => {
+  const projects = await getProjects();
+  
   return (
     <div className="min-h-screen pt-8 pb-8 px-4 sm:px-8 max-w-7xl mx-auto font-inter relative">
       <h1 className="text-3xl sm:text-4xl font-bold font-fraunces text-center mb-8 text-foreground/90">
         Projects
       </h1>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {projectsData.map((project) => (
+        {projects.map((project, index) => (
           <Link
             key={project.id}
             href={`/projects/${project.id}`}
@@ -23,12 +25,20 @@ const ProjectsPage = () => {
           >
             <div className="h-full bg-primary rounded-2xl overflow-hidden shadow-lg border border-border transition-all duration-300 hover:scale-[1.02] hover:shadow-xl flex flex-col">
               <div className="relative w-full aspect-video bg-gray-800 overflow-hidden">
-                <Image
-                  src={project.image}
-                  alt={project.title}
-                  fill
-                  className="object-cover transition-transform duration-500 group-hover:scale-110"
-                />
+                {project.image ? (
+                  <Image
+                    src={project.image}
+                    alt={project.title}
+                    fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    className="object-cover transition-transform duration-500 group-hover:scale-110"
+                    loading={index < 3 ? "eager" : "lazy"}
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center text-muted-foreground">
+                    No Image
+                  </div>
+                )}
               </div>
               <div className="p-6 flex flex-col flex-1">
                 <h2 className="text-xl font-semibold text-secondary mb-2 group-hover:text-secondary/80 transition-colors">

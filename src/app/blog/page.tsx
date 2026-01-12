@@ -40,11 +40,11 @@ const BlogPage = async () => {
                     <span>•</span>
                     <span>{post.readTime}</span>
                   </div>
-                  <div className="flex gap-2">
+                  <div className="flex flex-wrap gap-2">
                     {post.tags.map((tag) => (
                       <span
                         key={tag}
-                        className="text-xs px-2 py-0.5 rounded-full bg-secondary/10 text-secondary border border-secondary/20"
+                        className="text-xs px-2 py-0.5 rounded-full bg-secondary/10 text-secondary border border-secondary/20 whitespace-nowrap"
                       >
                         {tag}
                       </span>
@@ -62,11 +62,12 @@ const BlogPage = async () => {
                 </div>
               </div>
               {post.imageUrl && (
-                <div className="w-full sm:w-64 h-48 sm:h-40 shrink-0 rounded-xl overflow-hidden self-start">
+                <div className="relative w-full sm:w-64 h-48 sm:h-40 shrink-0 rounded-xl overflow-hidden self-start">
                   <Image
                     src={post.imageUrl}
                     alt={post.imageAlt || post.title}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    fill
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
                   />
                 </div>
               )}

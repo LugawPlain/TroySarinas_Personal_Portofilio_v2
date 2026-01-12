@@ -1,0 +1,23 @@
+[
+  {
+    "id": "af666881-e113-4644-8a74-b6d12effb9dc",
+    "slug": "yorticia",
+    "title": "Yorticia.com",
+    "description": "Created a stunning personal portfolio website for model Yorticia, enhancing her online presence and providing a dedicated space to display her work and connect with industry professionals. The site features an image-rich gallery and detailed service listings,implementing Authentication and Authorization for CRUD operations",
+    "thumbnail_url": null,
+    "hero_image_url": null,
+    "technologies": [
+      "Next.js",
+      "Tailwind CSS",
+      "Javascript",
+      "Cloudflare",
+      "Firebase"
+    ],
+    "live_url": "https://Yorticia.com/",
+    "github_url": "https://github.com/LugawPlain/Yorticia",
+    "is_published": true,
+    "display_order": 1,
+    "created_at": "2026-01-05T01:51:00.149496+00:00",
+    "updated_at": "2026-01-05T01:51:00.149496+00:00"
+  }
+]

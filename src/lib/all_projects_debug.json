@@ -1,0 +1,201 @@
+[
+  {
+    "id": "af666881-e113-4644-8a74-b6d12effb9dc",
+    "slug": "yorticia",
+    "title": "Yorticia.com",
+    "description": "Created a stunning personal portfolio website for model Yorticia, enhancing her online presence and providing a dedicated space to display her work and connect with industry professionals. The site features an image-rich gallery and detailed service listings,implementing Authentication and Authorization for CRUD operations",
+    "thumbnail_url": "https://dkyhwhijbmndzajxaeoy.supabase.co/storage/v1/object/public/projects_assets/yorticia/6o66saqq66c-1768160696784.webp",
+    "hero_image_url": "https://dkyhwhijbmndzajxaeoy.supabase.co/storage/v1/object/public/projects_assets/yorticia/xd71dg7iph-1768160697959.png",
+    "technologies": [
+      "Next.js",
+      "Tailwind CSS",
+      "Javascript",
+      "Cloudflare",
+      "Firebase"
+    ],
+    "live_url": "https://Yorticia.com/",
+    "github_url": "https://github.com/LugawPlain/Yorticia",
+    "is_published": true,
+    "display_order": 1,
+    "created_at": "2026-01-05T01:51:00.149496+00:00",
+    "updated_at": "2026-01-11T19:45:03.113+00:00"
+  },
+  {
+    "id": "7b6840d1-ab7f-4dd6-aaf4-7445427a1371",
+    "slug": "lead-entry-automation",
+    "title": "Lead Entry & Enrichment Automation",
+    "description": "Automating Lead Entry Process storing them in Airtable along lead enrichment using APIFY and Firecrawl to extract data from websites and APIs lastly creating a Notion page for each lead",
+    "thumbnail_url": "https://dkyhwhijbmndzajxaeoy.supabase.co/storage/v1/object/public/projects_assets/lead-entry-automation/4kzd0sm9yyn-1768163222588.webp",
+    "hero_image_url": "https://dkyhwhijbmndzajxaeoy.supabase.co/storage/v1/object/public/projects_assets/lead-entry-automation/surn43rrugq-1768163223699.png",
+    "technologies": [
+      "N8n",
+      "APIFY",
+      "Firecrawl",
+      "Tally",
+      "Airtable",
+      "Notion"
+    ],
+    "live_url": "https://tally.so/r/5BXrkd",
+    "github_url": "",
+    "is_published": true,
+    "display_order": 2,
+    "created_at": "2026-01-05T01:51:00.149496+00:00",
+    "updated_at": "2026-01-11T20:27:05.756+00:00"
+  },
+  {
+    "id": "218ec25a-ab2f-4335-92ac-818072a45edc",
+    "slug": "orbital-simulation",
+    "title": "Newton vs Einstein Orbital Simulation",
+    "description": "Simulating Orbits based on Newton equation and Post-Newtonian equation based on Einstein's General Relativity Theory",
+    "thumbnail_url": "https://dkyhwhijbmndzajxaeoy.supabase.co/storage/v1/object/public/projects_assets/orbital-simulation/7rvy9pm9is-1768163281953.webp",
+    "hero_image_url": "https://dkyhwhijbmndzajxaeoy.supabase.co/storage/v1/object/public/projects_assets/orbital-simulation/hlcjg0chzu-1768163282439.png",
+    "technologies": [
+      "Javascript",
+      "HTML",
+      "CSS"
+    ],
+    "live_url": "https://lugawplain.github.io/Newton-vs-Einstein-Orbital-Simulation/",
+    "github_url": "https://github.com/LugawPlain/Newton-vs-Einstein-Orbital-Simulation",
+    "is_published": true,
+    "display_order": 3,
+    "created_at": "2026-01-05T01:51:00.149496+00:00",
+    "updated_at": "2026-01-11T20:28:03.572+00:00"
+  },
+  {
+    "id": "21e15819-854a-4c08-bea1-4237c157ede2",
+    "slug": "hamming-code",
+    "title": "Hamming Code Parity Error Correction",
+    "description": "Created a Hamming Code Parity Error Correction System that is fundamental to correct errors in data transmission and storage.",
+    "thumbnail_url": "https://dkyhwhijbmndzajxaeoy.supabase.co/storage/v1/object/public/projects_assets/hamming-code/2s43on21c9l-1768166613560.webp",
+    "hero_image_url": "https://dkyhwhijbmndzajxaeoy.supabase.co/storage/v1/object/public/projects_assets/hamming-code/b5cqwg4evi-1768166614100.png",
+    "technologies": [
+      "Javascript",
+      "HTML",
+      "CSS"
+    ],
+    "live_url": "https://lugawplain.github.io/Hamming_Code_Parity/",
+    "github_url": "https://github.com/LugawPlain/Hamming_Code_Parity",
+    "is_published": true,
+    "display_order": 4,
+    "created_at": "2026-01-05T01:51:00.149496+00:00",
+    "updated_at": "2026-01-11T21:23:36.235+00:00"
+  },
+  {
+    "id": "27c738f9-8e7f-4672-8410-2d86ccedd114",
+    "slug": "axelrods-tournament",
+    "title": "Axelrods Tournament",
+    "description": "A comprehensive web-based simulation of Robert Axelrod's famous Prisoner's Dilemma tournament, exploring the evolution of cooperation through game theory This project is based on Robert Axelrod's influential research paper, 'Effective Choice in the Prisoner's Dilemma', which made significant contributions to the fields of game theory, political science, and evolutionary biology.",
+    "thumbnail_url": "https://dkyhwhijbmndzajxaeoy.supabase.co/storage/v1/object/public/projects_assets/axelrods-tournament/dkb2cpqfw8g-1768166673129.webp",
+    "hero_image_url": "https://dkyhwhijbmndzajxaeoy.supabase.co/storage/v1/object/public/projects_assets/axelrods-tournament/vfx1lkq9rmf-1768166674237.png",
+    "technologies": [
+      "Javascript",
+      "HTML",
+      "CSS"
+    ],
+    "live_url": "https://lugawplain.github.io/Axelrods-Tournament/",
+    "github_url": "https://github.com/LugawPlain/Axelrods-Tournament",
+    "is_published": true,
+    "display_order": 6,
+    "created_at": "2026-01-05T01:51:00.149496+00:00",
+    "updated_at": "2026-01-11T21:24:35.919+00:00"
+  },
+  {
+    "id": "a1fdb16d-603e-473d-9cbe-68adf5ff3e4b",
+    "slug": "rag-vector-database-automation",
+    "title": "RAG Vector Database Automation",
+    "description": "Created a RAG Vector Database Automation System that automates the process of storing files in Supabase Vector Database then using Retreival Augmented Generation (RAG) to generate responses to user queries",
+    "thumbnail_url": "https://dkyhwhijbmndzajxaeoy.supabase.co/storage/v1/object/public/projects_assets/rag-vector-database-automation/75dj7zscvp8-1768166695182.webp",
+    "hero_image_url": "https://dkyhwhijbmndzajxaeoy.supabase.co/storage/v1/object/public/projects_assets/rag-vector-database-automation/d7asvpjdrm-1768166696250.png",
+    "technologies": [
+      "N8n",
+      "Supabase",
+      "Google Drive",
+      "OpenAI",
+      "Postgres"
+    ],
+    "live_url": "",
+    "github_url": "",
+    "is_published": true,
+    "display_order": 7,
+    "created_at": "2026-01-05T01:51:00.149496+00:00",
+    "updated_at": "2026-01-11T21:24:59.158+00:00"
+  },
+  {
+    "id": "76bbbb66-1273-45de-bf45-3f23a781538f",
+    "slug": "enigma-machine",
+    "title": "Enigma Machine",
+    "description": "Created a simulation of the Enigma Machine which was used during World War II to encrypt and decrypt messages. This machine is pivotal to the history of cryptography and played a crucial role in the development of modern encryption techniques.",
+    "thumbnail_url": "https://dkyhwhijbmndzajxaeoy.supabase.co/storage/v1/object/public/projects_assets/enigma-machine/z528v8192b-1768166711465.webp",
+    "hero_image_url": "https://dkyhwhijbmndzajxaeoy.supabase.co/storage/v1/object/public/projects_assets/enigma-machine/5hlev66cmy2-1768166712025.png",
+    "technologies": [
+      "Javascript",
+      "HTML",
+      "CSS"
+    ],
+    "live_url": "https://lugawplain.github.io/Enigma-Machine/",
+    "github_url": "https://github.com/LugawPlain/Enigma-Machine",
+    "is_published": true,
+    "display_order": 8,
+    "created_at": "2026-01-05T01:51:00.149496+00:00",
+    "updated_at": "2026-01-11T21:25:13.035+00:00"
+  },
+  {
+    "id": "6b37d39d-1c91-4d8d-a10e-6b649e191fdd",
+    "slug": "optical-physics-simulation",
+    "title": "Optical Physics Simulation",
+    "description": "A comprehensive web-based simulation of Optical Physics, how glasses help correct vision and how light travels through different mediums .",
+    "thumbnail_url": "https://dkyhwhijbmndzajxaeoy.supabase.co/storage/v1/object/public/projects_assets/optical-physics-simulation/f4sqfm3g3t-1768166726199.webp",
+    "hero_image_url": "https://dkyhwhijbmndzajxaeoy.supabase.co/storage/v1/object/public/projects_assets/optical-physics-simulation/63kdat0m42f-1768166727197.png",
+    "technologies": [
+      "Javascript",
+      "HTML",
+      "CSS"
+    ],
+    "live_url": "https://lugawplain.github.io/Optical-Physics-Simulation/",
+    "github_url": "https://github.com/LugawPlain/Optical-Physics-Simulation",
+    "is_published": true,
+    "display_order": 9,
+    "created_at": "2026-01-05T01:51:00.149496+00:00",
+    "updated_at": "2026-01-11T21:25:28.7+00:00"
+  },
+  {
+    "id": "42274e62-2388-4714-930b-688da7052e5e",
+    "slug": "vr-sscr",
+    "title": "VR SSCR",
+    "description": "Created a VR educational experience for SSCRDC students focused on microcontrollers and logic gates. The simulation allowed students to interactively build virtual circuits, visualize signal flow, and grasp complex digital logic concepts in an intuitive 3D environment",
+    "thumbnail_url": "https://dkyhwhijbmndzajxaeoy.supabase.co/storage/v1/object/public/projects_assets/vr-sscr/dqvxa6uza6s-1768148436620.webp",
+    "hero_image_url": "https://dkyhwhijbmndzajxaeoy.supabase.co/storage/v1/object/public/projects_assets/vr-sscr/twmlur1ni0c-1768148437821.png",
+    "technologies": [
+      "Javascript",
+      "Aframe",
+      "Three.js",
+      "Blender",
+      "Python"
+    ],
+    "live_url": "https://vr-sscr.netlify.app/",
+    "github_url": "https://github.com/LugawPlain/VR-SSCR",
+    "is_published": true,
+    "display_order": 0,
+    "created_at": "2026-01-05T01:51:00.149496+00:00",
+    "updated_at": "2026-01-11T16:20:40.218+00:00"
+  },
+  {
+    "id": "72f38d05-f676-4ff8-9a65-3d78078ecee3",
+    "slug": "space-time",
+    "title": "Space Time",
+    "description": "A visually stunning, interactive gravity simulation that visualizes the curvature of space-time. This project demonstrates how massive objects (like stars) warp the fabric of space, influencing the motion of smaller objects (like planets) around them, based on General Relativity concepts.",
+    "thumbnail_url": "https://dkyhwhijbmndzajxaeoy.supabase.co/storage/v1/object/public/projects_assets/space-time/3w3b3ynrksh-1768166634842.webp",
+    "hero_image_url": "https://dkyhwhijbmndzajxaeoy.supabase.co/storage/v1/object/public/projects_assets/space-time/1t328v8s1oz-1768166635791.png",
+    "technologies": [
+      "Javascript",
+      "HTML",
+      "CSS"
+    ],
+    "live_url": "https://lugawplain.github.io/Space-Time/",
+    "github_url": "https://github.com/LugawPlain/Space-Time",
+    "is_published": true,
+    "display_order": 5,
+    "created_at": "2026-01-05T01:51:00.149496+00:00",
+    "updated_at": "2026-01-11T21:23:57.854+00:00"
+  }
+]

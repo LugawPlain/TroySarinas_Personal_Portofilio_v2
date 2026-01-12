@@ -6,6 +6,7 @@ import { FiArrowLeft, FiCalendar, FiClock } from "react-icons/fi";
 import { Metadata } from "next";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import rehypeRaw from "rehype-raw";
 import Image from "next/image";
 interface Props {
   params: Promise<{ slug: string }>;
@@ -90,7 +91,8 @@ export default async function BlogPostPage({ params }: Props) {
               <Image
                 src={post.imageUrl} 
                 alt={post.imageAlt || post.title} 
-                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                fill
+                className="object-cover transition-transform duration-700 group-hover:scale-105"
               />
             </div>
           )}
@@ -110,7 +112,7 @@ export default async function BlogPostPage({ params }: Props) {
             [&>a]:text-secondary [&>a]:underline [&>a]:hover:text-secondary/80"
          
         >
-           <ReactMarkdown remarkPlugins={[remarkGfm]}>{post.content}</ReactMarkdown>
+           <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]}>{post.content}</ReactMarkdown>
           </div>
       </article>
     </div>

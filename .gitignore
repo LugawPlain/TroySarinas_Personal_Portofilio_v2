@@ -49,3 +49,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+OPTIMIZATION_AND_IMPROVEMENT_PLAN.md
+TECH_STACK.md
+debug_output.txt
+debug_output.txt

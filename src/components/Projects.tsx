@@ -4,9 +4,11 @@ import { Button } from "./ui/button";
 import { MdArrowOutward } from "react-icons/md";
 import { FiExternalLink, FiGithub } from "react-icons/fi";
 import Link from "next/link";
-import { projectsData } from "@/lib/projects";
+import { getProjects } from "@/lib/projects";
 
-const Projects = () => {
+const Projects = async () => {
+  const projects = await getProjects();
+
   return (
     <div
       id="projects"
@@ -18,19 +20,26 @@ const Projects = () => {
           Projects
         </h1>
         <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8">
-          {projectsData.slice(0, 3).map((project) => (
+          {projects.slice(0, 3).map((project) => (
             <div
               key={project.id}
               className="pb-2 card bg-primary font-fraunces flex-col flex shadow-2xl rounded-2xl overflow-hidden hover:shadow-3xl transition-shadow duration-300"
             >
               <div className="relative w-full aspect-video overflow-hidden bg-gray-500 border-b border-border">
                 <Link href={`/projects/${project.id}`}>
-                  <Image
-                    src={project.image}
-                    alt={project.title}
-                    fill
-                    className="object-cover hover:scale-125 transition duration-300 hover:grayscale-50"
-                  />
+                  {project.image ? (
+                    <Image
+                      src={project.image}
+                      alt={project.title}
+                      fill
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      className="object-cover hover:scale-125 transition duration-300 hover:grayscale-50"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center text-muted-foreground bg-gray-600">
+                      No Image
+                    </div>
+                  )}
                 </Link>
               </div>
               <div className="px-2 xl:px-4 mt-2 mb-2 text-center flex h-full flex-col flex-1">
