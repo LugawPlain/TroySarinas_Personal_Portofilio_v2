@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import ProjectImage from "@/components/ProjectImage";
 import { Project } from "@/lib/projects";
 import Link from "next/link";
