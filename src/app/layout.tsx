@@ -8,6 +8,7 @@ import {
   Montserrat,
 } from "next/font/google";
 import "./globals.css";
+import { GoogleAnalytics } from "@next/third-parties/google";
 import { cn } from "@/lib/utils";
 import { CursorProvider } from "@/components/CursorProvider";
 import { ContactModalProvider } from "@/contexts/ContactModalContext";
@@ -128,6 +129,7 @@ export default function RootLayout({
           "antialiased"
         )}
       >
+        <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID || ""} />
         <CursorProvider>
           <ContactModalProvider>
             <Header />
