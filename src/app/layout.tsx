@@ -126,15 +126,17 @@ export default function RootLayout({
           inter.variable,
           fraunces.variable,
           montserrat.variable,
-          "antialiased"
+          "antialiased",
         )}
       >
-        <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID || ""} />
+        <GoogleAnalytics
+          gaId={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID || ""}
+        />
         <CursorProvider>
           <ContactModalProvider>
-            <Header />
+            {/* <Header /> */}
             {children}
-            <Footer />
+            {/* <Footer /> */}
           </ContactModalProvider>
         </CursorProvider>
       </body>

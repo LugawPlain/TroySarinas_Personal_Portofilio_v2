@@ -1,177 +1,69 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-
-interface Certification {
-  id: string;
-  title: string;
-  description: string;
-  logo: string;
-  logoAlt: string;
-  bgColor?: string;
-  url?: string;
-}
-
-interface WebinarCertificate {
-  id: string;
-  title: string;
-  description: string;
-  logo: string;
-  logoAlt: string;
-  date?: string;
-  organizer?: string;
-  url?: string;
-}
+import { getCertifications } from "@/lib/roles";
 
 interface CertificationsProps {
-  certifications?: Certification[];
-  webinarCertificates?: WebinarCertificate[];
+  role?: string;
   title?: string;
   subtitle?: string;
 }
-// Default certifications data
-const defaultCertifications: Certification[] = [
-  {
-    id: "1",
-    title: "N8n",
-    description: "N8n Certification Badge",
-    logo: "/N8nbadge.png",
-    logoAlt: "N8n badge 2",
-    url: "https://community.n8n.io/badges/104/completed-n8n-course-level-1?username=troy_sarinas",
-  },
-  {
-    id: "2",
-    title: "N8n",
-    description: "N8n Certification Badge 2",
-    logo: "/N8nbadge2.png",
-    logoAlt: "N8n badge 2",
-    url: "https://community.n8n.io/badges/104/completed-n8n-course-level-2?username=troy_sarinas",
-  },
-  {
-    id: "3",
-    title: "IBM",
-    description: "Introduction to Devops",
-    logo: "/IBMLogo.webp",
-    logoAlt: "IBM Logo",
-    url: "https://coursera.org/share/d526d7881be989589f77a7e9124b4338",
-  },
-  {
-    id: "4",
-    title: "React Developer",
-    description: "Modern Web Development with React & TypeScript",
-    logo: "/Icons/react.svg",
-    logoAlt: "React Logo",
-    url: "",
-  },
-  {
-    id: "5",
-    title: "Azure Fundamentals",
-    description: "Microsoft Azure Cloud Services",
-    logo: "/Icons/aws-svgrepo-com.svg",
-    logoAlt: "Azure Logo",
-    url: "",
-  },
-];
 
-// Default webinar certificates data
-const defaultWebinarCertificates: WebinarCertificate[] = [
-  {
-    id: "w1",
-    title: "Cloud Security Fundamentals",
-    description:
-      "Understanding cloud security best practices and implementation",
-    logo: "/Icons/cloudflare-svgrepo-com.svg",
-    logoAlt: "Cloud Security Webinar",
-    date: "2024",
-    organizer: "Cloud Security Alliance",
-    url: "",
-  },
-  {
-    id: "w2",
-    title: "AI & Machine Learning Workshop",
-    description: "Practical applications of AI and ML in modern development",
-    logo: "/Icons/python.svg",
-    logoAlt: "AI Workshop Certificate",
-    date: "2024",
-    organizer: "Tech Conference 2024",
-    url: "",
-  },
-  {
-    id: "w3",
-    title: "DevOps Best Practices",
-    description: "Modern DevOps workflows and automation strategies",
-    logo: "/Icons/docker-svgrepo-com.svg",
-    logoAlt: "DevOps Webinar",
-    date: "2024",
-    organizer: "DevOps Community",
-    url: "",
-  },
-  {
-    id: "w4",
-    title: "Web Performance Optimization",
-    description: "Advanced techniques for web performance and optimization",
-    logo: "/Icons/next.svg",
-    logoAlt: "Web Performance Certificate",
-    date: "2024",
-    organizer: "Web Dev Summit",
-    url: "",
-  },
-];
-
-const Certifications: React.FC<CertificationsProps> = ({
-  certifications = defaultCertifications,
-  webinarCertificates = defaultWebinarCertificates,
+const Certifications = async ({
+  role,
   title = "Professional Certifications & Credentials 📜",
-  subtitle = "Industry Recognized certifications and webinar certificates",
-}) => {
-  const renderCertificateCard = (
-    cert: Certification | WebinarCertificate,
-    isWebinar?: boolean
-  ) => (
+  subtitle = "Industry recognized certifications and webinar certificates",
+}: CertificationsProps) => {
+  const allCerts = await getCertifications(role);
+
+  if (allCerts.length === 0) return null;
+
+  const certifications = allCerts.filter((c) => !c.is_webinar);
+  const webinarCertificates = allCerts.filter((c) => c.is_webinar);
+
+  const renderCertificateCard = (cert: any, isWebinar?: boolean) => (
     <div
       key={cert.id}
-      className="block shadow-2xl rounded-2xl overflow-clip group hover:shadow-3xl transition-all duration-300"
+      className="block shadow-2xl rounded-2xl overflow-clip group hover:shadow-3xl transition-all duration-300 bg-card border border-border/50"
     >
-      {cert.url ? (
+      {cert.cert_url ? (
         <Link
-          href={cert.url}
-          className="h-45 w-full flex items-center justify-center cursor-pointer border-b border-border bg-gray-100 hover:bg-gray-200 transition-colors"
+          href={cert.cert_url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="h-48 w-full flex items-center justify-center cursor-pointer border-b border-border bg-muted/30 hover:bg-muted/50 transition-colors p-6"
         >
           <Image
-            className="group-hover:scale-125 transition duration-300"
-            src={cert.logo}
-            alt={cert.logoAlt}
-            height={150}
-            width={150}
+            className="group-hover:scale-110 transition duration-500 object-contain max-h-full"
+            src={cert.logo_url}
+            alt={cert.logo_alt || cert.title}
+            height={120}
+            width={120}
           />
         </Link>
       ) : (
-        <div className="h-45 w-full flex items-center justify-center border-b border-border bg-gray-100">
+        <div className="h-48 w-full flex items-center justify-center border-b border-border bg-muted/30 p-6">
           <Image
-            className="group-hover:scale-125 transition duration-300"
-            src={cert.logo}
-            alt={cert.logoAlt}
-            height={150}
-            width={150}
+            className="group-hover:scale-110 transition duration-500 object-contain max-h-full"
+            src={cert.logo_url}
+            alt={cert.logo_alt || cert.title}
+            height={120}
+            width={120}
           />
         </div>
       )}
-      <div className="text-center py-4 px-4">
-        <h3 className="mt-1 text-2xl font-bold mb-1 text-secondary">
+      <div className="text-center py-6 px-4 space-y-2">
+        <h3 className="text-xl font-bold text-secondary line-clamp-1">
           {cert.title}
         </h3>
-        <p className="text-center text-base/5 text-muted-foreground mb-2">
+        <p className="text-sm text-muted-foreground line-clamp-2 min-h-[2.5rem]">
           {cert.description}
         </p>
-        {isWebinar && "date" in cert && cert.date && (
-          <p className="text-sm text-muted-foreground">
-            <span className="font-semibold">Date:</span> {cert.date}
-          </p>
-        )}
-        {isWebinar && "organizer" in cert && cert.organizer && (
-          <p className="text-sm text-muted-foreground">
-            <span className="font-semibold">Organizer:</span> {cert.organizer}
-          </p>
+        {(cert.organizer || cert.date_label) && (
+          <div className="pt-2 border-t mt-4 text-[10px] uppercase tracking-widest text-muted-foreground/70 font-bold flex flex-col gap-1">
+            {cert.organizer && <span>{cert.organizer}</span>}
+            {cert.date_label && <span>{cert.date_label}</span>}
+          </div>
         )}
       </div>
     </div>
@@ -180,35 +72,43 @@ const Certifications: React.FC<CertificationsProps> = ({
   return (
     <div
       id="certifications"
-      className="flex-col flex px-4 items-center justify-center"
+      className="flex-col flex px-4 items-center justify-center w-full"
     >
-      <div className="flex flex-col justify-center items-center">
-        <h1 className="text-center font-bold xl:text-4xl text-3xl mt-2 text-foreground/90">
+      <div className="flex flex-col justify-center items-center w-full max-w-[80rem]">
+        <h1 className="text-center font-bold xl:text-4xl text-3xl mt-2 text-foreground/90 leading-tight">
           {title}
         </h1>
-        <p className="text-center text-muted-foreground">{subtitle}</p>
+        <p className="text-center text-muted-foreground mt-2">{subtitle}</p>
 
         {/* Professional Certifications Section */}
-        <div className="w-full max-w-[80rem] mt-12">
-          <h2 className="text-center font-bold text-3xl mb-8 text-foreground/80">
-            Professional Certifications 🏆
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-14 gap-y-12">
-            {certifications.map((cert) => renderCertificateCard(cert))}
+        {certifications.length > 0 && (
+          <div className="w-full mt-16">
+            <h2 className="text-center font-bold text-2xl mb-10 text-foreground/80 flex items-center justify-center gap-3">
+              <span className="h-px w-12 bg-border hidden sm:block" />
+              Professional Certifications 🏆
+              <span className="h-px w-12 bg-border hidden sm:block" />
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+              {certifications.map((cert) => renderCertificateCard(cert))}
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Webinar Certificates Section */}
-        <div className="w-full max-w-[80rem] mt-16">
-          <h2 className="text-center font-bold text-3xl mb-8 text-foreground/80">
-            Webinar Certificates & Workshops 🎓
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-14 gap-y-12">
-            {webinarCertificates.map((cert) =>
-              renderCertificateCard(cert, true)
-            )}
+        {webinarCertificates.length > 0 && (
+          <div className="w-full mt-24 pb-12">
+            <h2 className="text-center font-bold text-2xl mb-10 text-foreground/80 flex items-center justify-center gap-3">
+              <span className="h-px w-12 bg-border hidden sm:block" />
+              Webinar Certificates & Workshops 🎓
+              <span className="h-px w-12 bg-border hidden sm:block" />
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+              {webinarCertificates.map((cert) =>
+                renderCertificateCard(cert, true),
+              )}
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );

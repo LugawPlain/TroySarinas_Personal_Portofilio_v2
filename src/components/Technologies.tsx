@@ -1,82 +1,22 @@
 "use client";
 
 import React, { useState } from "react";
-import CloudfareIcon from "./Icons/CloudfareIcon";
-import { SiFramer } from "react-icons/si";
-import { IoLogoJavascript } from "react-icons/io5";
-import { SiTypescript } from "react-icons/si";
-import { FaPython } from "react-icons/fa";
-
-import { FaReact } from "react-icons/fa";
-import { FaNodeJs } from "react-icons/fa";
-import { SiNextdotjs } from "react-icons/si";
-
-import { FaDocker } from "react-icons/fa";
-import { RiTailwindCssFill } from "react-icons/ri";
-import { SiN8N } from "react-icons/si";
-import { SiMake } from "react-icons/si";
-import { SiZapier } from "react-icons/si";
-import { FaHubspot } from "react-icons/fa";
-import { FaVuejs } from "react-icons/fa";
-import { SiMongodb } from "react-icons/si";
-import { FaAws } from "react-icons/fa6";
-import { BiLogoPostgresql } from "react-icons/bi";
-import { SiPrisma } from "react-icons/si";
-import { FaWordpress } from "react-icons/fa";
-import { SiMysql } from "react-icons/si";
-import { SiThreedotjs } from "react-icons/si";
 import { motion } from "framer-motion";
-import { PiOpenAiLogo } from "react-icons/pi";
-import { SiGooglegemini } from "react-icons/si";
-import { SiClaude } from "react-icons/si";
-import { RiPerplexityLine } from "react-icons/ri";
-import { SiOllama } from "react-icons/si";
-import { SiHuggingface } from "react-icons/si";
-import { RiSupabaseLine } from "react-icons/ri";
-import { FaHtml5 } from "react-icons/fa";
-import { IoLogoCss3 } from "react-icons/io5";
-import { FaArrowsUpToLine } from "react-icons/fa6";
-import { FaShopify } from "react-icons/fa";
-import { SiWoocommerce } from "react-icons/si";
 import LayeredSlants from "./Icons/LayeredSlants";
-const technologies = [
-  { name: "HTML", IconComponent: FaHtml5, Percent: 100 },
-  { name: "CSS", IconComponent: IoLogoCss3, Percent: 95 },
-  { name: "JavaScript", IconComponent: IoLogoJavascript, Percent: 90 },
-  { name: "TypeScript", IconComponent: SiTypescript, Percent: 90 },
-  { name: "React", IconComponent: FaReact, Percent: 90 },
-  { name: "Vue", IconComponent: FaVuejs, Percent: 70 },
-  { name: "Node.js", IconComponent: FaNodeJs, Percent: 85 },
-  { name: "Next.js", IconComponent: SiNextdotjs, Percent: 90 },
-  { name: "Python", IconComponent: FaPython, Percent: 95 },
-  { name: "Docker", IconComponent: FaDocker, Percent: 80 },
-  { name: "Tailwind CSS", IconComponent: RiTailwindCssFill, Percent: 92 },
-  { name: "Three.js", IconComponent: SiThreedotjs, Percent: 60 },
-  { name: "MongoDB", IconComponent: SiMongodb, Percent: 80 },
-  { name: "Supabase", IconComponent: RiSupabaseLine, Percent: 75 },
-  { name: "MySQL", IconComponent: SiMysql, Percent: 85 },
-  { name: "PostgreSQL", IconComponent: BiLogoPostgresql, Percent: 80 },
-  { name: "Prisma", IconComponent: SiPrisma, Percent: 50 },
-  { name: "AWS", IconComponent: FaAws, Percent: 60 },
-  { name: "Cloudfare", IconComponent: CloudfareIcon, Percent: 70 },
-  { name: "WordPress", IconComponent: FaWordpress, Percent: 80 },
-  { name: "Framer", IconComponent: SiFramer, Percent: 60 },
-  { name: "Shopify", IconComponent: FaShopify, Percent: 80 },
-  { name: "WooCommerce", IconComponent: SiWoocommerce, Percent: 75 },
-  { name: "n8n", IconComponent: SiN8N, Percent: 98 },
-  { name: "Make", IconComponent: SiMake, Percent: 80 },
-  { name: "Zapier", IconComponent: SiZapier, Percent: 40 },
-  { name: "HubSpot", IconComponent: FaHubspot, Percent: 30 },
-  { name: "OpenAI", IconComponent: PiOpenAiLogo, Percent: 98 },
-  { name: "Google Gemini", IconComponent: SiGooglegemini, Percent: 95 },
-  { name: "Claude", IconComponent: SiClaude, Percent: 98 },
-  { name: "Perplexity", IconComponent: RiPerplexityLine, Percent: 80 },
-  { name: "Ollama", IconComponent: SiOllama, Percent: 98 },
-  { name: "Huggingface", IconComponent: SiHuggingface, Percent: 95 },
-  { name: "GoHighLevel,", IconComponent: FaArrowsUpToLine, Percent: 80 },
-];
+import DynamicIcon from "./DynamicIcon";
 
-const Technologies = () => {
+interface TechItem {
+  name: string;
+  icon_name: string;
+  proficiency: number;
+}
+
+interface TechnologiesProps {
+  role?: string;
+  initialTech: TechItem[];
+}
+
+const Technologies = ({ role, initialTech }: TechnologiesProps) => {
   const [showAll, setShowAll] = useState(false);
   const [tappedIndex, setTappedIndex] = useState<number | null>(null);
 
@@ -100,7 +40,7 @@ const Technologies = () => {
 
   return (
     <motion.div
-    id="technologies"
+      id="technologies"
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
@@ -126,7 +66,7 @@ const Technologies = () => {
           initial="hidden"
           animate={showAll ? "visible" : "hidden"}
         >
-          {technologies.map(({ name, IconComponent, Percent = 50 }, index) => {
+          {initialTech.map(({ name, icon_name, proficiency }, index) => {
             const isActive = tappedIndex === index;
 
             return (
@@ -148,7 +88,7 @@ const Technologies = () => {
                     className="absolute px-4 py-2 flex items-center justify-between inset-0 rounded-lg bg-secondary text-secondary-foreground"
                     style={{ backfaceVisibility: "hidden" }}
                   >
-                    {<IconComponent size={24} />}
+                    <DynamicIcon name={icon_name} size={24} />
                     <p className="text-sm font-medium font-inter">{name}</p>
                   </div>
                   <div
@@ -158,13 +98,13 @@ const Technologies = () => {
                       transform: "rotateY(180deg)",
                     }}
                   >
-                    <p className="text-center text-xs xl:text-md font-semibold">
+                    <p className="text-center text-xs xl:text-md font-semibold text-gray-800">
                       {(() => {
-                        if (Percent < 30) return "Entry Level";
-                        if (Percent < 50) return "Junior";
-                        if (Percent < 70) return "Mid-Level";
-                        if (Percent < 80) return "Senior";
-                        if (Percent < 90) return "Expert";
+                        if (proficiency < 30) return "Entry Level";
+                        if (proficiency < 50) return "Junior";
+                        if (proficiency < 70) return "Mid-Level";
+                        if (proficiency < 80) return "Senior";
+                        if (proficiency < 90) return "Expert";
                         return "Advanced";
                       })()}
                     </p>
@@ -172,9 +112,9 @@ const Technologies = () => {
                       <motion.div
                         initial={{ width: "0%" }}
                         animate={{
-                          width: isActive ? `${Percent}%` : "0%",
+                          width: isActive ? `${proficiency}%` : "0%",
                           filter: isActive
-                            ? `hue-rotate(${(Percent / 100) * 120}deg)`
+                            ? `hue-rotate(${(proficiency / 100) * 120}deg)`
                             : "none",
                         }}
                         transition={{ duration: 1.5, ease: "linear" }}
@@ -186,7 +126,7 @@ const Technologies = () => {
                             animate={{ opacity: isActive ? 1 : 0 }}
                             transition={{ duration: 3 }}
                           >
-                            {Percent}%
+                            {proficiency}%
                           </motion.p>
                         </div>
                       </motion.div>

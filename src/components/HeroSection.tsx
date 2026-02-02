@@ -10,9 +10,23 @@ import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import { useRouter } from "next/navigation";
 import ContactModal from "./ContactModal";
 
-const HeroSection = () => {
+interface HeroSectionProps {
+  headline?: string;
+  bio?: string;
+  resumeUrl?: string;
+}
+
+const HeroSection = ({ headline, bio, resumeUrl }: HeroSectionProps) => {
   const router = useRouter();
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
+
+  const handleResumeClick = () => {
+    if (resumeUrl) {
+      window.open(resumeUrl, "_blank");
+    } else {
+      router.push("/?resume=true");
+    }
+  };
   const handleSplineLoad = () => {
     setTimeout(() => {
       const viewer = document.querySelector("spline-viewer");
@@ -85,10 +99,10 @@ const HeroSection = () => {
           {/* Header */}
           <div>
             <h1 className="text-3xl xl:text-5xl font-semibold font-fraunces text-center text-foreground/90">
-              Troy Sarinas
+              {headline}
             </h1>
             <p className="text-sm xl:text-base text-muted-foreground text-center">
-              AI Automation & Software Engineer
+              Troy Sarinas
             </p>
           </div>
 
@@ -96,13 +110,7 @@ const HeroSection = () => {
           <div className="flex flex-col xl:flex-row">
             <div className="flex flex-col justify-center items-center">
               {/* Bio */}
-              <p className="mt-2 xl:text-lg text-justify">
-                🚀 I am a graduate of Computer Engineering with a passion for
-                technology and design. Collaborating with companies worldwide to
-                create visually stunning, highly functional, and user-friendly
-                digital experiences that deliver measurable results and support
-                business growth.
-              </p>
+              <p className="mt-2 xl:text-lg text-justify">{bio}</p>
               {/* Status Cards */}
               <div className="grid grid-flow-col grid-rows-2 lg:grid-cols-2 lg:grid-rows-1 font-inter font-semibold gap-8 mt-4 w-full">
                 {/* Available Card */}
@@ -165,7 +173,7 @@ const HeroSection = () => {
                   Get in Touch
                 </Button>
                 <Button
-                  onClick={() => router.push("/?resume=true")}
+                  onClick={handleResumeClick}
                   variant="outline"
                   className="text-md cursor-pointer font-semibold px-5 py-5 border-border border-2 uppercase tracking-tight shadow-lg"
                 >

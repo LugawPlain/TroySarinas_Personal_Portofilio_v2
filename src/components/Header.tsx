@@ -15,6 +15,11 @@ import { useContactModal } from "@/contexts/ContactModalContext";
 const Header = () => {
   const pathname = usePathname();
   const [isVisible, setIsVisible] = useState(true);
+
+  // Detect if we are in a role-specific portfolio
+  const pathnameParts = pathname.split("/");
+  const isRoleRoute = pathnameParts[1] === "portfolio" && pathnameParts[2];
+  const rolePrefix = isRoleRoute ? `/portfolio/${pathnameParts[2]}` : "";
   const [lastScrollY, setLastScrollY] = useState(0);
   const [isSettingsOpen, setIsSettingsOpen] = useState(true);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -58,8 +63,11 @@ const Header = () => {
   };
 
   const navLinks = [
-    { name: "Projects", href: "/projects" },
-    { name: "Blogs", href: "/blog" },
+    {
+      name: "Projects",
+      href: rolePrefix ? `${rolePrefix}/projects` : "/projects",
+    },
+    { name: "Blogs", href: rolePrefix ? `${rolePrefix}/blog` : "/blog" },
     { name: "Experience", href: "#experience" },
     { name: "Education", href: "#education" },
     { name: "Certifications", href: "#certifications" },
@@ -107,7 +115,11 @@ const Header = () => {
               {navLinks.map((link) => (
                 <li key={link.name}>
                   <a
-                    href={link.href.startsWith("#") ? "/" + link.href : link.href}
+                    href={
+                      link.href.startsWith("#")
+                        ? (rolePrefix || "") + link.href
+                        : link.href
+                    }
                     onClick={(e) => handleSmoothScroll(e, link.href)}
                     className="hover:text-gray-600 font-inter transition-colors"
                   >
@@ -207,7 +219,11 @@ const Header = () => {
             {navLinks.map((link) => (
               <li key={link.name} className="active:bg-secondary ">
                 <a
-                  href={link.href.startsWith("#") ? "/" + link.href : link.href}
+                  href={
+                    link.href.startsWith("#")
+                      ? (rolePrefix || "") + link.href
+                      : link.href
+                  }
                   onClick={(e) => handleSmoothScroll(e, link.href)}
                   className="block text-lg hover:text-gray-600 px-4 py-3 active:text-white font-inter transition-colors "
                 >
