@@ -1,15 +1,25 @@
+"use client";
+
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { getEducation } from "@/lib/roles";
 
-interface EducationProps {
-  role?: string;
+interface EducationItem {
+  id: string;
+  school: string;
+  degree: string;
+  period: string;
+  logo_url: string;
+  website_url?: string;
+  description: string;
+  highlights: { icon: string; text: string }[];
 }
 
-const Education = async ({ role }: EducationProps) => {
-  const educationItems = await getEducation(role);
+interface EducationProps {
+  educationItems: EducationItem[];
+}
 
+const StandardEducation = ({ educationItems }: EducationProps) => {
   if (educationItems.length === 0) return null;
 
   return (
@@ -98,4 +108,4 @@ const Education = async ({ role }: EducationProps) => {
   );
 };
 
-export default Education;
+export default StandardEducation;

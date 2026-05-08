@@ -1,27 +1,38 @@
+"use client";
+
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { getCertifications } from "@/lib/roles";
+
+interface Certification {
+  id: string;
+  title: string;
+  description: string;
+  logo_url: string;
+  logo_alt?: string;
+  cert_url?: string;
+  is_webinar: boolean;
+  organizer?: string;
+  date_label?: string;
+}
 
 interface CertificationsProps {
-  role?: string;
+  certifications: Certification[];
   title?: string;
   subtitle?: string;
 }
 
-const Certifications = async ({
-  role,
+const StandardCertifications = ({
+  certifications: allCerts,
   title = "Professional Certifications & Credentials 📜",
   subtitle = "Industry recognized certifications and webinar certificates",
 }: CertificationsProps) => {
-  const allCerts = await getCertifications(role);
-
   if (allCerts.length === 0) return null;
 
-  const certifications = allCerts.filter((c) => !c.is_webinar);
-  const webinarCertificates = allCerts.filter((c) => c.is_webinar);
+  const professionalCerts = allCerts.filter((c) => !c.is_webinar);
+  const webinarCerts = allCerts.filter((c) => c.is_webinar);
 
-  const renderCertificateCard = (cert: any, isWebinar?: boolean) => (
+  const renderCertificateCard = (cert: Certification) => (
     <div
       key={cert.id}
       className="block shadow-2xl rounded-2xl overflow-clip group hover:shadow-3xl transition-all duration-300 bg-card border border-border/50"
@@ -56,7 +67,7 @@ const Certifications = async ({
         <h3 className="text-xl font-bold text-secondary line-clamp-1">
           {cert.title}
         </h3>
-        <p className="text-sm text-muted-foreground line-clamp-2 min-h-[2.5rem]">
+        <p className="text-sm text-muted-foreground line-clamp-2 min-h-10">
           {cert.description}
         </p>
         {(cert.organizer || cert.date_label) && (
@@ -74,14 +85,13 @@ const Certifications = async ({
       id="certifications"
       className="flex-col flex px-4 items-center justify-center w-full"
     >
-      <div className="flex flex-col justify-center items-center w-full max-w-[80rem]">
+      <div className="flex flex-col justify-center items-center w-full max-w-7xl">
         <h1 className="text-center font-bold xl:text-4xl text-3xl mt-2 text-foreground/90 leading-tight">
           {title}
         </h1>
         <p className="text-center text-muted-foreground mt-2">{subtitle}</p>
 
-        {/* Professional Certifications Section */}
-        {certifications.length > 0 && (
+        {professionalCerts.length > 0 && (
           <div className="w-full mt-16">
             <h2 className="text-center font-bold text-2xl mb-10 text-foreground/80 flex items-center justify-center gap-3">
               <span className="h-px w-12 bg-border hidden sm:block" />
@@ -89,13 +99,12 @@ const Certifications = async ({
               <span className="h-px w-12 bg-border hidden sm:block" />
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-              {certifications.map((cert) => renderCertificateCard(cert))}
+              {professionalCerts.map((cert) => renderCertificateCard(cert))}
             </div>
           </div>
         )}
 
-        {/* Webinar Certificates Section */}
-        {webinarCertificates.length > 0 && (
+        {webinarCerts.length > 0 && (
           <div className="w-full mt-24 pb-12">
             <h2 className="text-center font-bold text-2xl mb-10 text-foreground/80 flex items-center justify-center gap-3">
               <span className="h-px w-12 bg-border hidden sm:block" />
@@ -103,9 +112,7 @@ const Certifications = async ({
               <span className="h-px w-12 bg-border hidden sm:block" />
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-              {webinarCertificates.map((cert) =>
-                renderCertificateCard(cert, true),
-              )}
+              {webinarCerts.map((cert) => renderCertificateCard(cert))}
             </div>
           </div>
         )}
@@ -114,4 +121,4 @@ const Certifications = async ({
   );
 };
 
-export default Certifications;
+export default StandardCertifications;

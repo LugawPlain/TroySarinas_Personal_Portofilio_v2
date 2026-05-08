@@ -1,18 +1,19 @@
+"use client";
+
 import React from "react";
 import Image from "next/image";
-import { Button } from "./ui/button";
+import { Button } from "../../ui/button";
 import { MdArrowOutward } from "react-icons/md";
 import { FiExternalLink, FiGithub } from "react-icons/fi";
 import Link from "next/link";
-import { getProjects, Project } from "@/lib/projects";
+import { Project } from "@/lib/projects";
 
 interface ProjectsProps {
-  initialProjects?: Project[] | null;
+  projects: Project[];
   role?: string;
 }
 
-const Projects = async ({ initialProjects, role }: ProjectsProps) => {
-  const projects = initialProjects || (await getProjects(role));
+const StandardProjects = ({ projects, role }: ProjectsProps) => {
   const rolePrefix = role ? `/portfolio/${role}` : "";
 
   return (
@@ -145,4 +146,4 @@ const Projects = async ({ initialProjects, role }: ProjectsProps) => {
   );
 };
 
-export default Projects;
+export default StandardProjects;

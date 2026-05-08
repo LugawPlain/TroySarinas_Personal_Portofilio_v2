@@ -10,6 +10,7 @@ import {
   LinkGeneratorForm,
   LinkActions,
   ResumeManager,
+  InteractionFeed,
 } from "./DashboardComponents";
 import { PortfolioContentManager } from "./PortfolioManager";
 
@@ -160,10 +161,10 @@ export default async function DashboardPage() {
       </section>
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-        {/* Left Side: Forms */}
+        {/* Left Side: Forms & Activity Feed */}
         <div className="lg:col-span-1 space-y-8">
-          <LinkGeneratorForm />
-          <ResumeManager initialResumes={resumes} />
+          <LinkGeneratorForm roles={roles} />
+          {/* <ResumeManager initialResumes={resumes} roles={roles} /> */}
         </div>
 
         {/* Right Side: Links Table */}
@@ -224,6 +225,7 @@ export default async function DashboardPage() {
                           <LinkActions
                             linkId={link.id}
                             verSlug={link.version_slug}
+                            targetRole={link.target_role}
                           />
                         </td>
                       </tr>
@@ -247,6 +249,7 @@ export default async function DashboardPage() {
           </div>
         </div>
       </div>
+      <InteractionFeed />
     </div>
   );
 }

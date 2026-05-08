@@ -1,22 +1,26 @@
 "use client";
+
 import React, { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import InfoIcon from "../../public/Icons/InformationIcon";
-import SocialLinks from "./SocialLinks";
-import { Button } from "./ui/button";
+import SocialLinks from "@/components/SocialLinks";
+import { Button } from "@/components/ui/button";
 import Spline from "@splinetool/react-spline";
 import { motion } from "framer-motion";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import { useRouter } from "next/navigation";
-import ContactModal from "./ContactModal";
+import ContactModal from "@/components/ContactModal";
+import InfoIcon from "@/../public/Icons/InformationIcon";
 
 interface HeroSectionProps {
   headline?: string;
   bio?: string;
   resumeUrl?: string;
 }
-
-const HeroSection = ({ headline, bio, resumeUrl }: HeroSectionProps) => {
+const StandardHeroSection = ({
+  headline,
+  bio,
+  resumeUrl,
+}: HeroSectionProps) => {
   const router = useRouter();
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
 
@@ -27,6 +31,7 @@ const HeroSection = ({ headline, bio, resumeUrl }: HeroSectionProps) => {
       router.push("/?resume=true");
     }
   };
+
   const handleSplineLoad = () => {
     setTimeout(() => {
       const viewer = document.querySelector("spline-viewer");
@@ -168,12 +173,14 @@ const HeroSection = ({ headline, bio, resumeUrl }: HeroSectionProps) => {
               <div className="flex justify-center gap-4 mt-8 ">
                 <Button
                   onClick={() => setIsContactModalOpen(true)}
+                  trackId="clicked_contact_hero"
                   className="text-md  cursor-pointer font-semibold px-5 py-5 bg-secondary inset-ring-secondary inset-ring  text-secondary-foreground uppercase tracking-tight shadow-lg"
                 >
                   Get in Touch
                 </Button>
                 <Button
                   onClick={handleResumeClick}
+                  trackId="clicked_resume_hero"
                   variant="outline"
                   className="text-md cursor-pointer font-semibold px-5 py-5 border-border border-2 uppercase tracking-tight shadow-lg"
                 >
@@ -203,4 +210,4 @@ const HeroSection = ({ headline, bio, resumeUrl }: HeroSectionProps) => {
   );
 };
 
-export default HeroSection;
+export default StandardHeroSection;

@@ -3,7 +3,7 @@
 import Image from "next/image";
 import React from "react";
 import { MdImageNotSupported } from "react-icons/md";
-import DynamicIcon from "./DynamicIcon";
+import DynamicIcon from "../../DynamicIcon";
 
 interface ExperienceHighlights {
   icon?: string;
@@ -25,11 +25,10 @@ interface ExperienceItem {
 }
 
 interface ExperienceProps {
-  role?: string;
   initialExperience: ExperienceItem[];
 }
 
-const Experience = ({ role, initialExperience }: ExperienceProps) => {
+const StandardExperience = ({ initialExperience }: ExperienceProps) => {
   return (
     <div
       id="experience"
@@ -136,4 +135,4 @@ const Experience = ({ role, initialExperience }: ExperienceProps) => {
   );
 };
 
-export default Experience;
+export default StandardExperience;

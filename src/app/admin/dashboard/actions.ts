@@ -53,3 +53,28 @@ export async function deleteGatewayLink(id: string) {
   revalidatePath("/admin/dashboard");
   return { success: true };
 }
+
+export async function getInteractionEvents() {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from("gateway_events")
+    .select(
+      `
+      *,
+      gateway_links (
+        label,
+        target_role
+      )
+    `,
+    )
+    .order("created_at", { ascending: false })
+    .limit(50);
+
+  if (error) {
+    console.error("Error fetching events:", error);
+    return [];
+  }
+
+  return data;
+}

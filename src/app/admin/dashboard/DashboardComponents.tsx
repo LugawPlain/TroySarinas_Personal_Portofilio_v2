@@ -14,9 +14,113 @@ import {
   Check,
   FileText,
   Save,
+  Activity,
+  MousePointer2,
+  Eye,
 } from "lucide-react";
+import { getInteractionEvents } from "./actions";
+import { useEffect } from "react";
 
-export function LinkGeneratorForm() {
+export function InteractionFeed() {
+  const [events, setEvents] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchEvents = async () => {
+      const data = await getInteractionEvents();
+      setEvents(data);
+      setIsLoading(false);
+    };
+
+    fetchEvents();
+    // Refresh every 30 seconds
+    const interval = setInterval(fetchEvents, 30000);
+    return () => clearInterval(interval);
+  }, []);
+
+  if (isLoading)
+    return (
+      <div className="bg-card rounded-xl border p-12 text-center text-muted-foreground shadow-sm h-full flex flex-col items-center justify-center gap-2">
+        <Loader2 className="w-5 h-5 animate-spin" />
+        <p className="text-xs font-bold uppercase tracking-widest opacity-50">
+          Syncing Live Feed...
+        </p>
+      </div>
+    );
+
+  const refreshEvents = async () => {
+    setIsLoading(true);
+    const data = await getInteractionEvents();
+    setEvents(data);
+    setIsLoading(false);
+  };
+
+  return (
+    <div className="bg-card rounded-xl border p-6 space-y-4 shadow-sm h-full flex flex-col">
+      <div className="flex items-center justify-between mb-2">
+        <h2 className="text-xl font-semibold flex items-center gap-2">
+          <Activity className="w-5 h-5 text-accent" />
+          Live Activity Feed
+        </h2>
+        <button
+          onClick={refreshEvents}
+          disabled={isLoading}
+          className="text-muted-foreground hover:text-accent p-1 transition-colors disabled:opacity-50"
+          title="Refresh Feed"
+        >
+          <Loader2 className={`w-4 h-4 ${isLoading ? "animate-spin" : ""}`} />
+        </button>
+      </div>
+
+      <div className="flex-1 overflow-y-auto space-y-4 pr-2 custom-scrollbar">
+        {events.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-12 text-center">
+            <XCircle className="w-8 h-8 text-muted-foreground/20 mb-2" />
+            <p className="text-sm text-muted-foreground italic">
+              No interactions recorded yet.
+            </p>
+          </div>
+        ) : (
+          events.map((event) => (
+            <div
+              key={event.id}
+              className="group relative pl-4 border-l-2 border-muted hover:border-accent transition-colors pb-1"
+            >
+              <div className="flex items-center justify-between mb-0.5">
+                <span className="text-[10px] font-black uppercase tracking-tighter text-accent">
+                  {event.gateway_links?.label || "Unknown Link"}
+                </span>
+                <span className="text-[10px] text-muted-foreground font-medium">
+                  {new Date(event.created_at).toLocaleTimeString([], {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                {event.event_name === "section_view" ? (
+                  <Eye className="w-3 h-3 text-blue-500" />
+                ) : (
+                  <MousePointer2 className="w-3 h-3 text-emerald-500" />
+                )}
+                <span className="text-sm font-semibold capitalize tracking-tight">
+                  {event.event_name.replace(/_/g, " ")}
+                </span>
+              </div>
+              {event.section && (
+                <div className="text-[10px] text-muted-foreground mt-0.5 font-bold uppercase tracking-widest opacity-60">
+                  Section: {event.section}
+                </div>
+              )}
+            </div>
+          ))
+        )}
+      </div>
+    </div>
+  );
+}
+
+export function LinkGeneratorForm({ roles }: { roles: any[] }) {
   const [state, formAction, isPending] = useActionState(
     createGatewayLink,
     null,
@@ -37,9 +141,11 @@ export function LinkGeneratorForm() {
             className="w-full h-10 px-3 rounded-md border bg-background border-input focus:ring-2 focus:ring-accent outline-none"
             required
           >
-            <option value="software-engineer">Software Engineer</option>
-            <option value="gtm-engineer">GTM Engineer</option>
-            <option value="video-editor">Video Editor</option>
+            {roles.map((role) => (
+              <option key={role.slug} value={role.slug}>
+                {role.title}
+              </option>
+            ))}
           </select>
         </div>
         <div className="space-y-2">
@@ -75,7 +181,7 @@ export function LinkGeneratorForm() {
           {isPending ? (
             <Loader2 className="w-4 h-4 animate-spin" />
           ) : (
-            "Create Camouflage Link"
+            "Create Tracking Link"
           )}
         </button>
       </form>
@@ -83,7 +189,13 @@ export function LinkGeneratorForm() {
   );
 }
 
-export function ResumeManager({ initialResumes }: { initialResumes: any[] }) {
+export function ResumeManager({
+  initialResumes,
+  roles,
+}: {
+  initialResumes: any[];
+  roles: any[];
+}) {
   const [resumes, setResumes] = useState(initialResumes);
   const [isSaving, setIsSaving] = useState<string | null>(null);
 
@@ -104,12 +216,6 @@ export function ResumeManager({ initialResumes }: { initialResumes: any[] }) {
     setIsSaving(null);
   };
 
-  const roles = [
-    { key: "software-engineer", label: "Software Engineer" },
-    { key: "gtm-engineer", label: "GTM Engineer" },
-    { key: "video-editor", label: "Video Editor" },
-  ];
-
   return (
     <div className="bg-card rounded-xl border p-6 space-y-4 shadow-sm">
       <h2 className="text-xl font-semibold flex items-center gap-2">
@@ -119,11 +225,11 @@ export function ResumeManager({ initialResumes }: { initialResumes: any[] }) {
       <div className="space-y-4">
         {roles.map((role) => {
           const currentResume =
-            resumes.find((r) => r.role_key === role.key)?.resume_url || "";
+            resumes.find((r) => r.role_key === role.slug)?.resume_url || "";
           return (
-            <div key={role.key} className="space-y-1.5">
+            <div key={role.slug} className="space-y-1.5">
               <label className="text-xs font-medium text-muted-foreground uppercase">
-                {role.label}
+                {role.title}
               </label>
               <div className="flex gap-2">
                 <input
@@ -133,12 +239,12 @@ export function ResumeManager({ initialResumes }: { initialResumes: any[] }) {
                   className="flex-1 h-9 px-3 text-sm rounded-md border bg-background border-input focus:ring-1 focus:ring-accent outline-none"
                   onBlur={(e) => {
                     if (e.target.value !== currentResume) {
-                      handleSave(role.key, e.target.value);
+                      handleSave(role.slug, e.target.value);
                     }
                   }}
                 />
                 <div className="flex items-center justify-center w-9 h-9">
-                  {isSaving === role.key ? (
+                  {isSaving === role.slug ? (
                     <Loader2 className="w-4 h-4 animate-spin text-accent" />
                   ) : (
                     <Save className="w-4 h-4 text-muted-foreground opacity-20" />
@@ -156,15 +262,17 @@ export function ResumeManager({ initialResumes }: { initialResumes: any[] }) {
 export function LinkActions({
   linkId,
   verSlug,
+  targetRole,
 }: {
   linkId: string;
   verSlug: string;
+  targetRole: string;
 }) {
   const [copied, setCopied] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
 
   const copyLink = () => {
-    const url = `${window.location.origin}/?ver=${verSlug}`;
+    const url = `${window.location.origin}/portfolio/${targetRole}/?ver=${verSlug}`;
     navigator.clipboard.writeText(url);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);

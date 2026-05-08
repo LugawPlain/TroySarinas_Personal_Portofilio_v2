@@ -6,21 +6,28 @@ interface NameTitleProps {
   className?: string;
   size?: string;
   href?: string;
+  nameFontClass?: string;
 }
 
-const NameTitle: React.FC<NameTitleProps> = ({ className, size, href = "/" }) => {
+const NameTitle: React.FC<NameTitleProps> = ({
+  className,
+  size,
+  href = "/",
+  nameFontClass,
+}) => {
   return (
     <Link href={href}>
-      <h1
-        className={cn("text-3xl font-extralight flex items-center", className)}
-      >
-        <span className="text-gray-400">{"<"}</span>
+      <h1 className={cn("text-2xl flex items-center", className)}>
+        <p className="text-secondary/80 ">{"<"}</p>
         <span
-          className={cn("font-passionconflict text-5xl text-secondary", size)}
+          className={cn(
+            nameFontClass || "font-passionconflict ",
+            size || "text-5xl",
+          )}
         >
-          Troy Sarinas
+          Troy
         </span>
-        <span className="text-gray-400">{"/>"}</span>
+        <p className="pl-2 text-secondary/80">{"/>"}</p>
       </h1>
     </Link>
   );

@@ -6,14 +6,14 @@ import {
   Passions_Conflict,
   Fraunces,
   Montserrat,
+  Space_Mono,
 } from "next/font/google";
 import "./globals.css";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import { cn } from "@/lib/utils";
-import { CursorProvider } from "@/components/CursorProvider";
-import { ContactModalProvider } from "@/contexts/ContactModalContext";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import ClientProviders from "@/components/ClientProviders";
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -49,7 +49,15 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const spaceMono = Space_Mono({
+  variable: "--font-spacemono",
+  subsets: ["latin"],
+  weight: ["400", "700"],
+  display: "swap",
+});
+
 export const metadata: Metadata = {
+  // ... existing metadata
   metadataBase: new URL("https://troysarinas.vercel.app"),
   title: {
     default: "Troy Sarinas | Software Engineer & Web Developer",
@@ -81,7 +89,7 @@ export const metadata: Metadata = {
     siteName: "Troy Sarinas Portfolio",
     images: [
       {
-        url: "/og-image.png", // Ensure this image exists or use a valid one
+        url: "/og-image.png",
         width: 1200,
         height: 630,
         alt: "Troy Sarinas Portfolio Preview",
@@ -95,8 +103,8 @@ export const metadata: Metadata = {
     title: "Troy Sarinas | Software Engineer & Web Developer",
     description:
       "Portfolio of Troy Sarinas, a Software Engineer specializing in Next.js, React, Automation, and Full Stack Development.",
-    images: ["/og-image.png"], // Ensure this image exists
-    creator: "@troysarinas", // Updated handle if known, or keep generic
+    images: ["/og-image.png"],
+    creator: "@troysarinas",
   },
   robots: {
     index: true,
@@ -126,19 +134,18 @@ export default function RootLayout({
           inter.variable,
           fraunces.variable,
           montserrat.variable,
+          spaceMono.variable,
           "antialiased",
         )}
       >
         <GoogleAnalytics
           gaId={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID || ""}
         />
-        <CursorProvider>
-          <ContactModalProvider>
-            {/* <Header /> */}
-            {children}
-            {/* <Footer /> */}
-          </ContactModalProvider>
-        </CursorProvider>
+        <ClientProviders>
+          <Header />
+          {children}
+          <Footer />
+        </ClientProviders>
       </body>
     </html>
   );

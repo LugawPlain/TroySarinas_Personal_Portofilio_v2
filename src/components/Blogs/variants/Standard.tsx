@@ -1,7 +1,9 @@
+"use client";
+
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Button } from "./ui/button";
+import { Button } from "@/components/ui/button";
 import { MdArrowOutward } from "react-icons/md";
 import { BlogPost } from "@/lib/blog";
 
@@ -10,7 +12,7 @@ interface BlogsProps {
   role?: string;
 }
 
-const Blogs = ({ initialBlogs, role }: BlogsProps) => {
+const StandardBlogs = ({ initialBlogs, role }: BlogsProps) => {
   if (initialBlogs.length === 0) return null;
 
   const rolePrefix = role ? `/portfolio/${role}` : "";
@@ -100,4 +102,4 @@ const Blogs = ({ initialBlogs, role }: BlogsProps) => {
   );
 };
 
-export default Blogs;
+export default StandardBlogs;

@@ -1,9 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
-import LayeredSlants from "./Icons/LayeredSlants";
-import DynamicIcon from "./DynamicIcon";
+import DynamicIcon from "../../DynamicIcon";
 
 interface TechItem {
   name: string;
@@ -12,11 +11,10 @@ interface TechItem {
 }
 
 interface TechnologiesProps {
-  role?: string;
   initialTech: TechItem[];
 }
 
-const Technologies = ({ role, initialTech }: TechnologiesProps) => {
+const StandardTechnologies = ({ initialTech }: TechnologiesProps) => {
   const [showAll, setShowAll] = useState(false);
   const [tappedIndex, setTappedIndex] = useState<number | null>(null);
 
@@ -47,7 +45,6 @@ const Technologies = ({ role, initialTech }: TechnologiesProps) => {
       transition={{ duration: 0.5 }}
       className="mt-4 pb-8 relative overflow-clip"
     >
-      <LayeredSlants className="bottom-0 absolute -z-99" />
       <h2 className="text-center mb-10 font-bold">
         <span className="text-3xl sm:text-4xl text-foreground/90">
           Technologies I use 🧑‍💻
@@ -148,4 +145,4 @@ const Technologies = ({ role, initialTech }: TechnologiesProps) => {
   );
 };
 
-export default Technologies;
+export default StandardTechnologies;
