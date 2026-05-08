@@ -1,17 +1,17 @@
 "use client";
 import React from "react";
-import NameTitle from "./NameTitle";
-import SocialLinks from "./SocialLinks";
-import GitHubStarCount from "./GithubStarCount";
+import NameTitle from "../../NameTitle";
+import SocialLinks from "../../SocialLinks";
+import GitHubStarCount from "../../GithubStarCount";
 import GitHubButton from "react-github-btn";
 import Link from "next/link";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
-import BuyMeACoffeeButton from "./BuyMeACoffeeButton";
+import BuyMeACoffeeButton from "../../BuyMeACoffeeButton";
 import { useRouter } from "next/navigation";
-import { Button } from "./ui/button";
+import { Button } from "../../ui/button";
 import { useContactModal } from "@/contexts/ContactModalContext";
 
-const Footer = () => {
+const StandardFooter = () => {
   const router = useRouter();
   const { setIsContactModalOpen } = useContactModal();
   return (
@@ -33,11 +33,11 @@ const Footer = () => {
         </div>
 
         <div className="flex flex-col justify-center items-center gap-2 font-inter order-1 xl:order-2 ">
-            <NameTitle
-              className="font-medium"
-              size="xl:text-7xl text-5xl lg:text-6xl "
-              href="#herosection"
-            />
+          <NameTitle
+            className="font-medium"
+            size="xl:text-7xl text-5xl lg:text-6xl "
+            href="#herosection"
+          />
           <p className="text-sm font-medium font-montserrat text-justify">
             Ready to collaborate on something extraordinary? I&apos;m always
             excited to connect with fellow innovators, explore cutting-edge
@@ -117,4 +117,4 @@ const Footer = () => {
   );
 };
 
-export default Footer;
+export default StandardFooter;

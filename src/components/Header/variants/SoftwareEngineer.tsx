@@ -4,17 +4,21 @@ import { usePathname } from "next/navigation";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { X } from "lucide-react";
 
-// Mock components - replace with your actual imports
-import NameTitle from "./NameTitle";
-import { useCursor } from "./CursorProvider";
+import NameTitle from "../../NameTitle";
+import { useCursor } from "../../CursorProvider";
 import { RiSettings5Fill } from "react-icons/ri";
-import { Button } from "./ui/button";
-import ContactModal from "./ContactModal";
+import { Button } from "../../ui/button";
+import ContactModal from "../../ContactModal";
 import { useContactModal } from "@/contexts/ContactModalContext";
 
-const Header = () => {
+const SoftwareEngineerHeader = () => {
   const pathname = usePathname();
   const [isVisible, setIsVisible] = useState(true);
+
+  // Detect if we are in a role-specific portfolio
+  const pathnameParts = pathname.split("/");
+  const isRoleRoute = pathnameParts[1] === "portfolio" && pathnameParts[2];
+  const rolePrefix = isRoleRoute ? `/portfolio/${pathnameParts[2]}` : "";
   const [lastScrollY, setLastScrollY] = useState(0);
   const [isSettingsOpen, setIsSettingsOpen] = useState(true);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -50,7 +54,6 @@ const Header = () => {
 
   const toggleDarkMode = () => {
     setIsDarkMode(!isDarkMode);
-    // TODO: Implement dark mode logic
   };
 
   const toggleCursorEffect = () => {
@@ -58,23 +61,26 @@ const Header = () => {
   };
 
   const navLinks = [
-    { name: "Projects", href: "/projects" },
-    { name: "Blogs", href: "/blog" },
+    {
+      name: "Projects",
+      href: rolePrefix ? `${rolePrefix}/projects` : "/projects",
+    },
+    { name: "Blogs", href: rolePrefix ? `${rolePrefix}/blog` : "/blog" },
     { name: "Experience", href: "#experience" },
     { name: "Education", href: "#education" },
     { name: "Certifications", href: "#certifications" },
     { name: "Contacts", href: "#contacts" },
   ];
+
   const handleSmoothScroll = (e: React.MouseEvent, href: string) => {
-    // Only handle smooth scrolling for hash links (starting with #)
     if (href.startsWith("#")) {
-      if (pathname === "/") {
+      if (pathname === "/" || pathname.startsWith("/portfolio")) {
         e.preventDefault();
         const targetId = href.substring(1);
         const targetElement = document.getElementById(targetId);
 
         if (targetElement) {
-          const headerOffset = 80; // Height of your header
+          const headerOffset = 80;
           const elementPosition = targetElement.getBoundingClientRect().top;
           const offsetPosition =
             elementPosition + window.pageYOffset - headerOffset;
@@ -85,12 +91,10 @@ const Header = () => {
           });
         }
       }
-      // If not on home page, let the default link behavior happen (navigate to /#section)
     }
-    // For non-hash links (/projects, /blog), let them navigate normally
-
     setIsMobileMenuOpen(false);
   };
+
   return (
     <>
       <div
@@ -98,16 +102,23 @@ const Header = () => {
           isVisible ? "translate-y-0" : "-translate-y-full"
         }`}
       >
-        <NameTitle className="text-nowrap cursor-pointer" />
+        <NameTitle
+          className="text-black/80 text-nowrap cursor-pointer font-inter tracking-[-2px] font-bold"
+          nameFontClass="font-spacemono"
+          size="text-3xl"
+        />
 
         <div className="flex items-center gap-6">
-          {/* Desktop Navigation */}
           <nav className="hidden xl:block">
-            <ul className="flex gap-6 text-lg items-center">
+            <ul className="flex gap-4 text-md font-medium text-black/80 items-center">
               {navLinks.map((link) => (
                 <li key={link.name}>
                   <a
-                    href={link.href.startsWith("#") ? "/" + link.href : link.href}
+                    href={
+                      link.href.startsWith("#")
+                        ? (rolePrefix || "") + link.href
+                        : link.href
+                    }
                     onClick={(e) => handleSmoothScroll(e, link.href)}
                     className="hover:text-gray-600 font-inter transition-colors"
                   >
@@ -118,15 +129,14 @@ const Header = () => {
               <li>
                 <Button
                   onClick={() => setIsContactModalOpen(true)}
-                  className="text-md font-semibold px-4 py-2 bg-secondary text-secondary-foreground uppercase tracking-tight shadow-lg"
+                  className="text-md  bg-stone-900 font-semibold rounded-full px-6 py-4  text-secondary-foreground  tracking-tight shadow-lg"
                 >
-                  Get in Touch
+                  Let&apos;s Talk
                 </Button>
               </li>
             </ul>
           </nav>
 
-          {/* Mobile Hamburger Button */}
           <button
             className="xl:hidden text-2xl"
             onClick={toggleMobileMenu}
@@ -135,26 +145,18 @@ const Header = () => {
             {isMobileMenuOpen ? <X /> : <GiHamburgerMenu />}
           </button>
 
-          {/* Dark Mode Button */}
-          <div className="hidden md:block">
-            {/* <Button className="text-xs">Dark Mode</Button> */}
-          </div>
-
-          {/* Settings Dropdown */}
-          <div className="relative ">
+          <div className="relative">
             <button
               onClick={toggleSettings}
-              className="p-1 rounded-md cursor-pointer  hover:bg-gray-100 transition-colors"
+              className="p-1 rounded-md cursor-pointer hover:bg-gray-100 transition-colors"
               aria-label="Settings"
             >
               <RiSettings5Fill className="text-accent" size={30} />
             </button>
 
-            {/* Settings Dropdown Menu */}
             {isSettingsOpen && (
-              <div className="absolute  right-0 top-full mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-50">
+              <div className="absolute right-0 top-full mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-50">
                 <div className="p-2">
-                  {/* Dark Mode Toggle */}
                   <div className="flex items-center justify-between py-2 px-3">
                     <span className="text-sm font-medium">Dark Mode</span>
                     <button
@@ -171,8 +173,7 @@ const Header = () => {
                     </button>
                   </div>
 
-                  {/* Cursor Effects Toggle */}
-                  <div className="flex items-center   justify-between py-2 px-3 border-t border-gray-100">
+                  <div className="flex items-center justify-between py-2 px-3 border-t border-gray-100">
                     <span className="text-sm font-medium">Cursor Effects</span>
                     <button
                       onClick={toggleCursorEffect}
@@ -181,7 +182,7 @@ const Header = () => {
                       }`}
                     >
                       <span
-                        className={`inline-block  h-4 w-4 transform rounded-full bg-white transition-transform ${
+                        className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
                           isCursorEffectEnabled
                             ? "translate-x-6"
                             : "translate-x-1"
@@ -196,26 +197,29 @@ const Header = () => {
         </div>
       </div>
 
-      {/* Mobile Dropdown Menu */}
       <div
         className={`xl:hidden fixed top-20 left-0 right-0 bg-white border-b-2 border-gray-200 z-40 transition-all duration-300 overflow-hidden ${
           isMobileMenuOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
         }`}
       >
-        <nav className="">
-          <ul className="flex flex-col divide-y-[0.5px] divide-gray-200">
+        <nav>
+          <ul className="flex flex-col font-inter divide-y-[0.5px] divide-gray-200">
             {navLinks.map((link) => (
-              <li key={link.name} className="active:bg-secondary ">
+              <li key={link.name} className="active:bg-secondary">
                 <a
-                  href={link.href.startsWith("#") ? "/" + link.href : link.href}
+                  href={
+                    link.href.startsWith("#")
+                      ? (rolePrefix || "") + link.href
+                      : link.href
+                  }
                   onClick={(e) => handleSmoothScroll(e, link.href)}
-                  className="block text-lg hover:text-gray-600 px-4 py-3 active:text-white font-inter transition-colors "
+                  className="block text-lg text-gray-800/80 hover:text-gray-600 px-4 py-3 active:text-white font-inter transition-colors"
                 >
                   {link.name}
                 </a>
               </li>
             ))}
-            <li className=" border-t border-gray-200">
+            <li className="border-t border-gray-200">
               <Button
                 onClick={() => {
                   setIsContactModalOpen(true);
@@ -223,14 +227,13 @@ const Header = () => {
                 }}
                 className="text-md font-semibold w-full bg-secondary text-secondary-foreground uppercase tracking-tight shadow-lg"
               >
-                Get in Touch
+                Let&apos;s Talk
               </Button>
             </li>
           </ul>
         </nav>
       </div>
 
-      {/* Overlay to close menu when clicking outside */}
       {isMobileMenuOpen && (
         <div
           className="xl:hidden fixed h-full w-full bg-black/20 z-30 top-20"
@@ -238,7 +241,6 @@ const Header = () => {
         />
       )}
 
-      {/* Overlay to close settings dropdown when clicking outside */}
       {isSettingsOpen && (
         <div
           className="fixed inset-0 z-40"
@@ -246,7 +248,6 @@ const Header = () => {
         />
       )}
 
-      {/* Contact Modal */}
       <ContactModal
         isOpen={isContactModalOpen}
         onClose={() => setIsContactModalOpen(false)}
@@ -255,4 +256,4 @@ const Header = () => {
   );
 };
 
-export default Header;
+export default SoftwareEngineerHeader;

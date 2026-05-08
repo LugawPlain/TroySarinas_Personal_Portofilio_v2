@@ -27,13 +27,19 @@ interface ProjectRow {
   created_at?: string;
 }
 
-export async function getProjects(): Promise<Project[]> {
-  const { data, error } = await supabase
+export async function getProjects(role?: string): Promise<Project[]> {
+  let query = supabase
     .from("projects")
-    .select("*")
+    .select(role ? "*, role_projects!inner(job_roles!inner(slug))" : "*")
     .eq("is_published", true)
     .order("display_order", { ascending: true });
-  
+
+  if (role) {
+    query = query.eq("role_projects.job_roles.slug", role);
+  }
+
+  const { data, error } = await query;
+
   if (error) {
     console.error("Error fetching projects:", error);
     return [];
@@ -75,4 +81,3 @@ export async function getProject(id: string): Promise<Project | undefined> {
     githubUrl: project.github_url || undefined,
   };
 }
-

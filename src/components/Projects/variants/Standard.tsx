@@ -1,13 +1,20 @@
+"use client";
+
 import React from "react";
 import Image from "next/image";
-import { Button } from "./ui/button";
+import { Button } from "../../ui/button";
 import { MdArrowOutward } from "react-icons/md";
 import { FiExternalLink, FiGithub } from "react-icons/fi";
 import Link from "next/link";
-import { getProjects } from "@/lib/projects";
+import { Project } from "@/lib/projects";
 
-const Projects = async () => {
-  const projects = await getProjects();
+interface ProjectsProps {
+  projects: Project[];
+  role?: string;
+}
+
+const StandardProjects = ({ projects, role }: ProjectsProps) => {
+  const rolePrefix = role ? `/portfolio/${role}` : "";
 
   return (
     <div
@@ -26,7 +33,7 @@ const Projects = async () => {
               className="pb-1.5 card bg-primary font-fraunces flex-col flex shadow-xl rounded-xl overflow-hidden hover:shadow-2xl transition-shadow duration-300 max-w-sm"
             >
               <div className="relative w-full aspect-video overflow-hidden bg-gray-500 border-b border-border">
-                <Link href={`/projects/${project.id}`}>
+                <Link href={`${rolePrefix}/projects/${project.id}`}>
                   {project.image ? (
                     <Image
                       src={project.image}
@@ -130,7 +137,7 @@ const Projects = async () => {
           ))}
         </div>
       </div>
-      <Link href="/projects">
+      <Link href={`${rolePrefix}/projects`}>
         <Button className="mx-auto mt-4 h-9 text-sm" variant={"outline"}>
           See more <MdArrowOutward />
         </Button>
@@ -139,4 +146,4 @@ const Projects = async () => {
   );
 };
 
-export default Projects;
+export default StandardProjects;

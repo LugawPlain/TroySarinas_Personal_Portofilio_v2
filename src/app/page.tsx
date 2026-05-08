@@ -7,7 +7,6 @@ import SplashCursor from "@/components/SplashCursor";
 import ChatWidget from "@/components/ChatWidget";
 import Resume from "@/components/Resume";
 
-
 export default async function Home({
   searchParams,
 }: {
@@ -28,9 +27,9 @@ export default async function Home({
       <div className="flex flex-col gap-8 font-inter relative">
         <HeroSection />
         <Projects />
-        <Experience />
+        {/* <Experience /> */}
         <Education />
-        <Technologies />
+        {/* <Technologies /> */}
         {/* <Certifications /> */}
         <ChatWidget />
       </div>
