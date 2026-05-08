@@ -30,25 +30,31 @@ interface SupabaseBlogPost {
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY!
+  process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY!,
 );
 
 // Internal function that fetches from Supabase
-async function fetchBlogPostsFromDB(): Promise<BlogPost[]> {
-  const { data, error } = await supabase
+async function fetchBlogPostsFromDB(role?: string): Promise<BlogPost[]> {
+  let query = supabase
     .from("blogs")
-    .select("*")
+    .select(role ? "*, role_blogs!inner(job_roles!inner(slug))" : "*")
     .eq("status", "published")
     .order("date", { ascending: false, nullsFirst: false })
     .order("created_at", { ascending: false });
+
+  if (role) {
+    query = query.eq("role_blogs.job_roles.slug", role);
+  }
+
+  const { data, error } = await query;
 
   if (error) {
     console.error("Error fetching blog posts:", error);
     return [];
   }
 
-  return (data as SupabaseBlogPost[]).map((post) => ({
-    slug: String(post.slug || ''),
+  return (data as unknown as SupabaseBlogPost[]).map((post) => ({
+    slug: String(post.slug || ""),
     title: post.title,
     excerpt: post.excerpt,
     date: new Date(post.date || post.created_at).toLocaleDateString("en-US", {
@@ -65,22 +71,27 @@ async function fetchBlogPostsFromDB(): Promise<BlogPost[]> {
 }
 
 // Cached version with Next.js cache (persistent across requests, revalidates every 60 seconds)
-const getCachedBlogPosts = unstable_cache(
-  async () => fetchBlogPostsFromDB(),
-  ['blog-posts'],
-  { 
-    revalidate: 60, // Cache for 60 seconds
-    tags: ['blog-posts'] 
-  }
-);
+const getCachedBlogPosts = (role?: string) =>
+  unstable_cache(
+    async () => fetchBlogPostsFromDB(role),
+    [role ? `blog-posts-${role}` : "blog-posts"],
+    {
+      revalidate: 60, // Cache for 60 seconds
+      tags: [role ? `blog-posts-${role}` : "blog-posts"],
+    },
+  )();
 
 // React cache for request-level memoization
-export const getBlogPosts = cache(async (): Promise<BlogPost[]> => {
-  return getCachedBlogPosts();
-});
+export const getBlogPosts = cache(
+  async (role?: string): Promise<BlogPost[]> => {
+    return getCachedBlogPosts(role);
+  },
+);
 
 // Internal function that fetches a single post from Supabase
-async function fetchBlogPostBySlugFromDB(slug: string): Promise<BlogPost | null> {
+async function fetchBlogPostBySlugFromDB(
+  slug: string,
+): Promise<BlogPost | null> {
   const { data, error } = await supabase
     .from("blogs")
     .select("*")
@@ -96,7 +107,7 @@ async function fetchBlogPostBySlugFromDB(slug: string): Promise<BlogPost | null>
   const post = data as SupabaseBlogPost;
 
   return {
-    slug: String(post.slug || ''),
+    slug: String(post.slug || ""),
     title: post.title,
     excerpt: post.excerpt,
     date: new Date(post.date || post.created_at).toLocaleDateString("en-US", {
@@ -113,16 +124,19 @@ async function fetchBlogPostBySlugFromDB(slug: string): Promise<BlogPost | null>
 }
 
 // Cached version with dynamic cache key based on slug
-const getCachedBlogPost = (slug: string) => unstable_cache(
-  async () => fetchBlogPostBySlugFromDB(slug),
-  [`blog-post-${slug}`],
-  { 
-    revalidate: 60,
-    tags: [`blog-post-${slug}`] 
-  }
-)();
+const getCachedBlogPost = (slug: string) =>
+  unstable_cache(
+    async () => fetchBlogPostBySlugFromDB(slug),
+    [`blog-post-${slug}`],
+    {
+      revalidate: 60,
+      tags: [`blog-post-${slug}`],
+    },
+  )();
 
 // React cache for request-level memoization
-export const getBlogPostBySlug = cache(async (slug: string): Promise<BlogPost | null> => {
-  return getCachedBlogPost(slug);
-});
+export const getBlogPostBySlug = cache(
+  async (slug: string): Promise<BlogPost | null> => {
+    return getCachedBlogPost(slug);
+  },
+);

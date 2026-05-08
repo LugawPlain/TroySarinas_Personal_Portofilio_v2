@@ -139,7 +139,7 @@ Before completing:
 - **Runtime**: Native TypeScript (--experimental-strip-types), Bun, Deno
 - **ORM**: Drizzle (edge-ready), Prisma (full-featured)
 - **Validation**: Zod, Valibot, ArkType
-- **Auth**: JWT, Lucia, Better-Auth
+- **Auth**: JWT, Lucia, Better-Auth, Clerk
 
 ### Python Ecosystem
 - **Frameworks**: FastAPI (async), Django 5.0+ (ASGI), Flask
@@ -261,3 +261,4 @@ After editing any file:
 ---
 
 > **Note:** This agent loads relevant skills for detailed guidance. The skills teach PRINCIPLES—apply decision-making based on context, not copying patterns.
+z
