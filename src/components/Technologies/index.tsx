@@ -2,6 +2,7 @@
 
 import { usePortfolio } from "@/context/PortfolioContext";
 import StandardTechnologies from "./variants/Standard";
+import SoftwareEngineerTechnologies from "./variants/SoftwareEngineer";
 
 interface TechItem {
   name: string;
@@ -17,7 +18,8 @@ export default function Technologies(props: TechnologiesProps) {
   const { role } = usePortfolio();
 
   switch (role) {
-    // Add custom role variants here as we build them
+    case "software-engineer":
+      return <SoftwareEngineerTechnologies {...props} />;
     // case "video-editor": return <CinematicTechnologies {...props} />;
 
     default:

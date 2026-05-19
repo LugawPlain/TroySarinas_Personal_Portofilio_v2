@@ -17,9 +17,13 @@ import {
   Activity,
   MousePointer2,
   Eye,
+  Upload,
+  ExternalLink,
+  X,
 } from "lucide-react";
 import { getInteractionEvents } from "./actions";
-import { useEffect } from "react";
+import { uploadResume, deleteResume, setResumeUrl } from "./resume-upload-actions";
+import { useEffect, useRef } from "react";
 
 export function InteractionFeed() {
   const [events, setEvents] = useState<any[]>([]);
@@ -189,6 +193,163 @@ export function LinkGeneratorForm({ roles }: { roles: any[] }) {
   );
 }
 
+function ResumeModal({
+  linkId,
+  targetRole,
+  linkResume,
+  onClose,
+}: {
+  linkId: string;
+  targetRole: string;
+  linkResume: any;
+  onClose: () => void;
+}) {
+  const [isUploading, setIsUploading] = useState(false);
+  const [urlInput, setUrlInput] = useState(linkResume?.resume_url || "");
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setIsUploading(true);
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("role_key", targetRole);
+    formData.append("link_id", linkId);
+
+    const result = await uploadResume(formData);
+    setIsUploading(false);
+
+    if (result.success) {
+      onClose();
+      window.location.reload();
+    } else {
+      alert(result.error);
+    }
+  };
+
+  const handleUrlSave = async () => {
+    if (!urlInput) return;
+    
+    setIsUploading(true);
+    const result = await setResumeUrl(targetRole, urlInput, linkId);
+    setIsUploading(false);
+
+    if (result.success) {
+      onClose();
+      window.location.reload();
+    } else {
+      alert(result.error);
+    }
+  };
+
+  const handleDelete = async () => {
+    if (!confirm("Delete this custom resume?")) return;
+    
+    setIsUploading(true);
+    const result = await deleteResume(targetRole, linkId);
+    setIsUploading(false);
+
+    if (result.success) {
+      onClose();
+      window.location.reload();
+    } else {
+      alert(result.error);
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50" onClick={onClose}>
+      <div className="bg-card rounded-xl border shadow-lg p-6 w-full max-w-md space-y-4" onClick={(e) => e.stopPropagation()}>
+        <div className="flex justify-between items-center">
+          <h3 className="text-lg font-semibold">Manage Resume</h3>
+          <button onClick={onClose} className="p-1 hover:bg-muted rounded">
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+
+        {linkResume && (
+          <div className="p-3 bg-muted/50 rounded-lg space-y-2">
+            <div className="text-sm font-medium">Current Resume</div>
+            <div className="flex items-center gap-2">
+              <FileText className="w-4 h-4 text-accent" />
+              <a 
+                href={linkResume.resume_url} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-sm text-accent hover:underline truncate flex-1"
+              >
+                {linkResume.is_upload ? "Uploaded PDF" : linkResume.resume_url}
+              </a>
+              <button 
+                onClick={handleDelete}
+                className="p-1 hover:bg-destructive/10 text-destructive rounded"
+                disabled={isUploading}
+              >
+                <Trash2 className="w-3 h-3" />
+              </button>
+            </div>
+          </div>
+        )}
+
+        <div className="space-y-3">
+          <div className="text-sm font-medium">Upload PDF</div>
+          <input
+            type="file"
+            accept=".pdf"
+            ref={fileInputRef}
+            onChange={handleFileUpload}
+            className="hidden"
+          />
+          <button
+            onClick={() => fileInputRef.current?.click()}
+            disabled={isUploading}
+            className="w-full flex items-center justify-center gap-2 h-10 rounded-md border-2 border-dashed border-muted-foreground/25 hover:border-accent hover:bg-accent/5 transition-colors disabled:opacity-50"
+          >
+            {isUploading ? (
+              <Loader2 className="w-4 h-4 animate-spin" />
+            ) : (
+              <>
+                <Upload className="w-4 h-4" />
+                <span className="text-sm">Click to upload PDF</span>
+              </>
+            )}
+          </button>
+        </div>
+
+        <div className="relative">
+          <div className="absolute inset-0 flex items-center">
+            <span className="w-full border-t" />
+          </div>
+          <div className="relative flex justify-center text-xs uppercase">
+            <span className="bg-card px-2 text-muted-foreground">or paste URL</span>
+          </div>
+        </div>
+
+        <div className="space-y-2">
+          <div className="flex gap-2">
+            <input
+              type="url"
+              value={urlInput}
+              onChange={(e) => setUrlInput(e.target.value)}
+              placeholder="https://example.com/resume.pdf"
+              className="flex-1 h-10 px-3 rounded-md border bg-background border-input focus:ring-2 focus:ring-accent outline-none text-sm"
+            />
+            <button
+              onClick={handleUrlSave}
+              disabled={isUploading || !urlInput}
+              className="px-4 h-10 rounded-md bg-accent text-white font-medium hover:opacity-90 transition-opacity disabled:opacity-50"
+            >
+              {isUploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function ResumeManager({
   initialResumes,
   roles,
@@ -263,13 +424,16 @@ export function LinkActions({
   linkId,
   verSlug,
   targetRole,
+  linkResume,
 }: {
   linkId: string;
   verSlug: string;
   targetRole: string;
+  linkResume: any;
 }) {
   const [copied, setCopied] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [showResumeModal, setShowResumeModal] = useState(false);
 
   const copyLink = () => {
     const url = `${window.location.origin}/portfolio/${targetRole}/?ver=${verSlug}`;
@@ -292,6 +456,25 @@ export function LinkActions({
 
   return (
     <div className="flex items-center justify-end gap-2">
+      {linkResume && (
+        <span className="text-[10px] px-2 py-0.5 bg-green-100 text-green-700 rounded-full font-medium">
+          Custom Resume
+        </span>
+      )}
+      <button
+        onClick={() => setShowResumeModal(true)}
+        className="p-2 hover:bg-muted rounded-md transition-colors relative group"
+        title={linkResume ? "Manage Resume" : "Upload Resume"}
+      >
+        {linkResume ? (
+          <FileText className="w-4 h-4 text-green-500" />
+        ) : (
+          <Upload className="w-4 h-4" />
+        )}
+        <span className="absolute -top-8 left-1/2 -translate-x-1/2 bg-foreground text-background text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+          {linkResume ? "Manage Resume" : "Upload Resume"}
+        </span>
+      </button>
       <button
         onClick={copyLink}
         className="p-2 hover:bg-muted rounded-md transition-colors relative group"
@@ -318,6 +501,15 @@ export function LinkActions({
           <Trash2 className="w-4 h-4" />
         )}
       </button>
+
+      {showResumeModal && (
+        <ResumeModal
+          linkId={linkId}
+          targetRole={targetRole}
+          linkResume={linkResume}
+          onClose={() => setShowResumeModal(false)}
+        />
+      )}
     </div>
   );
 }

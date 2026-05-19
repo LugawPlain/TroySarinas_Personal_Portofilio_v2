@@ -2,6 +2,7 @@
 
 import { usePortfolio } from "@/context/PortfolioContext";
 import StandardExperience from "./variants/Standard";
+import SoftwareEngineerExperience from "./variants/SoftwareEngineer";
 
 interface ExperienceHighlights {
   icon?: string;
@@ -30,7 +31,8 @@ export default function Experience(props: ExperienceProps) {
   const { role } = usePortfolio();
 
   switch (role) {
-    // Add custom role variants here as we build them
+    case "software-engineer":
+      return <SoftwareEngineerExperience {...props} />;
     // case "video-editor": return <CinematicExperience {...props} />;
 
     default:

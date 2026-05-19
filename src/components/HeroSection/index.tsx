@@ -1,6 +1,7 @@
 "use client";
 
 import { usePortfolio } from "@/context/PortfolioContext";
+import { HeroConfig } from "@/lib/roles";
 import StandardHeroSection from "./variants/Standard";
 import SoftwareEngineerHeroSection from "./variants/SoftwareEngineer";
 
@@ -8,6 +9,7 @@ interface HeroSectionProps {
   headline?: string;
   bio?: string;
   resumeUrl?: string;
+  heroConfig?: HeroConfig;
 }
 
 export default function HeroSection(props: HeroSectionProps) {
