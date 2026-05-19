@@ -7,6 +7,7 @@ import { MdArrowOutward } from "react-icons/md";
 import { FiExternalLink, FiGithub } from "react-icons/fi";
 import Link from "next/link";
 import { Project } from "@/lib/projects";
+import { useTrack } from "@/hooks/use-track";
 
 interface ProjectsProps {
   projects: Project[];
@@ -15,6 +16,8 @@ interface ProjectsProps {
 
 const StandardProjects = ({ projects, role }: ProjectsProps) => {
   const rolePrefix = role ? `/portfolio/${role}` : "";
+  const trackProject = useTrack("project_click", "projects");
+  const trackExternal = useTrack("project_external_link", "projects");
 
   return (
     <div
@@ -33,7 +36,16 @@ const StandardProjects = ({ projects, role }: ProjectsProps) => {
               className="pb-1.5 card bg-primary font-fraunces flex-col flex shadow-xl rounded-xl overflow-hidden hover:shadow-2xl transition-shadow duration-300 max-w-sm"
             >
               <div className="relative w-full aspect-video overflow-hidden bg-gray-500 border-b border-border">
-                <Link href={`${rolePrefix}/projects/${project.id}`}>
+                <Link
+                  href={`${rolePrefix}/projects/${project.id}`}
+                  onClick={() =>
+                    trackProject({
+                      project_id: project.id,
+                      project_title: project.title,
+                      action: "view_detail",
+                    })
+                  }
+                >
                   {project.image ? (
                     <Image
                       src={project.image}
@@ -80,6 +92,14 @@ const StandardProjects = ({ projects, role }: ProjectsProps) => {
                         href={project.liveUrl}
                         target="_blank"
                         rel="noopener noreferrer"
+                        onClick={() =>
+                          trackExternal({
+                            project_id: project.id,
+                            project_title: project.title,
+                            url: project.liveUrl,
+                            type: "live_demo",
+                          })
+                        }
                         className="flex-1"
                       >
                         <Button
@@ -108,6 +128,14 @@ const StandardProjects = ({ projects, role }: ProjectsProps) => {
                         href={project.githubUrl}
                         target="_blank"
                         rel="noopener noreferrer"
+                        onClick={() =>
+                          trackExternal({
+                            project_id: project.id,
+                            project_title: project.title,
+                            url: project.githubUrl,
+                            type: "github",
+                          })
+                        }
                         className="flex-1"
                       >
                         <Button
@@ -137,7 +165,15 @@ const StandardProjects = ({ projects, role }: ProjectsProps) => {
           ))}
         </div>
       </div>
-      <Link href={`${rolePrefix}/projects`}>
+      <Link
+        href={`${rolePrefix}/projects`}
+        onClick={() =>
+          trackProject({
+            action: "view_all",
+            count: projects.length,
+          })
+        }
+      >
         <Button className="mx-auto mt-4 h-9 text-sm" variant={"outline"}>
           See more <MdArrowOutward />
         </Button>

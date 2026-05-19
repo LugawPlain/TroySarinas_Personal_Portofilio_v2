@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useTransition } from "react";
+import React, { useState, useTransition, useRef } from "react";
 import {
   updateRoleMetadata,
   toggleRoleRelationship,
@@ -33,7 +33,11 @@ import {
   Trash2,
   Save,
   X,
+  Upload,
+  ExternalLink,
 } from "lucide-react";
+import { uploadResume, deleteResume } from "./resume-upload-actions";
+import { HeroConfigEditor } from "./HeroConfigEditor";
 
 interface PortfolioContentManagerProps {
   roles: any[];
@@ -83,6 +87,8 @@ export function PortfolioContentManager({
 
   const [isPending, startTransition] = useTransition();
   const [saveStatus, setSaveStatus] = useState<string | null>(null);
+  const [uploadingResume, setUploadingResume] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Editor Modal State
   const [isEditorOpen, setIsEditorOpen] = useState(false);
@@ -134,20 +140,46 @@ export function PortfolioContentManager({
     });
   };
 
-  const handleResumeChange = async (e: React.FocusEvent<HTMLInputElement>) => {
-    const newUrl = e.target.value;
-    const currentResume = resumes.find((r) => r.role_key === selectedRole.slug);
+  const handleResumeUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
 
-    if (newUrl === (currentResume?.resume_url || "")) return;
+    setUploadingResume(true);
+    setSaveStatus("Uploading resume...");
 
-    setSaveStatus("Updating Resume...");
-    startTransition(async () => {
-      const result = await updateRoleResume(selectedRole.slug, newUrl);
-      if (result?.error) {
-        alert("Failed to update resume: " + result.error);
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("role_key", selectedRole.slug);
+
+    try {
+      const result = await uploadResume(formData);
+      if (result.error) {
+        alert("Upload failed: " + result.error);
+      } else {
+        setSaveStatus("Resume uploaded!");
+        setTimeout(() => setSaveStatus(null), 2000);
       }
-      setSaveStatus(null);
-    });
+    } catch (err) {
+      alert("Upload failed: " + err);
+    } finally {
+      setUploadingResume(false);
+    }
+  };
+
+  const handleResumeDelete = async () => {
+    const currentResume = resumes.find((r) => r.role_key === selectedRole.slug);
+    if (!currentResume) return;
+
+    if (!confirm("Are you sure you want to delete this resume?")) return;
+
+    setSaveStatus("Deleting resume...");
+    const result = await deleteResume(selectedRole.slug);
+    if (result.error) {
+      alert("Failed to delete: " + result.error);
+    } else {
+      setSaveStatus("Resume deleted");
+      setTimeout(() => setSaveStatus(null), 2000);
+    }
   };
 
   const isTechLinked = (techId: string) =>
@@ -347,7 +379,7 @@ export function PortfolioContentManager({
   };
 
   return (
-    <div className="bg-card rounded-xl border shadow-sm flex flex-col h-full">
+    <div className="flex flex-col h-full -m-6 md:-m-8">
       <div className="p-6 border-b flex flex-col md:flex-row md:items-center justify-between gap-4 bg-muted/20">
         <div className="flex items-center gap-3">
           <div className="p-2 bg-accent/10 rounded-lg">
@@ -355,7 +387,7 @@ export function PortfolioContentManager({
           </div>
           <div>
             <h2 className="text-xl font-bold tracking-tight">
-              Portfolio Command Center
+              Content Manager
             </h2>
             <p className="text-[10px] text-muted-foreground uppercase font-bold tracking-wider mt-0.5">
               Refining Variant:{" "}
@@ -432,6 +464,7 @@ export function PortfolioContentManager({
                   Hero Headline
                 </label>
                 <input
+                  key={`headline-${selectedRole.id}`}
                   name="headline"
                   defaultValue={selectedRole.headline}
                   onBlur={handleMetadataChange}
@@ -442,21 +475,71 @@ export function PortfolioContentManager({
               <div className="space-y-4">
                 <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground flex items-center gap-2">
                   <FileText className="w-3.5 h-3.5" />
-                  Target Resume URL
+                  Role Resume
                 </label>
+                
+                {(() => {
+                  const currentResume = resumes.find((r) => r.role_key === selectedRole.slug);
+                  return currentResume?.resume_url ? (
+                    <div className="space-y-3">
+                      <div className="flex items-center gap-3 p-3 bg-muted/30 rounded-lg border">
+                        <FileText className="w-5 h-5 text-accent" />
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium truncate">
+                            {currentResume.is_upload ? "Uploaded Resume" : "External Resume Link"}
+                          </p>
+                          <p className="text-xs text-muted-foreground truncate">
+                            {currentResume.resume_url}
+                          </p>
+                        </div>
+                        <a
+                          href={currentResume.resume_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="p-2 hover:bg-muted rounded-md transition-colors"
+                          title="View Resume"
+                        >
+                          <ExternalLink className="w-4 h-4" />
+                        </a>
+                        <button
+                          onClick={handleResumeDelete}
+                          className="p-2 hover:bg-red-50 text-red-500 rounded-md transition-colors"
+                          title="Delete Resume"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div
+                      onClick={() => fileInputRef.current?.click()}
+                      className="border-2 border-dashed border-muted-foreground/25 rounded-xl p-6 flex flex-col items-center gap-2 cursor-pointer hover:border-accent hover:bg-accent/5 transition-all"
+                    >
+                      <Upload className="w-8 h-8 text-muted-foreground" />
+                      <p className="text-sm font-medium">Click to upload resume</p>
+                      <p className="text-xs text-muted-foreground">PDF, PNG, or JPG</p>
+                    </div>
+                  );
+                })()}
+                
                 <input
-                  name="resume_url"
-                  defaultValue={
-                    resumes.find((r) => r.role_key === selectedRole.slug)
-                      ?.resume_url || ""
-                  }
-                  onBlur={handleResumeChange}
-                  placeholder="Paste PDF link from Supabase Storage..."
-                  className="w-full p-4 rounded-xl border bg-background focus:ring-2 focus:ring-accent outline-none text-sm font-medium shadow-sm transition-all"
+                  ref={fileInputRef}
+                  type="file"
+                  accept=".pdf,.png,.jpg,.jpeg"
+                  onChange={handleResumeUpload}
+                  className="hidden"
                 />
+                
+                {uploadingResume && (
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    Uploading...
+                  </div>
+                )}
+                
                 <p className="text-[10px] text-muted-foreground italic">
-                  Note: This file will be served when visitors click "Download
-                  Resume" on the {selectedRole.title} page.
+                  This file will be served when visitors click "Download Resume"
+                  on the {selectedRole.title} page.
                 </p>
               </div>
             </div>
@@ -466,6 +549,7 @@ export function PortfolioContentManager({
                 Role Biography
               </label>
               <textarea
+                key={`bio-${selectedRole.id}`}
                 name="bio"
                 rows={4}
                 defaultValue={selectedRole.bio}
@@ -474,6 +558,15 @@ export function PortfolioContentManager({
                 placeholder="Briefly describe your expertise for this specific role..."
               />
             </div>
+
+            {/* Hero Configuration */}
+            <HeroConfigEditor 
+              selectedRole={selectedRole} 
+              onSave={(status) => {
+                setSaveStatus(status);
+                if (status === "Synced") setTimeout(() => setSaveStatus(null), 2000);
+              }}
+            />
           </div>
         )}
 

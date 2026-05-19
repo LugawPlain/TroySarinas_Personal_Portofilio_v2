@@ -68,14 +68,14 @@ export async function middleware(request: NextRequest) {
       );
       const redirectResponse = NextResponse.redirect(redirectUrl);
 
-      // 3. Set the 7-day Sticky Cookies
+      // 3. Set the 30-day Sticky Cookies
       redirectResponse.cookies.set("portfolio_role", link.target_role, {
-        maxAge: 60 * 60 * 24 * 7, // 7 days
+        maxAge: 60 * 60 * 24 * 30, // 30 days
         path: "/",
       });
 
       redirectResponse.cookies.set("visitor_link_id", link.id, {
-        maxAge: 60 * 60 * 24 * 7, // 7 days
+        maxAge: 60 * 60 * 24 * 30, // 30 days
         path: "/",
         httpOnly: false, // Allow client-side tracker.js to read this
         sameSite: "lax",
@@ -104,6 +104,11 @@ export async function middleware(request: NextRequest) {
         return NextResponse.redirect(
           new URL(`/portfolio/${savedRole}`, request.url),
         );
+      }
+    } else {
+      // No saved role - root page should be inaccessible (404)
+      if (url.pathname === "/") {
+        return NextResponse.rewrite(new URL("/__404", request.url));
       }
     }
   }

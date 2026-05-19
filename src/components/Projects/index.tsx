@@ -2,6 +2,7 @@
 
 import { usePortfolio } from "@/context/PortfolioContext";
 import StandardProjects from "./variants/Standard";
+import SoftwareEngineerProjects from "./variants/SoftwareEngineer";
 import { Project } from "@/lib/projects";
 
 interface ProjectsProps {
@@ -21,6 +22,8 @@ export default function Projects({
   const projects = initialProjects || [];
 
   switch (activeRole) {
+    case "software-engineer":
+      return <SoftwareEngineerProjects projects={projects} role={activeRole} />;
     // case "video-editor": return <CinematicProjects projects={projects} role={activeRole} />;
 
     default:

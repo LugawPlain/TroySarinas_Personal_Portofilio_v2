@@ -26,12 +26,25 @@ export interface ExperienceItem {
   logo_bg_color: string;
 }
 
+export interface HeroConfig {
+  subHeadline?: string;
+  ctaPrimary: string;
+  ctaSecondary: string;
+  showAvatar: boolean;
+  showStatusCards: boolean;
+  showSocialLinks: boolean;
+  displayName: string;
+  accentColor?: string;
+  avatarUrl?: string;
+}
+
 export interface JobRole {
   id: string;
   slug: string;
   title: string;
   headline: string;
   bio: string;
+  hero_config: HeroConfig;
 }
 
 export interface EducationItem {

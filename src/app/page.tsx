@@ -6,6 +6,7 @@ import HeroSection from "@/components/HeroSection";
 import SplashCursor from "@/components/SplashCursor";
 import ChatWidget from "@/components/ChatWidget";
 import Resume from "@/components/Resume";
+import { getEducation } from "@/lib/roles";
 
 export default async function Home({
   searchParams,
@@ -14,6 +15,7 @@ export default async function Home({
 }) {
   const params = await searchParams;
   const showResume = params.resume === "true";
+  const educationItems = await getEducation();
 
   return (
     <>
@@ -28,7 +30,7 @@ export default async function Home({
         <HeroSection />
         <Projects />
         {/* <Experience /> */}
-        <Education />
+        <Education educationItems={educationItems} />
         {/* <Technologies /> */}
         {/* <Certifications /> */}
         <ChatWidget />

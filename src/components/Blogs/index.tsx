@@ -2,6 +2,7 @@
 
 import { usePortfolio } from "@/context/PortfolioContext";
 import StandardBlogs from "./variants/Standard";
+import SoftwareEngineerBlogs from "./variants/SoftwareEngineer";
 import { BlogPost } from "@/lib/blog";
 
 interface BlogsProps {
@@ -14,6 +15,8 @@ export default function Blogs({ initialBlogs, role: propRole }: BlogsProps) {
   const activeRole = contextRole || propRole;
 
   switch (activeRole) {
+    case "software-engineer":
+      return <SoftwareEngineerBlogs initialBlogs={initialBlogs} role={activeRole} />;
     // case "video-editor": return <CinematicBlogs initialBlogs={initialBlogs} />;
 
     default:

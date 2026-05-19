@@ -6,7 +6,6 @@ import {
   getEducation,
   getCertifications,
 } from "@/lib/roles";
-import { createClient } from "@/lib/supabase/server";
 import { notFound } from "next/navigation";
 import Projects from "@/components/Projects";
 import HeroSection from "@/components/HeroSection";
@@ -14,6 +13,8 @@ import Technologies from "@/components/Technologies";
 import Experience from "@/components/Experience";
 import Education from "@/components/Education";
 import Certifications from "@/components/Certifications";
+import GridBackground from "@/components/GridBackground";
+import { getResumeForRole } from "@/lib/resume";
 
 import { TrackedSection } from "@/components/TrackedSection";
 
@@ -28,7 +29,7 @@ export default async function SoftwareEngineerPortfolio() {
     experience,
     education,
     certifications,
-    supabase,
+    resumeUrl,
   ] = await Promise.all([
     getRoleMetadata(role),
     getProjects(role),
@@ -36,30 +37,31 @@ export default async function SoftwareEngineerPortfolio() {
     getExperience(role),
     getEducation(role),
     getCertifications(role),
-    createClient(),
+    getResumeForRole(role),
   ]);
 
   if (!roleMetadata) {
     return notFound();
   }
 
-  // Fetch Role-Specific Resume
-  const { data: resumeData } = await supabase
-    .from("gateway_resumes")
-    .select("resume_url")
-    .eq("role_key", role)
-    .single();
-
   return (
-    <div className=" bg-background selection:bg-accent/30">
-      <main className="space-y-24 pb-20">
+    <div className="selection:bg-accent/30 relative">
+      <GridBackground />
+      <main className="pb-20 relative z-10">
         <TrackedSection id="hero_view">
           <HeroSection
             headline={roleMetadata.headline}
             bio={roleMetadata.bio}
-            resumeUrl={resumeData?.resume_url}
+            resumeUrl={resumeUrl}
           />
         </TrackedSection>
+        {/* Smooth gradient transition from hero to sections */}
+        <div 
+          className="h-24 sm:h-32 w-full"
+          style={{
+            background: "linear-gradient(to bottom, rgba(248, 222, 255, 1) 0%, rgba(255, 255, 255, 0.8) 50%, rgba(255, 255, 255, 0) 100%)"
+          }}
+        />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-32">
           <TrackedSection id="projects_view">
             <Projects initialProjects={projects} />

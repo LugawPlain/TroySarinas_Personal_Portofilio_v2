@@ -2,6 +2,7 @@
 
 import { usePortfolio } from "@/context/PortfolioContext";
 import StandardCertifications from "./variants/Standard";
+import SoftwareEngineerCertifications from "./variants/SoftwareEngineer";
 import { CertificationItem } from "@/lib/roles";
 
 interface CertificationsProps {
@@ -21,6 +22,14 @@ export default function Certifications({
   const activeRole = contextRole || propRole;
 
   switch (activeRole) {
+    case "software-engineer":
+      return (
+        <SoftwareEngineerCertifications
+          certifications={certifications}
+          title={title}
+          subtitle={subtitle}
+        />
+      );
     // case "video-editor": return <CinematicCertifications certifications={certifications} />;
 
     default:

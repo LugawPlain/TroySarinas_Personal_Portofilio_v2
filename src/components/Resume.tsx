@@ -2,17 +2,32 @@
 import Image from "next/image";
 import React from "react";
 import { useRouter } from "next/navigation";
+import { X, Download, ExternalLink } from "lucide-react";
+import { useTrack } from "@/hooks/use-track";
 
-const Resume = () => {
+const Resume = ({
+  resumeUrl,
+  onClose,
+}: {
+  resumeUrl?: string;
+  onClose?: () => void;
+}) => {
   const router = useRouter();
+  const trackDownload = useTrack("resume_download", "resume_modal");
+  const trackView = useTrack("resume_view_full", "resume_modal");
 
   const handleClose = () => {
-    router.push("/");
+    if (onClose) {
+      onClose();
+    } else {
+      router.push("/");
+    }
   };
 
   const handleDownload = () => {
+    trackDownload({ url: resumeUrl, format: "pdf", triggered_from: "modal" });
     const link = document.createElement("a");
-    link.href = "/Software Engineer Developer Sarinas.pdf";
+    link.href = resumeUrl || "/Software Engineer Developer Sarinas.pdf";
     link.download = "Troy_Sarinas_Resume.pdf";
     document.body.appendChild(link);
     link.click();
@@ -20,54 +35,70 @@ const Resume = () => {
   };
 
   const handleViewFullSize = () => {
-    window.open("/SoftwareEngineerDeveloperSarinas.png", "_blank");
+    trackView({ url: resumeUrl, format: isPdf ? "pdf" : "image" });
+    window.open(
+      resumeUrl || "/SoftwareEngineerDeveloperSarinas.png",
+      "_blank",
+    );
   };
+
+  const src = resumeUrl || "/SoftwareEngineerDeveloperSarinas.png";
+  const isPdf = src.endsWith(".pdf");
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/90"
       onClick={handleClose}
     >
       <div
-        className="relative w-11/12 max-w-4xl h-[80vh] bg-white rounded-2xl shadow-2xl overflow-hidden"
+        className="flex w-[95vw] h-[90vh] gap-0"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Header */}
-        <div className="absolute top-0 left-0 right-0 h-14 bg-gradient-to-b from-black/50 to-transparent z-10 flex items-center justify-between px-6">
-          <h2 className="text-white font-semibold text-lg">Resume</h2>
+        <div className="flex-1 flex items-center justify-center overflow-hidden rounded-l-xl">
+          {isPdf ? (
+            <iframe
+              src={src}
+              className="w-full h-full bg-zinc-900"
+              title="Resume PDF"
+            />
+          ) : (
+            <div className="relative w-full h-full bg-zinc-900">
+              <Image
+                alt="Resume"
+                src={src}
+                fill
+                className="object-contain"
+                priority
+              />
+            </div>
+          )}
+        </div>
+
+        <div className="w-14 bg-zinc-900/95 flex flex-col items-center justify-center gap-3 rounded-r-xl border-l border-white/5">
           <button
             onClick={handleClose}
-            className="text-white hover:text-gray-300 transition-colors text-2xl font-light"
+            className="p-2.5 rounded-lg text-white/40 hover:text-white hover:bg-white/10 transition-all"
             aria-label="Close"
           >
-            ×
+            <X className="w-5 h-5" />
           </button>
-        </div>
 
-        {/* Resume Image Container */}
-        <div className="relative w-full h-full bg-gray-200">
-          <Image
-            alt="Resume - Software Engineer Developer Sarinas"
-            src="/SoftwareEngineerDeveloperSarinas.png"
-            fill
-            className="object-contain p-4"
-            priority
-          />
-        </div>
+          <div className="w-6 h-px bg-white/10" />
 
-        {/* Bottom Action Bar */}
-        <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-black/50 to-transparent z-10 flex items-center justify-center gap-4 px-6">
           <button
             onClick={handleDownload}
-            className="px-6 py-2 bg-white text-gray-800 rounded-md hover:bg-gray-100 transition-colors font-medium shadow-lg"
+            className="p-2.5 rounded-lg text-white/40 hover:text-white hover:bg-white/10 transition-all"
+            aria-label="Download"
           >
-            Download PDF
+            <Download className="w-5 h-5" />
           </button>
+
           <button
             onClick={handleViewFullSize}
-            className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors font-medium shadow-lg"
+            className="p-2.5 rounded-lg text-white/40 hover:text-white hover:bg-white/10 transition-all"
+            aria-label="Open in new tab"
           >
-            View Full Size
+            <ExternalLink className="w-5 h-5" />
           </button>
         </div>
       </div>

@@ -319,3 +319,21 @@ export async function deleteCertification(id: string) {
   revalidatePath("/portfolio/[role]", "layout");
   return { success: true };
 }
+
+export async function updateHeroConfig(roleId: string, heroConfig: any) {
+  const supabase = await createClient();
+
+  const { error } = await supabase
+    .from("job_roles")
+    .update({ hero_config: heroConfig })
+    .eq("id", roleId);
+
+  if (error) {
+    console.error("Error updating hero config:", error);
+    return { error: error.message };
+  }
+
+  revalidatePath("/admin/dashboard");
+  revalidatePath("/portfolio/[role]", "layout");
+  return { success: true };
+}

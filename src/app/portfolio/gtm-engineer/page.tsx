@@ -6,7 +6,6 @@ import {
   getEducation,
   getCertifications,
 } from "@/lib/roles";
-import { createClient } from "@/lib/supabase/server";
 import { notFound } from "next/navigation";
 import Projects from "@/components/Projects";
 import HeroSection from "@/components/HeroSection";
@@ -14,6 +13,7 @@ import Technologies from "@/components/Technologies";
 import Experience from "@/components/Experience";
 import Education from "@/components/Education";
 import Certifications from "@/components/Certifications";
+import { getResumeForRole } from "@/lib/resume";
 
 import { TrackedSection } from "@/components/TrackedSection";
 
@@ -28,7 +28,7 @@ export default async function GTMEngineerPortfolio() {
     experience,
     education,
     certifications,
-    supabase,
+    resumeUrl,
   ] = await Promise.all([
     getRoleMetadata(role),
     getProjects(role),
@@ -36,19 +36,12 @@ export default async function GTMEngineerPortfolio() {
     getExperience(role),
     getEducation(role),
     getCertifications(role),
-    createClient(),
+    getResumeForRole(role),
   ]);
 
   if (!roleMetadata) {
     return notFound();
   }
-
-  // Fetch Role-Specific Resume
-  const { data: resumeData } = await supabase
-    .from("gateway_resumes")
-    .select("resume_url")
-    .eq("role_key", role)
-    .single();
 
   return (
     <div className="min-h-screen bg-background selection:bg-accent/30">
@@ -57,7 +50,7 @@ export default async function GTMEngineerPortfolio() {
           <HeroSection
             headline={roleMetadata.headline}
             bio={roleMetadata.bio}
-            resumeUrl={resumeData?.resume_url}
+            resumeUrl={resumeUrl}
           />
         </TrackedSection>
 

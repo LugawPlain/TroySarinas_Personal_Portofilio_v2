@@ -2,6 +2,7 @@
 
 import { usePortfolio } from "@/context/PortfolioContext";
 import StandardEducation from "./variants/Standard";
+import SoftwareEngineerEducation from "./variants/SoftwareEngineer";
 import { EducationItem } from "@/lib/roles";
 
 interface EducationProps {
@@ -17,6 +18,8 @@ export default function Education({
   const activeRole = contextRole || propRole;
 
   switch (activeRole) {
+    case "software-engineer":
+      return <SoftwareEngineerEducation educationItems={educationItems} />;
     // case "video-editor": return <CinematicEducation educationItems={educationItems} />;
 
     default:

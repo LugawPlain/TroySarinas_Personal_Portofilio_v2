@@ -1,4 +1,3 @@
-import { createClient } from "@/lib/supabase/server";
 import { notFound } from "next/navigation";
 import Projects from "@/components/Projects";
 import HeroSection from "@/components/HeroSection";
@@ -16,6 +15,7 @@ import {
 } from "@/lib/roles";
 import { getProjects } from "@/lib/projects";
 import { getBlogPosts } from "@/lib/blog";
+import { getResumeForRole } from "@/lib/resume";
 
 import { TrackedSection } from "@/components/TrackedSection";
 
@@ -25,7 +25,6 @@ interface Props {
 
 export default async function RolePortfolioPage({ params }: Props) {
   const { role } = await params;
-  const supabase = await createClient();
 
   // 1. Fetch Role Data
   const roleData = await getRoleMetadata(role);
@@ -36,7 +35,7 @@ export default async function RolePortfolioPage({ params }: Props) {
 
   // 2. Fetch Role-Specific Data in Parallel
   const [
-    resumeData,
+    resumeUrl,
     projects,
     techData,
     experienceData,
@@ -44,11 +43,7 @@ export default async function RolePortfolioPage({ params }: Props) {
     certifications,
     blogs,
   ] = await Promise.all([
-    supabase
-      .from("gateway_resumes")
-      .select("resume_url")
-      .eq("role_key", role)
-      .single(),
+    getResumeForRole(role),
     getProjects(role),
     getTechnologies(role),
     getExperience(role),
@@ -64,7 +59,8 @@ export default async function RolePortfolioPage({ params }: Props) {
           <HeroSection
             headline={roleData.headline}
             bio={roleData.bio}
-            resumeUrl={resumeData.data?.resume_url}
+            resumeUrl={resumeUrl}
+            heroConfig={roleData.hero_config}
           />
         </TrackedSection>
 
