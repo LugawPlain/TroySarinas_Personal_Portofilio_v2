@@ -21,10 +21,7 @@ const SoftwareEngineerProjects = ({ projects, role }: ProjectsProps) => {
   const trackExternal = useTrack("project_external_link", "projects");
 
   return (
-    <div
-      id="projects"
-      className="relative py-16 px-4"
-    >
+    <div id="projects" className="relative py-16 px-4">
       <div className="max-w-[85rem] mx-auto">
         {/* Section Header */}
         <div className="text-center mb-16">
@@ -38,7 +35,7 @@ const SoftwareEngineerProjects = ({ projects, role }: ProjectsProps) => {
             Featured Projects
           </h2>
           <p className="text-stone-600/80 font-light font-spacemono max-w-2xl mx-auto">
-            A collection of my recent work showcasing full-stack development, 
+            A collection of my recent work showcasing full-stack development,
             modern frameworks, and scalable architectures.
           </p>
         </div>
@@ -144,9 +141,7 @@ const SoftwareEngineerProjects = ({ projects, role }: ProjectsProps) => {
                         }
                         className="flex-1"
                       >
-                        <Button
-                          className="w-full rounded-full text-xs font-semibold px-4 py-2 bg-secondary hover:bg-secondary/90 text-secondary-foreground shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5"
-                        >
+                        <Button className="w-full rounded-full text-xs font-semibold px-4 py-2 bg-secondary hover:bg-secondary/90 text-secondary-foreground shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5">
                           <FiExternalLink size={14} className="mr-1.5" />
                           Live Demo
                         </Button>
@@ -212,7 +207,7 @@ const SoftwareEngineerProjects = ({ projects, role }: ProjectsProps) => {
               })
             }
           >
-            <Button 
+            <Button
               variant="outline"
               className="rounded-full px-8 py-6 border-2 border-secondary/30 hover:border-secondary/60 hover:bg-secondary/5 font-semibold tracking-tight shadow-lg transition-all hover:-translate-y-0.5"
             >

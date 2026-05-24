@@ -74,7 +74,9 @@ const StandardHeader = () => {
 
   const handleSmoothScroll = (e: React.MouseEvent, href: string) => {
     if (href.startsWith("#")) {
-      if (pathname === "/" || pathname.startsWith("/portfolio")) {
+      // Only smooth scroll if we're on the main portfolio page or home
+      const isMainPortfolioPage = pathname === rolePrefix || pathname === `${rolePrefix}/`;
+      if (pathname === "/" || isMainPortfolioPage) {
         e.preventDefault();
         const targetId = href.substring(1);
         const targetElement = document.getElementById(targetId);
@@ -91,6 +93,7 @@ const StandardHeader = () => {
           });
         }
       }
+      // If on a subpage (e.g. /blog), let browser navigate to /portfolio/role#section
     }
     setIsMobileMenuOpen(false);
   };

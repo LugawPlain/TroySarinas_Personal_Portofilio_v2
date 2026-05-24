@@ -9,6 +9,7 @@ import {
   ShieldCheck,
   MousePointer2,
   Activity,
+  MessageSquare,
 } from "lucide-react";
 import { PortfolioContentManager } from "./PortfolioManager";
 import {
@@ -17,8 +18,9 @@ import {
   InteractionFeed,
 } from "./DashboardComponents";
 import { LinkAnalyticsModal } from "./LinkAnalyticsModal";
+import { ChatAnalytics } from "./ChatAnalytics";
 
-type TabId = "overview" | "content" | "links";
+type TabId = "overview" | "content" | "links" | "chat";
 
 interface DashboardTabsProps {
   links: any[];
@@ -48,6 +50,7 @@ const tabs: { id: TabId; label: string; icon: React.ReactNode }[] = [
   { id: "overview", label: "Overview", icon: <BarChart3 className="w-4 h-4" /> },
   { id: "content", label: "Content Manager", icon: <Layout className="w-4 h-4" /> },
   { id: "links", label: "Gateway Links", icon: <Link2 className="w-4 h-4" /> },
+  { id: "chat", label: "Chat Analytics", icon: <MessageSquare className="w-4 h-4" /> },
 ];
 
 export function DashboardTabs(props: DashboardTabsProps) {
@@ -92,6 +95,7 @@ export function DashboardTabs(props: DashboardTabsProps) {
           {activeTab === "overview" && <OverviewTab {...props} />}
           {activeTab === "content" && <ContentTab {...props} />}
           {activeTab === "links" && <LinksTab {...props} />}
+          {activeTab === "chat" && <ChatTab />}
         </div>
       </div>
     </div>
@@ -120,6 +124,37 @@ function OverviewTab({ stats }: DashboardTabsProps) {
           icon={<ShieldCheck className="w-5 h-5 text-green-500" />}
           description="Configured portfolio variants"
         />
+      </div>
+
+      <div>
+        <h3 className="text-sm font-bold uppercase tracking-widest text-muted-foreground flex items-center gap-2 mb-4">
+          <ShieldCheck className="w-4 h-4 text-accent" />
+          Portfolio Roles
+        </h3>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {[
+            { name: "Software Engineer", slug: "software-engineer", color: "bg-blue-500/10 text-blue-600 border-blue-200" },
+            { name: "Video Editor", slug: "video-editor", color: "bg-purple-500/10 text-purple-600 border-purple-200" },
+            { name: "GTM Engineer", slug: "gtm-engineer", color: "bg-emerald-500/10 text-emerald-600 border-emerald-200" },
+            { name: "Data Analyst", slug: "data-analyst", color: "bg-violet-500/10 text-violet-600 border-violet-200" },
+            { name: "Social Media Manager", slug: "social-media-manager", color: "bg-pink-500/10 text-pink-600 border-pink-200" },
+            { name: "Marketing Manager", slug: "marketing-manager", color: "bg-orange-500/10 text-orange-600 border-orange-200" },
+          ].map((role) => (
+            <a
+              key={role.slug}
+              href={`/portfolio/${role.slug}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`flex items-center justify-between p-4 rounded-xl border ${role.color} hover:shadow-md transition-all group`}
+            >
+              <div>
+                <div className="font-semibold text-sm">{role.name}</div>
+                <div className="text-[10px] opacity-70 mt-0.5">/portfolio/{role.slug}</div>
+              </div>
+              <Link2 className="w-4 h-4 opacity-50 group-hover:opacity-100 transition-opacity" />
+            </a>
+          ))}
+        </div>
       </div>
 
       <div>
@@ -278,6 +313,10 @@ function LinksTab({
       )}
     </div>
   );
+}
+
+function ChatTab() {
+  return <ChatAnalytics />;
 }
 
 function StatCard({

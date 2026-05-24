@@ -55,14 +55,7 @@ export default async function SoftwareEngineerPortfolio() {
             resumeUrl={resumeUrl}
           />
         </TrackedSection>
-        {/* Smooth gradient transition from hero to sections */}
-        <div 
-          className="h-24 sm:h-32 w-full"
-          style={{
-            background: "linear-gradient(to bottom, rgba(248, 222, 255, 1) 0%, rgba(255, 255, 255, 0.8) 50%, rgba(255, 255, 255, 0) 100%)"
-          }}
-        />
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-32">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16 sm:space-y-24 lg:space-y-32">
           <TrackedSection id="projects_view">
             <Projects initialProjects={projects} />
           </TrackedSection>

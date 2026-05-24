@@ -1,6 +1,7 @@
 "use client";
+
 import React, { useState } from "react";
-import { Button } from "./ui/button";
+import { Button } from "../../ui/button";
 import { IoSend, IoMail, IoPerson, IoDocumentText } from "react-icons/io5";
 
 interface FormData {
@@ -10,7 +11,7 @@ interface FormData {
   message: string;
 }
 
-const ContactForm = () => {
+const StandardContactForm = () => {
   const [formData, setFormData] = useState<FormData>({
     name: "",
     email: "",
@@ -70,7 +71,7 @@ const ContactForm = () => {
             Message Sent Successfully!
           </h3>
           <p className="text-gray-600 mb-6">
-            Thank you for reaching out! I&aposll get back to you as soon as
+            Thank you for reaching out! I&apos;ll get back to you as soon as
             possible.
           </p>
           <Button
@@ -88,7 +89,7 @@ const ContactForm = () => {
     <div className="w-full">
       <div className="text-center mb-8">
         <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-          Ready to collaborate on something extraordinary? Let&aposs discuss
+          Ready to collaborate on something extraordinary? Let&apos;s discuss
           your project and bring your ideas to life.
         </p>
       </div>
@@ -96,12 +97,8 @@ const ContactForm = () => {
       <div className="bg-white rounded-lg p-0">
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Name Field */}
             <div className="space-y-2">
-              <label
-                htmlFor="name"
-                className="block text-sm font-medium text-secondary"
-              >
+              <label htmlFor="name" className="block text-sm font-medium text-secondary">
                 Full Name *
               </label>
               <div className="relative">
@@ -121,12 +118,8 @@ const ContactForm = () => {
               </div>
             </div>
 
-            {/* Email Field */}
             <div className="space-y-2">
-              <label
-                htmlFor="email"
-                className="block text-sm font-medium text-secondary"
-              >
+              <label htmlFor="email" className="block text-sm font-medium text-secondary">
                 Email Address *
               </label>
               <div className="relative">
@@ -147,12 +140,8 @@ const ContactForm = () => {
             </div>
           </div>
 
-          {/* Subject Field */}
           <div className="space-y-2">
-            <label
-              htmlFor="subject"
-              className="block text-sm font-medium text-secondary"
-            >
+            <label htmlFor="subject" className="block text-sm font-medium text-secondary">
               Subject *
             </label>
             <div className="relative">
@@ -167,17 +156,13 @@ const ContactForm = () => {
                 onChange={handleChange}
                 required
                 className="block w-full pl-10 pr-3 py-2 border border-secondary rounded-lg focus:outline-accent focus:ring-2 focus:ring-primary focus:border-transparent"
-                placeholder="What's this about?"
+                placeholder="What&apos;s this about?"
               />
             </div>
           </div>
 
-          {/* Message Field */}
           <div className="space-y-2">
-            <label
-              htmlFor="message"
-              className="block text-sm font-medium text-secondary"
-            >
+            <label htmlFor="message" className="block text-sm font-medium text-secondary">
               Message *
             </label>
             <textarea
@@ -192,7 +177,6 @@ const ContactForm = () => {
             />
           </div>
 
-          {/* Submit Button */}
           <div className="flex justify-center">
             <Button
               type="submit"
@@ -219,21 +203,14 @@ const ContactForm = () => {
         </form>
       </div>
 
-      {/* Alternative Contact Info */}
       <div className="max-lg mx-auto mt-8 text-center">
         <p className="text-gray-600">
           Prefer to reach out directly? Email me at <br />
-          <a
-            href="mailto:troysarinas22@gmail.com"
-            className="text-accent hover:underline font-medium"
-          >
+          <a href="mailto:troysarinas22@gmail.com" className="text-accent hover:underline font-medium">
             troysarinas22@gmail.com
           </a>{" "}
           or call{" "}
-          <a
-            href="tel:+639569878251"
-            className="text-accent hover:underline font-medium"
-          >
+          <a href="tel:+639569878251" className="text-accent hover:underline font-medium">
             +63 956 987 8251
           </a>
         </p>
@@ -242,4 +219,4 @@ const ContactForm = () => {
   );
 };
 
-export default ContactForm;
+export default StandardContactForm;

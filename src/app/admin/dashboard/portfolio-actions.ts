@@ -337,3 +337,39 @@ export async function updateHeroConfig(roleId: string, heroConfig: any) {
   revalidatePath("/portfolio/[role]", "layout");
   return { success: true };
 }
+
+export async function updateChatConfig(roleId: string, chatConfig: any) {
+  const supabase = await createClient();
+
+  const { error } = await supabase
+    .from("job_roles")
+    .update({ chat_config: chatConfig })
+    .eq("id", roleId);
+
+  if (error) {
+    console.error("Error updating chat config:", error);
+    return { error: error.message };
+  }
+
+  revalidatePath("/admin/dashboard");
+  revalidatePath("/portfolio/[role]", "layout");
+  return { success: true };
+}
+
+export async function updateChatPersona(roleId: string, chatPersona: string) {
+  const supabase = await createClient();
+
+  const { error } = await supabase
+    .from("job_roles")
+    .update({ chat_persona: chatPersona })
+    .eq("id", roleId);
+
+  if (error) {
+    console.error("Error updating chat persona:", error);
+    return { error: error.message };
+  }
+
+  revalidatePath("/admin/dashboard");
+  revalidatePath("/portfolio/[role]", "layout");
+  return { success: true };
+}

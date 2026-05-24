@@ -38,6 +38,15 @@ export interface HeroConfig {
   avatarUrl?: string;
 }
 
+export interface ChatConfig {
+  accentColor?: string;
+  welcomeMessage?: string;
+  suggestedQuestions?: string[];
+  avatarIcon?: string;
+  typingIndicator?: string;
+  statusText?: string;
+}
+
 export interface JobRole {
   id: string;
   slug: string;
@@ -45,6 +54,8 @@ export interface JobRole {
   headline: string;
   bio: string;
   hero_config: HeroConfig;
+  chat_config?: ChatConfig;
+  chat_persona?: string;
 }
 
 export interface EducationItem {
@@ -153,6 +164,29 @@ export async function getRoleMetadata(role: string): Promise<JobRole | null> {
   }
 
   return data as JobRole;
+}
+
+/**
+ * Fetches chat configuration and persona for a specific role.
+ */
+export async function getChatConfig(role: string): Promise<{ config: ChatConfig | null; persona: string | null }> {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from("job_roles")
+    .select("chat_config, chat_persona")
+    .eq("slug", role)
+    .single();
+
+  if (error) {
+    console.error("Error fetching chat config:", error);
+    return { config: null, persona: null };
+  }
+
+  return {
+    config: data?.chat_config as ChatConfig || null,
+    persona: data?.chat_persona || null,
+  };
 }
 
 export async function getEducation(role?: string): Promise<EducationItem[]> {

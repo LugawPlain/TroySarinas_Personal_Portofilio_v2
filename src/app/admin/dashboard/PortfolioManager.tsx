@@ -35,9 +35,11 @@ import {
   X,
   Upload,
   ExternalLink,
+  MessageSquare,
 } from "lucide-react";
 import { uploadResume, deleteResume } from "./resume-upload-actions";
 import { HeroConfigEditor } from "./HeroConfigEditor";
+import { ChatConfigEditor } from "./ChatConfigEditor";
 
 interface PortfolioContentManagerProps {
   roles: any[];
@@ -74,7 +76,7 @@ export function PortfolioContentManager({
 }: PortfolioContentManagerProps) {
   const [selectedRole, setSelectedRole] = useState(roles[0]);
   const [activeTab, setActiveTab] = useState<
-    "identity" | "skills" | "career" | "work" | "academia"
+    "identity" | "skills" | "career" | "work" | "academia" | "chat"
   >("identity");
 
   const [localRoleTech, setLocalRoleTech] = useState(initialRoleTech);
@@ -450,6 +452,12 @@ export function PortfolioContentManager({
           onClick={() => setActiveTab("academia")}
           icon={<GraduationCap className="w-4 h-4" />}
           label="Education & Certs"
+        />
+        <TabButton
+          active={activeTab === "chat"}
+          onClick={() => setActiveTab("chat")}
+          icon={<MessageSquare className="w-4 h-4" />}
+          label="Chat Config"
         />
       </div>
 
@@ -958,6 +966,17 @@ export function PortfolioContentManager({
               </div>
             </div>
           </div>
+        )}
+
+        {/* Tab 6: Chat Configuration */}
+        {activeTab === "chat" && (
+          <ChatConfigEditor
+            selectedRole={selectedRole}
+            onSave={(status) => {
+              setSaveStatus(status);
+              if (status === "Chat config synced" || status === "Persona synced") setTimeout(() => setSaveStatus(null), 2000);
+            }}
+          />
         )}
       </div>
 

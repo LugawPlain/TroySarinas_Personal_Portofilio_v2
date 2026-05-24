@@ -7,9 +7,16 @@ interface PortfolioContextType {
   role: string;
 }
 
-const PortfolioContext = createContext<PortfolioContextType | undefined>(
-  undefined,
-);
+// HMR-safe context: store on globalThis so hot reloads don't create orphaned instances
+const globalForContext = globalThis as unknown as {
+  __PortfolioContext?: React.Context<PortfolioContextType | undefined>;
+};
+
+const PortfolioContext =
+  globalForContext.__PortfolioContext ??
+  createContext<PortfolioContextType | undefined>(undefined);
+
+globalForContext.__PortfolioContext = PortfolioContext;
 
 export function PortfolioProvider({
   children,
@@ -21,16 +28,10 @@ export function PortfolioProvider({
   const params = useParams();
   const pathname = usePathname();
 
-  // Detection logic:
-  // 1. Manual prop (passed directly)
-  // 2. Dynamic route param [role]
-  // 3. Current URL segment (for static routes like /portfolio/software-engineer)
-  // 4. Default fallback
   const getRole = () => {
     if (manualRole) return manualRole;
     if (params?.role) return params.role as string;
 
-    // Extract role from pathname: /portfolio/[role]/...
     const segments = pathname.split("/").filter(Boolean);
     if (segments[0] === "portfolio" && segments[1]) {
       return segments[1];
