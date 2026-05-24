@@ -6,6 +6,7 @@ import {
   getEducation,
   getCertifications,
 } from "@/lib/roles";
+import { getBlogPosts } from "@/lib/blog";
 import { notFound } from "next/navigation";
 import Projects from "@/components/Projects";
 import HeroSection from "@/components/HeroSection";
@@ -13,6 +14,7 @@ import Technologies from "@/components/Technologies";
 import Experience from "@/components/Experience";
 import Education from "@/components/Education";
 import Certifications from "@/components/Certifications";
+import Blogs from "@/components/Blogs";
 import { getResumeForRole } from "@/lib/resume";
 
 import { TrackedSection } from "@/components/TrackedSection";
@@ -28,6 +30,7 @@ export default async function GTMEngineerPortfolio() {
     experience,
     education,
     certifications,
+    blogs,
     resumeUrl,
   ] = await Promise.all([
     getRoleMetadata(role),
@@ -36,6 +39,7 @@ export default async function GTMEngineerPortfolio() {
     getExperience(role),
     getEducation(role),
     getCertifications(role),
+    getBlogPosts(role),
     getResumeForRole(role),
   ]);
 
@@ -44,43 +48,48 @@ export default async function GTMEngineerPortfolio() {
   }
 
   return (
-    <div className="min-h-screen bg-background selection:bg-accent/30">
+    <div className="min-h-screen bg-background selection:bg-emerald-500/30">
       <main className="space-y-24 pb-20">
+        {/* 1. Hero - Metrics/Impact */}
         <TrackedSection id="hero_view">
           <HeroSection
             headline={roleMetadata.headline}
             bio={roleMetadata.bio}
             resumeUrl={resumeUrl}
+            heroConfig={roleMetadata.hero_config}
           />
         </TrackedSection>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-32">
-          {/* Projects Section (Dynamic) */}
+          {/* 2. Projects - Case Studies */}
           <TrackedSection id="projects_view">
-            <section id="projects">
-              <div className="space-y-4 mb-12">
-                <h2 className="text-4xl font-bold tracking-tight">
-                  Featured Projects
-                </h2>
-                <p className="text-muted-foreground text-lg max-w-2xl">
-                  A curated selection of my work specifically relevant to{" "}
-                  {roleMetadata.title}.
-                </p>
-              </div>
-              <Projects initialProjects={projects} />
-            </section>
+            <Projects initialProjects={projects} />
           </TrackedSection>
 
-          <TrackedSection id="skills_view">
-            <Technologies initialTech={tech} />
-          </TrackedSection>
-
+          {/* 3. Experience - Achievement-focused */}
           <TrackedSection id="experience_view">
             <Experience initialExperience={experience} />
           </TrackedSection>
 
-          <Education educationItems={education} />
-          <Certifications certifications={certifications} />
+          {/* 4. Certifications - Trust Badges */}
+          <TrackedSection id="certifications_view">
+            <Certifications certifications={certifications} />
+          </TrackedSection>
+
+          {/* 5. Blogs - Thought Leadership */}
+          <TrackedSection id="blogs_view">
+            <Blogs initialBlogs={blogs} />
+          </TrackedSection>
+
+          {/* 6. Technologies - Stack Diagram */}
+          <TrackedSection id="skills_view">
+            <Technologies initialTech={tech} />
+          </TrackedSection>
+
+          {/* Education - Minimized for GTM roles */}
+          <TrackedSection id="education_view">
+            <Education educationItems={education} />
+          </TrackedSection>
         </div>
       </main>
     </div>

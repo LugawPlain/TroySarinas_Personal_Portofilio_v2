@@ -15,9 +15,9 @@ const StandardFooter = () => {
   const router = useRouter();
   const { setIsContactModalOpen } = useContactModal();
   return (
-    <footer id="contacts" className="bg-gray-200 py-4">
-      <div className="py-4 xl:flex-row max-w-[80rem] mx-auto flex flex-col justify-between items-center px-8 gap-4">
-        <div className="flex flex-col justify-center items-center font-inter gap-2 max-w-80 min-w-80 order-2 xl:order-1">
+    <footer id="contacts" className="bg-gray-200 py-4 relative z-10">
+      <div className="py-4 xl:flex-row max-w-[80rem] mx-auto flex flex-col justify-between items-center px-4 sm:px-8 gap-4">
+        <div className="flex flex-col justify-center items-center font-inter gap-2 max-w-80 w-full order-2 xl:order-1">
           <div className="flex flex-col items-center">
             <div>
               <DotLottieReact
@@ -35,7 +35,7 @@ const StandardFooter = () => {
         <div className="flex flex-col justify-center items-center gap-2 font-inter order-1 xl:order-2 ">
           <NameTitle
             className="font-medium"
-            size="xl:text-7xl text-5xl lg:text-6xl "
+            size="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl"
             href="#herosection"
           />
           <p className="text-sm font-medium font-montserrat text-justify">
@@ -55,7 +55,7 @@ const StandardFooter = () => {
             Contact Me
           </Button>
         </div>
-        <div className="flex flex-col mt-4 xl:mt-0 justify-center pl-8 items-center font-inter max-w-80 min-w-80 xl:block order-3 xl:order-3">
+        <div className="flex flex-col mt-4 xl:mt-0 justify-center items-center font-inter max-w-80 w-full xl:block order-3 xl:order-3">
           <h3 className="font-semibold text-xl text-secondary">Quick Links</h3>
           <ul className="flex flex-wrap justify-center gap-2 mt-2 text-sm xl:block ">
             <Link className="underline" href="/#herosection">
@@ -88,7 +88,7 @@ const StandardFooter = () => {
           </ul>
         </div>
       </div>
-      <div className="text-center mt-2 xl:flex xl:justify-between mx-auto max-w-[80rem] px-20 border-t border-border py-2">
+      <div className="text-center mt-2 xl:flex xl:justify-between mx-auto max-w-[80rem] px-4 sm:px-8 lg:px-20 border-t border-border py-2">
         <div className="mt-2">
           <GitHubStarCount
             username="LugawPlain"

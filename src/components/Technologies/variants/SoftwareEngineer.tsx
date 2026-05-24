@@ -90,7 +90,8 @@ const SoftwareEngineerTechnologies = ({ initialTech }: TechnologiesProps) => {
             Technologies I Use
           </h2>
           <p className="text-stone-600/80 font-light font-spacemono max-w-2xl mx-auto">
-            Tools and frameworks I work with daily to build modern, scalable applications.
+            Tools and frameworks I work with daily to build modern, scalable
+            applications.
           </p>
         </div>
 
@@ -102,7 +103,7 @@ const SoftwareEngineerTechnologies = ({ initialTech }: TechnologiesProps) => {
               maskImage:
                 "linear-gradient(to bottom, black 95%, transparent 100%)",
             }}
-            className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 pb-8"
+            className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 p-4 pb-8"
             variants={gridVariants}
             initial="hidden"
             animate={showAll ? "visible" : "hidden"}

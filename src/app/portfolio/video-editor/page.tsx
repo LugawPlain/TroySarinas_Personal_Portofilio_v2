@@ -11,7 +11,6 @@ import Projects from "@/components/Projects";
 import HeroSection from "@/components/HeroSection";
 import Technologies from "@/components/Technologies";
 import Experience from "@/components/Experience";
-import Education from "@/components/Education";
 import Certifications from "@/components/Certifications";
 import { getResumeForRole } from "@/lib/resume";
 
@@ -44,44 +43,37 @@ export default async function VideoEditorPortfolio() {
   }
 
   return (
-    <div className="min-h-screen bg-background selection:bg-accent/30">
-      <main className="space-y-24 pb-20">
+    <div className="min-h-screen bg-black selection:bg-amber-500/30">
+      <main className="space-y-0 pb-20">
+        {/* 1. Hero - Full-bleed video background */}
         <TrackedSection id="hero_view">
           <HeroSection
             headline={roleMetadata.headline}
             bio={roleMetadata.bio}
             resumeUrl={resumeUrl}
+            heroConfig={roleMetadata.hero_config}
           />
         </TrackedSection>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-32">
-          {/* Projects Section (Dynamic) */}
-          <TrackedSection id="projects_view">
-            <section id="projects">
-              <div className="space-y-4 mb-12">
-                <h2 className="text-4xl font-bold tracking-tight">
-                  Featured Projects
-                </h2>
-                <p className="text-muted-foreground text-lg max-w-2xl">
-                  A curated selection of my work specifically relevant to{" "}
-                  {roleMetadata.title}.
-                </p>
-              </div>
-              <Projects initialProjects={projects} />
-            </section>
-          </TrackedSection>
+        {/* 2. Projects - Showreel / Masonry Grid */}
+        <TrackedSection id="projects_view">
+          <Projects initialProjects={projects} />
+        </TrackedSection>
 
-          <TrackedSection id="skills_view">
-            <Technologies initialTech={tech} />
-          </TrackedSection>
+        {/* 3. Experience - Client logos */}
+        <TrackedSection id="experience_view">
+          <Experience initialExperience={experience} />
+        </TrackedSection>
 
-          <TrackedSection id="experience_view">
-            <Experience initialExperience={experience} />
-          </TrackedSection>
-
-          <Education educationItems={education} />
+        {/* 4. Certifications - Prominently placed */}
+        <TrackedSection id="certifications_view">
           <Certifications certifications={certifications} />
-        </div>
+        </TrackedSection>
+
+        {/* 5. Technologies - Minimal icon strip */}
+        <TrackedSection id="skills_view">
+          <Technologies initialTech={tech} />
+        </TrackedSection>
       </main>
     </div>
   );

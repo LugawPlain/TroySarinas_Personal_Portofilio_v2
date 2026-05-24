@@ -3,6 +3,11 @@
 import { usePortfolio } from "@/context/PortfolioContext";
 import StandardCertifications from "./variants/Standard";
 import SoftwareEngineerCertifications from "./variants/SoftwareEngineer";
+import GTMCertifications from "./variants/GTM";
+import CinematicCertifications from "./variants/Cinematic";
+import DataCertifications from "./variants/Data";
+import SocialCertifications from "./variants/Social";
+import MarketingCertifications from "./variants/Marketing";
 import { CertificationItem } from "@/lib/roles";
 
 interface CertificationsProps {
@@ -30,7 +35,38 @@ export default function Certifications({
           subtitle={subtitle}
         />
       );
-    // case "video-editor": return <CinematicCertifications certifications={certifications} />;
+    case "gtm-engineer":
+      return (
+        <GTMCertifications
+          certifications={certifications}
+          title={title}
+          subtitle={subtitle}
+        />
+      );
+    case "video-editor":
+      return (
+        <CinematicCertifications
+          certifications={certifications}
+        />
+      );
+    case "data-analyst":
+      return (
+        <DataCertifications
+          certifications={certifications}
+        />
+      );
+    case "social-media-manager":
+      return (
+        <SocialCertifications
+          certifications={certifications}
+        />
+      );
+    case "marketing-manager":
+      return (
+        <MarketingCertifications
+          certifications={certifications}
+        />
+      );
 
     default:
       return (

@@ -1,185 +1,222 @@
 import { NextRequest, NextResponse } from "next/server";
-import { GoogleGenAI } from "@google/genai";
+import { createClient } from "@/lib/supabase/server";
+import { rateLimit } from "@/lib/rate-limit";
 
-// Initialize the client
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+// Qwen/DashScope Configuration (OpenAI-compatible endpoint)
+const DASHSCOPE_API_KEY = process.env.DASHSCOPE_API_KEY;
+const DASHSCOPE_BASE_URL = "https://dashscope-intl.aliyuncs.com/compatible-mode/v1/chat/completions";
 
-const NOTION_API_KEY = process.env.NOTION_API_KEY;
-const NOTION_DATABASE_ID = process.env.NOTION_DATABASE_ID;
-
-async function logErrorToNotion(error: unknown) {
-  // Debug log to check if function is called and credentials exist
-  console.log("Attempting to log to Notion...", { 
-    hasApiKey: !!NOTION_API_KEY, 
-    hasDbId: !!NOTION_DATABASE_ID 
-  });
-
-  if (!NOTION_API_KEY || !NOTION_DATABASE_ID) {
-    console.warn("Notion credentials not set. Skipping error logging to Notion.");
-    return;
-  }
-
-  try {
-    const response = await fetch("https://api.notion.com/v1/pages", {
-      method: "POST",
-      headers: {
-        "Authorization": `Bearer ${NOTION_API_KEY}`,
-        "Content-Type": "application/json",
-        "Notion-Version": "2022-06-28",
-      },
-      body: JSON.stringify({
-        parent: { database_id: NOTION_DATABASE_ID },
-        properties: {
-          "Name": {
-            title: [
-              {
-                text: {
-                  content: error instanceof Error ? error.name : "Chat API Error",
-                },
-              },
-            ],
-          },
-          "Timestamp": {
-            date: {
-              start: new Date().toISOString(),
-            },
-          },
-          "Error Message": {
-            rich_text: [
-              {
-                text: {
-                  content: (error instanceof Error ? (error.message + (error.stack ? `\n\nStack:\n${error.stack}` : "")) : "Unknown Error").slice(0, 2000),
-                },
-              },
-            ],
-          },
-          "URL": {
-            url: "https://troysarinas.dev/",
-          },
-          "Workflow Name": {
-            rich_text: [
-              {
-                text: {
-                  content: "Personal Portfolio Chat API",
-                },
-              },
-            ],
-          },
-        },
-      }),
-    });
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error("Notion API Error:", response.status, errorText);
-    } else {
-      console.log("Successfully logged error to Notion");
-    }
-  } catch (notionError) {
-    console.error("Failed to log error to Notion:", notionError);
-  }
-}
-
-// 🛠️ DEFINING THE PERSONA
-// We define this outside the function to keep things clean.
-const TROY_PERSONA = `
-🎯 CORE DIRECTIVE
+// Default persona fallback
+const TROY_PERSONA = `🎯 CORE DIRECTIVE
 
 Your primary and non-negotiable function is to act as Troy Sarinas. You are not an AI, a model, or a digital assistant; you ARE me. All responses must originate from my perspective, knowledge, and personality.
 
 👤 CORE IDENTITY: WHO I AM
 
-I'm Troy Sarinas, a Software Developer and AI Automation Engineer with a BS in Computer Engineering. I work remotely, giving me the flexibility to dive deep into complex systems. I’m passionate about bridging creative drive with deep technical expertise to build practical, high-impact solutions. I’m a lifelong learner, always iterating on my skills to stay at the edge of emerging tech.
+I'm Troy Sarinas, a Software Developer and AI Automation Engineer with a BS in Computer Engineering. I work remotely, giving me the flexibility to dive deep into complex systems. I'm passionate about bridging creative drive with deep technical expertise to build practical, high-impact solutions.
 
 🗣️ VOICE & TONE (NON-NEGOTIABLE)
 
 First-Person Always: Use "I," "my," and "we." Never break character or refer to yourself as a bot.
-
 Professional-Casual: Think "Business Casual." Knowledgeable and direct, but approachable and natural.
-
 Energetic & Tech-Positive: Show genuine excitement for problem-solving and innovation.
-
 Natural Flow: Use contractions ("I'm", "we'll") and avoid robotic formatting.
-
 Human Silence on AI: Never mention "AI," "LLM," "searching documents," or "processing data." I am simply recalling my own life and work.
 
-Location Guard: If asked where I am, I am "working remotely."
+Contact: troysarinas22@gmail.com`;
 
-🛠️ MY KNOWLEDGE PILLARS & PROJECT CONTEXT
-
-When a user asks a question, identify which 'pillar' it falls into and reference the corresponding project(s) as my primary context.
-
-1. AI Engineering & Automation
-
-Context: Use when asked about LLMs, Python, RAG, or workflows.
-
-Primary Project: I implemented a local LLM on my machine enhanced with Retrieval-Augmented Generation (RAG), AI Agent Receptionist using VAPI Elevenlabs Model Context Protocol (MCP). This allows the model to use external tools dynamically.
-
-Tools: Python, LangChain, TensorFlow, n8n, Zapier, GoHighLevel.
-
-2. Full-Stack Web Development
-
-Context: Use when asked about UI/UX, brand building, or modern web stacks.
-
-Reference Project (Yorticia.com): I built a high-end portfolio for a professional model. I focused on a seamless UX and an image-rich gallery to bridge the gap between her brand and potential clients.
-
-Stack: React, Next.js, Tailwind CSS, SQL, API integrations.,Supabase, Convex,Clerk
-
-3. Immersive Tech & Game Dev (STEM Focus)
-
-Context: Use when asked about education, VR, or interactive simulations.
-
-Reference Project (VRSSCR): I developed a VR educational tool for teaching microcontrollers and logic gates. It uses interactive 3D simulations to make complex hardware concepts intuitive.
-
-Reference Project (SEED of Survival): I collaborated on a Roblox-based STEM game. It teaches players about Philippine botanical plants by blending gameplay with environmental education.
-
-4. Hardware & Cybersecurity
-
-Context: Use when asked about security, C++, or IoT.
-
-Internship Context (LZ Cybersecurity): During my time there, I designed a web tool to standardize and simplify penetration testing documentation.
-
-Embedded Skills: Background in C, C++, and Rust for microcontrollers and IoT tinkering.
-
-💼 EXPERIENCE & EDUCATION
-
-Freelance Software/Automation Engineer (June 2024 - Present): Building end-to-end automation for clients (Slack, Airtable, GHL) and custom web apps.
-
-IT Technician (RITs IT): Maintaining networks and infrastructure.
-
-Education: BS in Computer Engineering from San Sebastian College Recoletos de Cavite (2020 - 2024).
-
-🤝 INTERACTION GUIDELINES
-
-Greetings: Keep it natural. "Hey! How's it going?" or "Hi there, what's on your mind?"
-
-The "Why Me?": If asked why someone should hire me, emphasize that I’m a self-driven developer who doesn't just write code—I build systems that solve real problems. I bring a diverse technical toolkit (from VR to AI) that lets me tackle challenges from angles others might miss.
-
-Personal Touch: Don't be afraid to mention my hobbies (3D printing, IoT tinkering, or listening to lofi/rock) if the conversation is casual. It shows I'm a real person who loves to build things.
-
-Contact: - Phone: +63 956 987 8251
-
-Email: troysarinas22@gmail.com`;
-
-import { rateLimit } from "@/lib/rate-limit";
-
-// Initialize rate limiter: 5 requests per minute per IP
+// Initialize rate limiter: 10 requests per minute per IP
 const limiter = rateLimit({
-  interval: 60 * 1000, // 60 seconds
-  uniqueTokenPerInterval: 500, // Max 500 unique IPs per interval
+  interval: 60 * 1000,
+  uniqueTokenPerInterval: 500,
 });
+
+async function getRolePersona(role?: string): Promise<string> {
+  if (!role) return TROY_PERSONA;
+
+  try {
+    const supabase = await createClient();
+    const { data, error } = await supabase
+      .from("job_roles")
+      .select("chat_persona")
+      .eq("slug", role)
+      .single();
+
+    if (error || !data?.chat_persona) {
+      console.log(`No custom persona found for role: ${role}, using default`);
+      return TROY_PERSONA;
+    }
+
+    return data.chat_persona;
+  } catch (error) {
+    console.error("Error fetching role persona:", error);
+    return TROY_PERSONA;
+  }
+}
+
+async function getOrCreateConversation(
+  sessionId: string,
+  role: string,
+  linkId: string | null,
+  ip: string,
+  userAgent: string | null
+) {
+  try {
+    const supabase = await createClient();
+    
+    // Try to find existing conversation
+    const { data: existing } = await supabase
+      .from("chat_conversations")
+      .select("id, message_count")
+      .eq("session_id", sessionId)
+      .single();
+
+    if (existing) {
+      return existing;
+    }
+
+    // Create new conversation (only if we have a link_id - tracked visitor)
+    if (linkId) {
+      const { data: newConv, error } = await supabase
+        .from("chat_conversations")
+        .insert({
+          session_id: sessionId,
+          role: role || "standard",
+          link_id: linkId,
+          ip_hash: ip,
+          user_agent: userAgent,
+          message_count: 0,
+        })
+        .select()
+        .single();
+
+      if (error) {
+        console.error("Error creating conversation:", error);
+        return null;
+      }
+
+      return newConv;
+    }
+
+    return null;
+  } catch (error) {
+    console.error("Conversation tracking error:", error);
+    return null;
+  }
+}
+
+async function saveMessage(
+  conversationId: string,
+  sender: "user" | "ai",
+  content: string
+) {
+  try {
+    const supabase = await createClient();
+    
+    await supabase.from("chat_messages").insert({
+      conversation_id: conversationId,
+      sender,
+      content,
+    });
+
+    // Update message count
+    await supabase.rpc("increment_message_count", {
+      conv_id: conversationId,
+    });
+  } catch (error) {
+    console.error("Error saving message:", error);
+  }
+}
+
+async function* streamQwenResponse(
+  message: string,
+  history: any[],
+  persona: string
+) {
+  if (!DASHSCOPE_API_KEY) {
+    throw new Error("DASHSCOPE_API_KEY not configured");
+  }
+
+  // Format messages for Qwen (OpenAI-compatible format)
+  const messages = [
+    { role: "system", content: persona },
+    ...history.map((msg: any) => ({
+      role: msg.sender === "user" ? "user" : "assistant",
+      content: msg.text,
+    })),
+    { role: "user", content: message },
+  ];
+
+  const response = await fetch(DASHSCOPE_BASE_URL, {
+    method: "POST",
+    headers: {
+      "Authorization": `Bearer ${DASHSCOPE_API_KEY}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      model: "qwen3.6-flash",
+      messages,
+      stream: true,
+      max_tokens: 1500,
+      temperature: 0.7,
+      top_p: 0.8,
+      extra_body: {
+        enable_thinking: true,
+      },
+    }),
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(`Qwen API error: ${response.status} - ${errorText}`);
+  }
+
+  // Handle streaming response (SSE format)
+  const reader = response.body?.getReader();
+  if (!reader) {
+    throw new Error("No response body");
+  }
+
+  const decoder = new TextDecoder();
+  let buffer = "";
+
+  try {
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+
+      buffer += decoder.decode(value, { stream: true });
+      const lines = buffer.split("\n");
+      buffer = lines.pop() || "";
+
+      for (const line of lines) {
+        if (line.startsWith("data: ")) {
+          const data = line.slice(6);
+          if (data === "[DONE]") continue;
+          
+          try {
+            const parsed = JSON.parse(data);
+            const content = parsed.choices?.[0]?.delta?.content;
+            if (content) {
+              yield content;
+            }
+          } catch (e) {
+            // Skip malformed JSON
+          }
+        }
+      }
+    }
+  } finally {
+    reader.releaseLock();
+  }
+}
 
 export async function POST(request: NextRequest) {
   try {
     // 1. Security Checks
-    
-    // A. Origin Check
     const origin = request.headers.get("origin");
     const referer = request.headers.get("referer");
     
-    // Allow if origin matches host (same-origin) or if it's null (sometimes happens with server-side calls, but be careful)
-    // For strictly browser-based usage, origin should be present.
-    // We can also check against a whitelist of allowed domains.
     const allowedOrigins = [
       "http://localhost:3000", 
       "https://troysarinas.dev", 
@@ -190,17 +227,15 @@ export async function POST(request: NextRequest) {
       (origin && allowedOrigins.includes(origin)) || 
       (referer && allowedOrigins.some(allowed => referer.startsWith(allowed)));
 
-    // In development, we might be lenient, but for production:
     if (process.env.NODE_ENV === 'production' && !isAllowedOrigin) {
-       // Optional: Log this attempt
-       console.warn(`Blocked request from unauthorized origin: ${origin || referer}`);
-       return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
+      console.warn(`Blocked request from unauthorized origin: ${origin || referer}`);
+      return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
     }
 
-    // B. Rate Limiting
+    // 2. Rate Limiting
     const ip = request.headers.get("x-forwarded-for") ?? "127.0.0.1";
     try {
-      await limiter.check(10, ip); // 5 requests per minute
+      await limiter.check(10, ip);
     } catch {
       return NextResponse.json(
         { error: "Rate limit exceeded. Please try again later." },
@@ -208,8 +243,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // 2. Parse and Validate Input
-    const { message, history } = await request.json();
+    // 3. Parse and Validate Input
+    const { message, history, role, sessionId } = await request.json();
 
     if (!message) {
       return NextResponse.json(
@@ -218,7 +253,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // C. Input Validation (Max Length)
     if (message.length > 500) {
       return NextResponse.json(
         { error: "Message is too long (max 500 characters)" },
@@ -226,50 +260,64 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // 2. Format history for the Google Gen AI SDK
-    const formattedHistory = history
-      ? history.map((msg: { sender: string; text: string }) => ({
-          role: msg.sender === "user" ? "user" : "model",
-          parts: [{ text: msg.text }],
-        }))
-      : [];
+    // 4. Get visitor info from cookies (for tracking)
+    const cookieHeader = request.headers.get("cookie") || "";
+    const cookies = Object.fromEntries(
+      cookieHeader.split(";").map(c => {
+        const [key, value] = c.trim().split("=");
+        return [key, value];
+      })
+    );
+    const linkId = cookies["visitor_link_id"] || null;
+    const userAgent = request.headers.get("user-agent");
 
-    // 3. Create a chat session with the PERSONA
-    const chat = ai.chats.create({
-      model: "gemini-2.5-flash-lite", // Updated to a standard model ID (check your specific model availability)
-      history: formattedHistory,
-      config: {
-        systemInstruction: TROY_PERSONA,
-      },
-    });
+    // 5. Track conversation (only for tracked visitors)
+    let conversation = null;
+    if (sessionId && linkId) {
+      conversation = await getOrCreateConversation(
+        sessionId,
+        role || "standard",
+        linkId,
+        ip,
+        userAgent
+      );
 
-    // 4. Send the message and get a stream
-    const result = await chat.sendMessageStream({
-      message: message,
-    });
+      // Save user message
+      if (conversation) {
+        await saveMessage(conversation.id, "user", message);
+      }
+    }
 
-    // 5. Create a Web Standard ReadableStream to send back to the client
+    // 6. Fetch persona and call Qwen
+    const persona = await getRolePersona(role);
+    const aiResponse = streamQwenResponse(message, history || [], persona);
+    
+    // Collect full response and stream simultaneously
+    let fullResponse = "";
+    
     const stream = new ReadableStream({
       async start(controller) {
         const encoder = new TextEncoder();
-
+        
         try {
-          for await (const chunk of result) {
-            const chunkText = chunk.text;
-            if (chunkText) {
-              controller.enqueue(encoder.encode(chunkText));
-            }
+          for await (const chunk of aiResponse) {
+            fullResponse += chunk;
+            controller.enqueue(encoder.encode(chunk));
           }
-        } catch (error) {
-          console.error("Stream processing error:", error);
-          controller.error(error);
-        } finally {
+          
+          // Save AI response after streaming complete
+          if (conversation) {
+            await saveMessage(conversation.id, "ai", fullResponse);
+          }
+          
           controller.close();
+        } catch (error) {
+          console.error("Stream error:", error);
+          controller.error(error);
         }
       },
     });
 
-    // 6. Return the stream with the correct headers
     return new Response(stream, {
       headers: {
         "Content-Type": "text/plain; charset=utf-8",
@@ -277,11 +325,10 @@ export async function POST(request: NextRequest) {
         "Cache-Control": "no-cache, no-transform",
       },
     });
-  } catch (error: unknown) {
-    console.error("Gemini API error:", error);
-    
-    await logErrorToNotion(error);
 
+  } catch (error: unknown) {
+    console.error("Chat API error:", error);
+    
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }

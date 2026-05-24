@@ -3,6 +3,11 @@
 import { usePortfolio } from "@/context/PortfolioContext";
 import StandardProjects from "./variants/Standard";
 import SoftwareEngineerProjects from "./variants/SoftwareEngineer";
+import GTMProjects from "./variants/GTM";
+import CinematicProjects from "./variants/Cinematic";
+import DataProjects from "./variants/Data";
+import SocialProjects from "./variants/Social";
+import MarketingProjects from "./variants/Marketing";
 import { Project } from "@/lib/projects";
 
 interface ProjectsProps {
@@ -24,7 +29,16 @@ export default function Projects({
   switch (activeRole) {
     case "software-engineer":
       return <SoftwareEngineerProjects projects={projects} role={activeRole} />;
-    // case "video-editor": return <CinematicProjects projects={projects} role={activeRole} />;
+    case "gtm-engineer":
+      return <GTMProjects projects={projects} role={activeRole} />;
+    case "video-editor":
+      return <CinematicProjects projects={projects} role={activeRole} />;
+    case "data-analyst":
+      return <DataProjects projects={projects} role={activeRole} />;
+    case "social-media-manager":
+      return <SocialProjects projects={projects} role={activeRole} />;
+    case "marketing-manager":
+      return <MarketingProjects projects={projects} role={activeRole} />;
 
     default:
       return <StandardProjects projects={projects} role={activeRole} />;
