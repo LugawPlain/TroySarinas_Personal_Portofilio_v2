@@ -13,6 +13,8 @@ export default function ChatWidget() {
       return <SoftwareEngineerChatWidget />;
     case "gtm-engineer":
       return <GTMEngineerChatWidget />;
+    case "ecommerce-developer":
+      return <StandardChatWidget />;
     default:
       return <StandardChatWidget />;
   }

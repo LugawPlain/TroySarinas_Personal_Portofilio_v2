@@ -21,6 +21,8 @@ async function getDashboardData() {
     { data: blogs },
     { data: education },
     { data: certifications },
+    { data: socialLinks },
+    { data: roleSocialLinks },
   ] = await Promise.all([
     supabase.from("job_roles").select("*").order("title"),
     supabase.from("technologies").select("*").order("name"),
@@ -41,6 +43,8 @@ async function getDashboardData() {
     supabase.from("blogs").select("*").order("date", { ascending: false }),
     supabase.from("education").select("*").order("school"),
     supabase.from("certifications").select("*").order("title"),
+    supabase.from("social_links").select("*").order("display_order"),
+    supabase.from("role_social_links").select("*"),
   ]);
 
   const linkResumesMap = new Map<string, any>();
@@ -67,6 +71,8 @@ async function getDashboardData() {
     blogs: blogs || [],
     education: education || [],
     certifications: certifications || [],
+    socialLinks: socialLinks || [],
+    roleSocialLinks: roleSocialLinks || [],
     stats: {
       totalLinks: links?.length || 0,
       totalVisits: totalVisits || 0,
@@ -96,6 +102,8 @@ export default async function DashboardPage() {
       blogs={data.blogs}
       education={data.education}
       certifications={data.certifications}
+      socialLinks={data.socialLinks}
+      roleSocialLinks={data.roleSocialLinks}
       stats={data.stats}
     />
   );

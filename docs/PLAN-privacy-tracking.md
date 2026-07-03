@@ -40,7 +40,7 @@ Track unique employer interactions via generated links without compromising priv
     - `created_at` (Timestptz)
   - Enable RLS:
     - `INSERT`: Allow anonymous (public) insert.
-    - `SELECT`: Only authenticated admin (`troysarinas22@gmail.com`).
+    - `SELECT`: Only authenticated admin (`troyjeffreysarinas@gmail.com`).
   - **Retention Logic:** Setup a Cron trigger/manual script task to delete records where `created_at < now() - interval '90 days'`.
 
 ---

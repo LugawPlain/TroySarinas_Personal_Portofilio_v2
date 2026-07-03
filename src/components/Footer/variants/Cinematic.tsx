@@ -113,7 +113,7 @@ const CinematicFooter = () => {
               Contact
             </h3>
             <div className="space-y-3 text-white/60">
-              <p>troysarinas22@gmail.com</p>
+              <p>troyjeffreysarinas@gmail.com</p>
               <p>+63 956 987 8251</p>
               <p>Remote / Worldwide</p>
             </div>

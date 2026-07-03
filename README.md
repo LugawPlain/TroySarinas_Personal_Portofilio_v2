@@ -110,7 +110,7 @@ While this is a personal portfolio, suggestions and improvements are welcome! Fe
 
 Troy Sarinas
 
-- 📧 Email: troysarinas22@gmail.com
+- 📧 Email: troyjeffreysarinas@gmail.com
 - 📱 Phone: +639569878251
 - 🌐 Portfolio: [troysarinas.vercel.app](https://www.troysarinas.dev)
 - 💼 LinkedIn: [Troy Sarinas](https://www.linkedin.com/in/troy-sarinas-47062b1ba/)

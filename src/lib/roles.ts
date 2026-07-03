@@ -4,6 +4,7 @@ import { unstable_cache } from "next/cache";
 export interface TechItem {
   name: string;
   icon_name: string;
+  icon_url?: string;
   proficiency: number;
 }
 
@@ -45,6 +46,25 @@ export interface ChatConfig {
   avatarIcon?: string;
   typingIndicator?: string;
   statusText?: string;
+}
+
+export interface SocialLink {
+  id: string;
+  name: string;
+  platform: string;
+  url: string;
+  icon_name: string;
+  color_class?: string;
+  display_order: number;
+}
+
+export interface RoleSocialLink {
+  id: string;
+  role_id: string;
+  social_link_id: string;
+  is_enabled: boolean;
+  display_order: number;
+  social_link: SocialLink;
 }
 
 export interface JobRole {
@@ -105,6 +125,7 @@ export async function getTechnologies(role?: string): Promise<TechItem[]> {
   return (data as any[]).map((t) => ({
     name: t.name,
     icon_name: t.icon_name,
+    icon_url: t.icon_url,
     proficiency: t.proficiency,
   }));
 }
@@ -251,4 +272,75 @@ export async function getCertifications(
     is_webinar: c.is_webinar,
     organizer: c.organizer,
   }));
+}
+
+/**
+ * Fetches all social links linked to a specific role.
+ * If no role is provided, fetches all social links.
+ */
+export async function getSocialLinks(role?: string): Promise<SocialLink[]> {
+  const supabase = await createClient();
+
+  if (role) {
+    // First get the role ID from the slug
+    const { data: roleData, error: roleError } = await supabase
+      .from("job_roles")
+      .select("id")
+      .eq("slug", role)
+      .single();
+
+    if (roleError || !roleData) {
+      console.error("Error fetching role ID:", roleError);
+      return [];
+    }
+
+    // Fetch role-specific social links with junction table data
+    const { data, error } = await supabase
+      .from("role_social_links")
+      .select(`
+        *,
+        social_link:social_links(*)
+      `)
+      .eq("role_id", roleData.id)
+      .eq("is_enabled", true)
+      .order("display_order", { ascending: true });
+
+    if (error) {
+      console.error("Error fetching social links:", error);
+      return [];
+    }
+
+    return (data as any[])
+      .filter((item) => item.social_link)
+      .map((item) => ({
+        id: item.social_link.id,
+        name: item.social_link.name,
+        platform: item.social_link.platform,
+        url: item.social_link.url,
+        icon_name: item.social_link.icon_name,
+        color_class: item.social_link.color_class,
+        display_order: item.display_order || item.social_link.display_order,
+      }));
+  } else {
+    // Fetch all social links
+    const { data, error } = await supabase
+      .from("social_links")
+      .select("*")
+      .order("display_order", { ascending: true });
+
+    if (error) {
+      console.error("Error fetching social links:", error);
+      return [];
+    }
+
+    return (data as any[]).map((sl) => ({
+      id: sl.id,
+      name: sl.name,
+      platform: sl.platform,
+      url: sl.url,
+      icon_name: sl.icon_name,
+      color_class: sl.color_class,
+      display_order: sl.display_order,
+    }));
+  }
 }

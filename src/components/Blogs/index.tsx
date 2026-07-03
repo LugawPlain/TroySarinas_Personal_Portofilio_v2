@@ -17,6 +17,11 @@ export default function Blogs({ initialBlogs, role: propRole }: BlogsProps) {
   switch (activeRole) {
     case "software-engineer":
       return <SoftwareEngineerBlogs initialBlogs={initialBlogs} role={activeRole} />;
+    case "ecommerce-developer":
+    case "cpa":
+    case "sales-representative":
+    case "virtual-assistant":
+      return <StandardBlogs initialBlogs={initialBlogs} role={activeRole} />;
     // case "video-editor": return <CinematicBlogs initialBlogs={initialBlogs} />;
 
     default:

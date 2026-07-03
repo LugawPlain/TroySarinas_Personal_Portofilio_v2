@@ -7,6 +7,7 @@ import DynamicIcon from "../../DynamicIcon";
 interface TechItem {
   name: string;
   icon_name: string;
+  icon_url?: string;
   proficiency: number;
 }
 
@@ -63,7 +64,7 @@ const StandardTechnologies = ({ initialTech }: TechnologiesProps) => {
           initial="hidden"
           animate={showAll ? "visible" : "hidden"}
         >
-          {initialTech.map(({ name, icon_name, proficiency }, index) => {
+          {initialTech.map(({ name, icon_name, icon_url, proficiency }, index) => {
             const isActive = tappedIndex === index;
 
             return (
@@ -85,7 +86,7 @@ const StandardTechnologies = ({ initialTech }: TechnologiesProps) => {
                     className="absolute px-4 py-2 flex items-center justify-between inset-0 rounded-lg bg-secondary text-secondary-foreground"
                     style={{ backfaceVisibility: "hidden" }}
                   >
-                    <DynamicIcon name={icon_name} size={24} />
+                    <DynamicIcon name={icon_name} iconUrl={icon_url} size={24} />
                     <p className="text-sm font-medium font-inter">{name}</p>
                   </div>
                   <div

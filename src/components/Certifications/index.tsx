@@ -8,6 +8,9 @@ import CinematicCertifications from "./variants/Cinematic";
 import DataCertifications from "./variants/Data";
 import SocialCertifications from "./variants/Social";
 import MarketingCertifications from "./variants/Marketing";
+import CPACertifications from "./variants/CPA";
+import SalesCertifications from "./variants/Sales";
+import VACertifications from "./variants/VA";
 import { CertificationItem } from "@/lib/roles";
 
 interface CertificationsProps {
@@ -65,6 +68,38 @@ export default function Certifications({
       return (
         <MarketingCertifications
           certifications={certifications}
+        />
+      );
+    case "ecommerce-developer":
+      return (
+        <StandardCertifications
+          certifications={certifications}
+          title={title}
+          subtitle={subtitle}
+        />
+      );
+    case "cpa":
+      return (
+        <CPACertifications
+          certifications={certifications}
+          title={title}
+          subtitle={subtitle}
+        />
+      );
+    case "sales-representative":
+      return (
+        <SalesCertifications
+          certifications={certifications}
+          title={title}
+          subtitle={subtitle}
+        />
+      );
+    case "virtual-assistant":
+      return (
+        <VACertifications
+          certifications={certifications}
+          title={title}
+          subtitle={subtitle}
         />
       );
 

@@ -23,6 +23,7 @@ import {
 interface TechItem {
   name: string;
   icon_name: string;
+  icon_url?: string;
   proficiency: number;
 }
 
@@ -328,7 +329,7 @@ const DataTechnologies = ({ initialTech }: DataTechnologiesProps) => {
                           className="flex items-center gap-3 bg-white rounded-xl p-3 border border-slate-100 hover:border-slate-300 transition-colors shadow-sm"
                         >
                           <div className="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center">
-                            <DynamicIcon name={tech.icon_name} size={20} />
+                            <DynamicIcon name={tech.icon_name} iconUrl={tech.icon_url} size={20} />
                           </div>
                           <div className="flex-1">
                             <span className="text-sm font-medium text-slate-700">{tech.name}</span>

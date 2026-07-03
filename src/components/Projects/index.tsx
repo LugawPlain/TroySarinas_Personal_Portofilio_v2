@@ -8,6 +8,10 @@ import CinematicProjects from "./variants/Cinematic";
 import DataProjects from "./variants/Data";
 import SocialProjects from "./variants/Social";
 import MarketingProjects from "./variants/Marketing";
+import EcommerceProjects from "./variants/Ecommerce";
+import CPAProjects from "./variants/CPA";
+import SalesProjects from "./variants/Sales";
+import VAProjects from "./variants/VA";
 import { Project } from "@/lib/projects";
 
 interface ProjectsProps {
@@ -39,6 +43,14 @@ export default function Projects({
       return <SocialProjects projects={projects} role={activeRole} />;
     case "marketing-manager":
       return <MarketingProjects projects={projects} role={activeRole} />;
+    case "ecommerce-developer":
+      return <EcommerceProjects projects={projects} role={activeRole} />;
+    case "cpa":
+      return <CPAProjects projects={projects} role={activeRole} />;
+    case "sales-representative":
+      return <SalesProjects projects={projects} role={activeRole} />;
+    case "virtual-assistant":
+      return <VAProjects projects={projects} role={activeRole} />;
 
     default:
       return <StandardProjects projects={projects} role={activeRole} />;

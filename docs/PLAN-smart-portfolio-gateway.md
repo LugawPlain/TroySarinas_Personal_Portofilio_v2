@@ -128,7 +128,7 @@ src/app/
 
 1.  **Admin Protection**:
     - The `/dashboard` route is protected by `middleware`.
-    - It checks for a Supabase Session **AND** verifies the email is `troysarinas22@gmail.com` (or your chosen email).
+    - It checks for a Supabase Session **AND** verifies the email is `troyjeffreysarinas@gmail.com` (or your chosen email).
     - No one else can generate links.
 2.  **Visitor Privacy**:
     - We do not track PII (Personally Identifiable Information) unless they submit a contact form.
@@ -145,7 +145,7 @@ src/app/
 - [x] **Migration**: Created and applied `20260202134500_gateway_setup.sql`.
   - Added `gateway_links`, `gateway_visits`, and `gateway_resumes` tables.
   - Added `job_role` column to `projects` and `blogs`.
-- [x] **Auth**: RLS policies for admin (`troysarinas22@gmail.com`) and public access are active. (Note: Ensure Google OAuth is enabled in Supabase Dash).
+- [x] **Auth**: RLS policies for admin (`troyjeffreysarinas@gmail.com`) and public access are active. (Note: Ensure Google OAuth is enabled in Supabase Dash).
 
 ### Phase 2: The Control Center (Dashboard) ✅
 

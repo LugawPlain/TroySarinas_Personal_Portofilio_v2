@@ -8,6 +8,7 @@ import { TrendingUp, Camera, Heart, BarChart3, ArrowRight } from "lucide-react";
 interface TechItem {
   name: string;
   icon_name: string;
+  icon_url?: string;
   proficiency: number;
 }
 
@@ -128,7 +129,7 @@ const SocialTechnologies = ({ initialTech }: SocialTechnologiesProps) => {
                         className="flex items-center gap-3 bg-gray-900/50 rounded-xl p-3 border border-gray-800 hover:border-gray-700 transition-colors"
                       >
                         <div className="w-8 h-8 rounded-lg bg-gray-800 flex items-center justify-center">
-                          <DynamicIcon name={tech.icon_name} size={20} />
+                          <DynamicIcon name={tech.icon_name} iconUrl={tech.icon_url} size={20} />
                         </div>
                         <span className="text-sm font-medium text-gray-300">{tech.name}</span>
                       </motion.div>

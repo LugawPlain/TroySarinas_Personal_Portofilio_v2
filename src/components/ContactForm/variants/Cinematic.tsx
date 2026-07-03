@@ -196,8 +196,8 @@ const CinematicContactForm = () => {
       <div className="mt-8 text-center">
         <p className="text-white/40 text-sm">
           Or reach me directly at{" "}
-          <a href="mailto:troysarinas22@gmail.com" className="text-amber-400 hover:text-amber-300 transition-colors">
-            troysarinas22@gmail.com
+          <a href="mailto:troyjeffreysarinas@gmail.com" className="text-amber-400 hover:text-amber-300 transition-colors">
+            troyjeffreysarinas@gmail.com
           </a>
         </p>
       </div>

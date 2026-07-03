@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import type { Metadata } from "next";
 import Projects from "@/components/Projects";
 import HeroSection from "@/components/HeroSection";
 import Technologies from "@/components/Technologies";
@@ -12,6 +13,8 @@ import {
   getEducation,
   getCertifications,
   getRoleMetadata,
+  getSocialLinks,
+  SocialLink,
 } from "@/lib/roles";
 import { getProjects } from "@/lib/projects";
 import { getBlogPosts } from "@/lib/blog";
@@ -21,6 +24,22 @@ import { TrackedSection } from "@/components/TrackedSection";
 
 interface Props {
   params: Promise<{ role: string }>;
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { role } = await params;
+  const roleData = await getRoleMetadata(role);
+
+  if (!roleData) {
+    return {
+      title: "Not Found",
+    };
+  }
+
+  return {
+    title: `${roleData.title} | Troy Sarinas`,
+    description: roleData.headline,
+  };
 }
 
 export default async function RolePortfolioPage({ params }: Props) {
@@ -42,6 +61,7 @@ export default async function RolePortfolioPage({ params }: Props) {
     education,
     certifications,
     blogs,
+    socialLinks,
   ] = await Promise.all([
     getResumeForRole(role),
     getProjects(role),
@@ -50,6 +70,7 @@ export default async function RolePortfolioPage({ params }: Props) {
     getEducation(role),
     getCertifications(role),
     getBlogPosts(role),
+    getSocialLinks(role),
   ]);
 
   return (
@@ -61,6 +82,7 @@ export default async function RolePortfolioPage({ params }: Props) {
             bio={roleData.bio}
             resumeUrl={resumeUrl}
             heroConfig={roleData.hero_config}
+            socialLinks={socialLinks}
           />
         </TrackedSection>
 

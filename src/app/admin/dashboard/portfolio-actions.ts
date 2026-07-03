@@ -1,6 +1,6 @@
 "use server";
 
-import { createClient } from "@/lib/supabase/server";
+import { createClient, createServiceRoleClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 
 export async function updateRoleMetadata(
@@ -112,6 +112,8 @@ export async function updateRoleResume(roleKey: string, resumeUrl: string) {
 export async function upsertTechnology(tech: any, roleId?: string) {
   const supabase = await createClient();
 
+  console.log("upsertTechnology called", { id: tech.id, icon_url: tech.icon_url });
+
   let result;
   if (tech.id) {
     // Update
@@ -120,9 +122,11 @@ export async function upsertTechnology(tech: any, roleId?: string) {
       .update({
         name: tech.name,
         icon_name: tech.icon_name,
+        icon_url: tech.icon_url,
         proficiency: tech.proficiency,
       })
       .eq("id", tech.id);
+    console.log("upsertTechnology update result", result);
   } else {
     // Create
     const { data: newTech, error: insertError } = await supabase
@@ -130,6 +134,7 @@ export async function upsertTechnology(tech: any, roleId?: string) {
       .insert({
         name: tech.name,
         icon_name: tech.icon_name,
+        icon_url: tech.icon_url,
         proficiency: tech.proficiency,
       })
       .select()
@@ -162,6 +167,41 @@ export async function deleteTechnology(id: string) {
   revalidatePath("/admin/dashboard");
   revalidatePath("/portfolio/[role]", "layout");
   return { success: true };
+}
+
+export async function uploadSkillIcon(formData: FormData) {
+  const supabase = createServiceRoleClient();
+
+  const file = formData.get("file") as File;
+
+  if (!file) {
+    return { error: "No file provided" };
+  }
+
+  try {
+    const fileExt = file.name.split(".").pop() || "svg";
+    const fileName = `${crypto.randomUUID()}.${fileExt}`;
+    const filePath = `${fileName}`;
+
+    const { error: uploadError } = await supabase.storage
+      .from("skill_icons")
+      .upload(filePath, file, {
+        contentType: file.type,
+        upsert: true,
+      });
+
+    if (uploadError) {
+      return { error: `Upload failed: ${uploadError.message}` };
+    }
+
+    const {
+      data: { publicUrl },
+    } = supabase.storage.from("skill_icons").getPublicUrl(filePath);
+
+    return { success: true, url: publicUrl };
+  } catch (err) {
+    return { error: `Unexpected error: ${err}` };
+  }
 }
 
 export async function upsertExperience(exp: any, roleId?: string) {
@@ -371,5 +411,384 @@ export async function updateChatPersona(roleId: string, chatPersona: string) {
 
   revalidatePath("/admin/dashboard");
   revalidatePath("/portfolio/[role]", "layout");
+  return { success: true };
+}
+
+// --- Social Links Actions ---
+
+export async function toggleSocialLink(
+  roleId: string,
+  socialLinkId: string,
+  isEnabled: boolean,
+) {
+  const supabase = await createClient();
+
+  const { error } = await supabase
+    .from("role_social_links")
+    .update({ is_enabled: isEnabled })
+    .eq("role_id", roleId)
+    .eq("social_link_id", socialLinkId);
+
+  if (error) {
+    console.error("Error toggling social link:", error);
+    return { error: error.message };
+  }
+
+  revalidatePath("/admin/dashboard");
+  revalidatePath("/portfolio/[role]", "layout");
+  return { success: true };
+}
+
+export async function upsertSocialLink(socialLink: any, roleId?: string) {
+  const supabase = await createClient();
+
+  let result;
+  if (socialLink.id) {
+    // Update
+    result = await supabase
+      .from("social_links")
+      .update({
+        name: socialLink.name,
+        platform: socialLink.platform,
+        url: socialLink.url,
+        icon_name: socialLink.icon_name,
+        color_class: socialLink.color_class,
+        display_order: socialLink.display_order || 0,
+      })
+      .eq("id", socialLink.id);
+  } else {
+    // Create
+    const { data: newSocialLink, error: insertError } = await supabase
+      .from("social_links")
+      .insert({
+        name: socialLink.name,
+        platform: socialLink.platform,
+        url: socialLink.url,
+        icon_name: socialLink.icon_name,
+        color_class: socialLink.color_class,
+        display_order: socialLink.display_order || 0,
+      })
+      .select()
+      .single();
+
+    if (insertError) return { error: insertError.message };
+
+    // Auto-link to role if provided
+    if (roleId && newSocialLink) {
+      await supabase
+        .from("role_social_links")
+        .insert({
+          role_id: roleId,
+          social_link_id: newSocialLink.id,
+          is_enabled: true,
+          display_order: socialLink.display_order || 0,
+        });
+    }
+    result = { error: null };
+  }
+
+  if (result.error) return { error: result.error.message };
+
+  revalidatePath("/admin/dashboard");
+  revalidatePath("/portfolio/[role]", "layout");
+  return { success: true };
+}
+
+export async function deleteSocialLink(id: string) {
+  const supabase = await createClient();
+  const { error } = await supabase.from("social_links").delete().eq("id", id);
+
+  if (error) return { error: error.message };
+
+  revalidatePath("/admin/dashboard");
+  revalidatePath("/portfolio/[role]", "layout");
+  return { success: true };
+}
+
+export async function updateSocialLinkOrder(
+  roleId: string,
+  socialLinkId: string,
+  displayOrder: number,
+) {
+  const supabase = await createClient();
+
+  const { error } = await supabase
+    .from("role_social_links")
+    .update({ display_order: displayOrder })
+    .eq("role_id", roleId)
+    .eq("social_link_id", socialLinkId);
+
+  if (error) {
+    console.error("Error updating social link order:", error);
+    return { error: error.message };
+  }
+
+  revalidatePath("/admin/dashboard");
+  revalidatePath("/portfolio/[role]", "layout");
+  return { success: true };
+}
+
+// --- Create Actions for Projects & Blogs ---
+
+export async function createProject(projectData: {
+  title: string;
+  description: string;
+  thumbnail_url?: string;
+  hero_image_url?: string;
+  technologies?: string[];
+  live_url?: string;
+  github_url?: string;
+  roleIds?: string[];
+}) {
+  const supabase = await createClient();
+
+  const { data: project, error } = await supabase
+    .from("projects")
+    .insert({
+      title: projectData.title,
+      description: projectData.description,
+      thumbnail_url: projectData.thumbnail_url || null,
+      hero_image_url: projectData.hero_image_url || null,
+      technologies: projectData.technologies || [],
+      live_url: projectData.live_url || null,
+      github_url: projectData.github_url || null,
+      is_published: true,
+      display_order: 0,
+    })
+    .select()
+    .single();
+
+  if (error) {
+    console.error("Error creating project:", error);
+    return { error: error.message };
+  }
+
+  // Link to roles
+  if (projectData.roleIds && projectData.roleIds.length > 0 && project) {
+    const roleInserts = projectData.roleIds.map((roleId) => ({
+      role_id: roleId,
+      project_id: project.id,
+    }));
+    await supabase.from("role_projects").insert(roleInserts);
+  }
+
+  revalidatePath("/admin/dashboard");
+  revalidatePath("/portfolio/[role]", "layout");
+  revalidatePath("/");
+  return { success: true, project };
+}
+
+export async function createBlog(blogData: {
+  title: string;
+  excerpt: string;
+  content: string;
+  tags?: string[];
+  images?: { url: string; alt: string }[];
+  roleIds?: string[];
+}) {
+  const supabase = await createClient();
+
+  const slug = blogData.title
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "");
+
+  const { data: blog, error } = await supabase
+    .from("blogs")
+    .insert({
+      title: blogData.title,
+      excerpt: blogData.excerpt,
+      content: blogData.content,
+      slug,
+      tags: blogData.tags || [],
+      status: "published",
+      read_time: "5 min read",
+      images: blogData.images || [],
+    })
+    .select()
+    .single();
+
+  if (error) {
+    console.error("Error creating blog:", error);
+    return { error: error.message };
+  }
+
+  // Link to roles
+  if (blogData.roleIds && blogData.roleIds.length > 0 && blog) {
+    const roleInserts = blogData.roleIds.map((roleId) => ({
+      role_id: roleId,
+      blog_id: blog.id,
+    }));
+    await supabase.from("role_blogs").insert(roleInserts);
+  }
+
+  revalidatePath("/admin/dashboard");
+  revalidatePath("/portfolio/[role]", "layout");
+  revalidatePath("/");
+  return { success: true, blog };
+}
+
+export async function deleteProject(id: string) {
+  const supabase = await createClient();
+  const { error } = await supabase.from("projects").delete().eq("id", id);
+  if (error) return { error: error.message };
+  revalidatePath("/admin/dashboard");
+  revalidatePath("/portfolio/[role]", "layout");
+  revalidatePath("/");
+  return { success: true };
+}
+
+export async function deleteBlog(id: string) {
+  const supabase = await createClient();
+  const { error } = await supabase.from("blogs").delete().eq("id", id);
+  if (error) return { error: error.message };
+  revalidatePath("/admin/dashboard");
+  revalidatePath("/portfolio/[role]", "layout");
+  revalidatePath("/");
+  return { success: true };
+}
+
+// --- File Upload for Project Images ---
+
+export async function uploadProjectImage(formData: FormData) {
+  const supabase = await createClient();
+
+  const file = formData.get("file") as File;
+
+  if (!file) {
+    return { error: "No file provided" };
+  }
+
+  try {
+    const fileExt = file.name.split(".").pop() || "png";
+    const fileName = `${crypto.randomUUID()}.${fileExt}`;
+    const filePath = `projects/${fileName}`;
+
+    const { error: uploadError } = await supabase.storage
+      .from("projects_assets")
+      .upload(filePath, file, {
+        contentType: file.type,
+        upsert: true,
+      });
+
+    if (uploadError) {
+      return { error: `Upload failed: ${uploadError.message}` };
+    }
+
+    const {
+      data: { publicUrl },
+    } = supabase.storage.from("projects_assets").getPublicUrl(filePath);
+
+    return { success: true, url: publicUrl };
+  } catch (err) {
+    return { error: `Unexpected error: ${err}` };
+  }
+}
+
+// --- Edit/Update Actions for Projects & Blogs ---
+
+export async function updateProject(
+  id: string,
+  projectData: {
+    title?: string;
+    description?: string;
+    thumbnail_url?: string;
+    hero_image_url?: string;
+    technologies?: string[];
+    live_url?: string;
+    github_url?: string;
+    roleIds?: string[];
+  }
+) {
+  const supabase = await createClient();
+
+  const { error } = await supabase
+    .from("projects")
+    .update({
+      title: projectData.title,
+      description: projectData.description,
+      thumbnail_url: projectData.thumbnail_url || null,
+      hero_image_url: projectData.hero_image_url || null,
+      technologies: projectData.technologies || [],
+      live_url: projectData.live_url || null,
+      github_url: projectData.github_url || null,
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", id);
+
+  if (error) {
+    console.error("Error updating project:", error);
+    return { error: error.message };
+  }
+
+  // Update role associations if provided
+  if (projectData.roleIds !== undefined) {
+    // Delete existing associations
+    await supabase.from("role_projects").delete().eq("project_id", id);
+
+    // Insert new associations
+    if (projectData.roleIds.length > 0) {
+      const roleInserts = projectData.roleIds.map((roleId) => ({
+        role_id: roleId,
+        project_id: id,
+      }));
+      await supabase.from("role_projects").insert(roleInserts);
+    }
+  }
+
+  revalidatePath("/admin/dashboard");
+  revalidatePath("/portfolio/[role]", "layout");
+  revalidatePath("/");
+  return { success: true };
+}
+
+export async function updateBlog(
+  id: string,
+  blogData: {
+    title?: string;
+    excerpt?: string;
+    content?: string;
+    tags?: string[];
+    images?: { url: string; alt: string }[];
+    roleIds?: string[];
+  }
+) {
+  const supabase = await createClient();
+
+  const { error } = await supabase
+    .from("blogs")
+    .update({
+      title: blogData.title,
+      excerpt: blogData.excerpt,
+      content: blogData.content,
+      tags: blogData.tags || [],
+      images: blogData.images || [],
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", id);
+
+  if (error) {
+    console.error("Error updating blog:", error);
+    return { error: error.message };
+  }
+
+  // Update role associations if provided
+  if (blogData.roleIds !== undefined) {
+    // Delete existing associations
+    await supabase.from("role_blogs").delete().eq("blog_id", id);
+
+    // Insert new associations
+    if (blogData.roleIds.length > 0) {
+      const roleInserts = blogData.roleIds.map((roleId) => ({
+        role_id: roleId,
+        blog_id: id,
+      }));
+      await supabase.from("role_blogs").insert(roleInserts);
+    }
+  }
+
+  revalidatePath("/admin/dashboard");
+  revalidatePath("/portfolio/[role]", "layout");
+  revalidatePath("/");
   return { success: true };
 }

@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState, useTransition, useRef } from "react";
+import React, { useState, useTransition, useRef, useEffect } from "react";
+import { createPortal } from "react-dom";
 import {
   updateRoleMetadata,
   toggleRoleRelationship,
@@ -8,12 +9,20 @@ import {
   updateRoleResume,
   upsertTechnology,
   deleteTechnology,
+  uploadSkillIcon,
   upsertExperience,
   deleteExperience,
   upsertEducation,
   deleteEducation,
   upsertCertification,
   deleteCertification,
+  createProject,
+  createBlog,
+  deleteProject,
+  deleteBlog,
+  updateProject,
+  updateBlog,
+  uploadProjectImage,
 } from "./portfolio-actions";
 import {
   Briefcase,
@@ -36,9 +45,15 @@ import {
   Upload,
   ExternalLink,
   MessageSquare,
+  Link2,
+  Share2,
+  Search,
 } from "lucide-react";
 import { uploadResume, deleteResume } from "./resume-upload-actions";
 import { HeroConfigEditor } from "./HeroConfigEditor";
+import DynamicIcon from "@/components/DynamicIcon";
+import IconPicker from "./IconPicker";
+import Image from "next/image";
 import { ChatConfigEditor } from "./ChatConfigEditor";
 
 interface PortfolioContentManagerProps {
@@ -56,6 +71,8 @@ interface PortfolioContentManagerProps {
   roleCert: any[];
   roleProj: any[];
   roleBlog: any[];
+  socialLinks: any[];
+  roleSocialLinks: any[];
 }
 
 export function PortfolioContentManager({
@@ -73,6 +90,8 @@ export function PortfolioContentManager({
   roleCert: initialRoleCert,
   roleProj: initialRoleProj,
   roleBlog: initialRoleBlog,
+  socialLinks,
+  roleSocialLinks: initialRoleSocialLinks,
 }: PortfolioContentManagerProps) {
   const [selectedRole, setSelectedRole] = useState(roles[0]);
   const [activeTab, setActiveTab] = useState<
@@ -86,6 +105,7 @@ export function PortfolioContentManager({
   const [localRoleCert, setLocalRoleCert] = useState(initialRoleCert);
   const [localRoleProj, setLocalRoleProj] = useState(initialRoleProj);
   const [localRoleBlog, setLocalRoleBlog] = useState(initialRoleBlog);
+  const [localRoleSocialLinks, setLocalRoleSocialLinks] = useState(initialRoleSocialLinks);
 
   const [isPending, startTransition] = useTransition();
   const [saveStatus, setSaveStatus] = useState<string | null>(null);
@@ -99,6 +119,19 @@ export function PortfolioContentManager({
   >(null);
   const [editingItem, setEditingItem] = useState<any>(null);
 
+  // Create Modal State
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [createType, setCreateType] = useState<"project" | "blog">("project");
+  const [createFormData, setCreateFormData] = useState<any>({});
+  const [createLoading, setCreateLoading] = useState(false);
+
+  // Edit Modal State
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [editType, setEditType] = useState<"project" | "blog">("project");
+  const [editItem, setEditItem] = useState<any>(null);
+  const [editFormData, setEditFormData] = useState<any>({});
+  const [editLoading, setEditLoading] = useState(false);
+
   // Sync local state when initial props change
   React.useEffect(() => {
     setLocalRoleTech(initialRoleTech);
@@ -107,6 +140,7 @@ export function PortfolioContentManager({
     setLocalRoleCert(initialRoleCert);
     setLocalRoleProj(initialRoleProj);
     setLocalRoleBlog(initialRoleBlog);
+    setLocalRoleSocialLinks(initialRoleSocialLinks);
   }, [
     initialRoleTech,
     initialRoleExp,
@@ -114,6 +148,7 @@ export function PortfolioContentManager({
     initialRoleCert,
     initialRoleProj,
     initialRoleBlog,
+    initialRoleSocialLinks,
   ]);
 
   const handleMetadataChange = async (
@@ -214,6 +249,14 @@ export function PortfolioContentManager({
       (rb) => rb.role_id === selectedRole.id && rb.blog_id === blogId,
     );
 
+  const isSocialLinkEnabled = (socialLinkId: string) =>
+    localRoleSocialLinks.some(
+      (rsl) =>
+        rsl.role_id === selectedRole.id &&
+        rsl.social_link_id === socialLinkId &&
+        rsl.is_enabled,
+    );
+
   const handleToggle = (
     table: any,
     targetId: string,
@@ -310,17 +353,38 @@ export function PortfolioContentManager({
           { role_id: selectedRole.id, blog_id: targetId },
         ]);
       }
+    } else if (table === "role_social_links") {
+      if (isActive) {
+        setLocalRoleSocialLinks((prev) =>
+          prev.map((rsl) =>
+            rsl.role_id === selectedRole.id && rsl.social_link_id === targetId
+              ? { ...rsl, is_enabled: false }
+              : rsl,
+          ),
+        );
+      } else {
+        setLocalRoleSocialLinks((prev) => [
+          ...prev,
+          { role_id: selectedRole.id, social_link_id: targetId, is_enabled: true },
+        ]);
+      }
     }
 
     // 2. Persistent Background Save
     startTransition(async () => {
-      const result = await toggleRoleRelationship(
-        table,
-        selectedRole.id,
-        targetId,
-        field,
-        isActive,
-      );
+      let result;
+      if (table === "role_social_links") {
+        const { toggleSocialLink } = await import("./portfolio-actions");
+        result = await toggleSocialLink(selectedRole.id, targetId, !isActive);
+      } else {
+        result = await toggleRoleRelationship(
+          table,
+          selectedRole.id,
+          targetId,
+          field,
+          isActive,
+        );
+      }
       if (result?.error) {
         // Rollback
         setLocalRoleTech(initialRoleTech);
@@ -329,6 +393,7 @@ export function PortfolioContentManager({
         setLocalRoleCert(initialRoleCert);
         setLocalRoleProj(initialRoleProj);
         setLocalRoleBlog(initialRoleBlog);
+        setLocalRoleSocialLinks(initialRoleSocialLinks);
         alert("Failed to save. Please refresh.");
       }
     });
@@ -350,6 +415,8 @@ export function PortfolioContentManager({
       else if (type === "exp") result = await deleteExperience(id);
       else if (type === "edu") result = await deleteEducation(id);
       else if (type === "cert") result = await deleteCertification(id);
+      else if (type === "project") result = await deleteProject(id);
+      else if (type === "blog") result = await deleteBlog(id);
 
       if (result?.error) alert(result.error);
       setSaveStatus(null);
@@ -567,6 +634,52 @@ export function PortfolioContentManager({
               />
             </div>
 
+            {/* Social Links Configuration */}
+            <div className="space-y-4 pt-6 border-t border-border">
+              <div className="flex items-center justify-between">
+                <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground flex items-center gap-2">
+                  <Share2 className="w-3.5 h-3.5" />
+                  Social Links
+                </label>
+                <span className="text-[10px] text-muted-foreground">
+                  Toggle which social links appear for this role
+                </span>
+              </div>
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+                {socialLinks.map((socialLink) => {
+                  const enabled = isSocialLinkEnabled(socialLink.id);
+                  return (
+                    <div key={socialLink.id} className="group/item relative">
+                      <button
+                        onClick={() =>
+                          handleToggle(
+                            "role_social_links",
+                            socialLink.id,
+                            "social_link_id",
+                            enabled,
+                          )
+                        }
+                        className={`w-full flex items-center justify-between p-3 rounded-xl border transition-all duration-200 group ${
+                          enabled
+                            ? "bg-accent/5 border-accent text-accent shadow-sm ring-1 ring-accent/20"
+                            : "bg-background hover:bg-muted/50 text-muted-foreground border-border"
+                        }`}
+                      >
+                        <span className="text-xs font-bold truncate pr-2">
+                          {socialLink.name}
+                        </span>
+                        {enabled ? (
+                          <CheckCircle2 className="w-4 h-4 text-accent shrink-0" />
+                        ) : (
+                          <Circle className="w-4 h-4 opacity-10 shrink-0" />
+                        )}
+                      </button>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
             {/* Hero Configuration */}
             <HeroConfigEditor 
               selectedRole={selectedRole} 
@@ -613,15 +726,30 @@ export function PortfolioContentManager({
                           linked,
                         )
                       }
-                      className={`w-full flex items-center justify-between p-3 rounded-xl border transition-all duration-200 group ${
+                      className={`w-full flex items-center gap-2 p-3 rounded-xl border transition-all duration-200 group ${
                         linked
                           ? "bg-accent/5 border-accent text-accent shadow-sm ring-1 ring-accent/20"
                           : "bg-background hover:bg-muted/50 text-muted-foreground border-border"
                       }`}
                     >
-                      <span className="text-xs font-bold truncate pr-2">
-                        {tech.name}
-                      </span>
+                      <div className="flex items-center gap-2 min-w-0 flex-1">
+                        {tech.icon_url ? (
+                          <img
+                            src={tech.icon_url}
+                            alt={tech.name}
+                            className="w-5 h-5 object-contain shrink-0"
+                          />
+                        ) : (
+                          <DynamicIcon
+                            name={tech.icon_name || "CircleHelp"}
+                            size={20}
+                            className="shrink-0"
+                          />
+                        )}
+                        <span className="text-xs font-bold truncate">
+                          {tech.name}
+                        </span>
+                      </div>
                       {linked ? (
                         <CheckCircle2 className="w-4 h-4 text-accent shrink-0" />
                       ) : (
@@ -738,39 +866,115 @@ export function PortfolioContentManager({
           <div className="space-y-12 animate-in fade-in slide-in-from-bottom-2 duration-300">
             {/* Projects */}
             <div>
-              <h3 className="text-sm font-bold uppercase tracking-widest text-muted-foreground flex items-center gap-2 mb-6">
-                <FolderGit2 className="w-4 h-4 text-purple-500" />
-                Showcase Projects
-              </h3>
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-sm font-bold uppercase tracking-widest text-muted-foreground flex items-center gap-2">
+                  <FolderGit2 className="w-4 h-4 text-purple-500" />
+                  Showcase Projects
+                  <span className="text-xs bg-purple-500/10 text-purple-600 px-2 py-0.5 rounded-full">
+                    {projects.length}
+                  </span>
+                </h3>
+                <button
+                  onClick={() => {
+                    setCreateType("project");
+                    setCreateFormData({});
+                    setIsCreateModalOpen(true);
+                  }}
+                  className="flex items-center gap-1.5 px-3 py-1.5 bg-purple-500/10 border border-purple-500/20 rounded-full text-[10px] font-bold text-purple-500 uppercase hover:bg-purple-500/20 transition-all"
+                >
+                  <Plus className="w-3 h-3" />
+                  New Project
+                </button>
+              </div>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                 {projects.map((proj) => {
                   const linked = isProjLinked(proj.id);
+                  const projRoleLinks = localRoleProj.filter(
+                    (rp: any) => rp.project_id === proj.id
+                  );
+                  const linkedRoles = roles.filter((r: any) =>
+                    projRoleLinks.some((pr: any) => pr.role_id === r.id)
+                  );
                   return (
-                    <button
+                    <div
                       key={proj.id}
-                      onClick={() =>
-                        handleToggle(
-                          "role_projects",
-                          proj.id,
-                          "project_id",
-                          linked,
-                        )
-                      }
-                      className={`flex items-center justify-between p-4 rounded-xl border text-left transition-all duration-200 ${
+                      className={`group relative p-4 rounded-xl border text-left transition-all duration-200 ${
                         linked
                           ? "bg-purple-500/5 border-purple-500/50 text-purple-700 shadow-sm ring-1 ring-purple-500/10"
                           : "bg-background hover:bg-muted/50 text-muted-foreground border-border"
                       }`}
                     >
-                      <span className="text-xs font-bold line-clamp-1 flex-1">
-                        {proj.title}
-                      </span>
-                      {linked ? (
-                        <CheckCircle2 className="w-4 h-4 text-purple-500 shrink-0" />
-                      ) : (
-                        <Circle className="w-4 h-4 opacity-10 shrink-0" />
-                      )}
-                    </button>
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="flex-1 min-w-0">
+                          <button
+                            onClick={() =>
+                              handleToggle(
+                                "role_projects",
+                                proj.id,
+                                "project_id",
+                                linked,
+                              )
+                            }
+                            className="text-xs font-bold line-clamp-1 text-left w-full"
+                          >
+                            {proj.title}
+                          </button>
+                          <p className="text-[10px] opacity-60 mt-1 line-clamp-1">
+                            {proj.description}
+                          </p>
+                          
+                          {/* Role Tags */}
+                          {linkedRoles.length > 0 && (
+                            <div className="flex flex-wrap gap-1 mt-2">
+                              {linkedRoles.map((role: any) => (
+                                <span
+                                  key={role.id}
+                                  className="inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-bold bg-purple-500/10 text-purple-600 border border-purple-500/20"
+                                >
+                                  {role.title}
+                                </span>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                        <div className="flex items-center gap-1 shrink-0">
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setEditType("project");
+                              setEditItem(proj);
+                              setEditFormData({
+                                title: proj.title,
+                                description: proj.description,
+                                thumbnail_url: proj.thumbnail_url || "",
+                                technologies: (proj.technologies || []).join(", "),
+                                live_url: proj.live_url || "",
+                                github_url: proj.github_url || "",
+                                roleIds: projRoleLinks.map((pr: any) => pr.role_id),
+                              });
+                              setIsEditModalOpen(true);
+                            }}
+                            className="p-1.5 bg-background border rounded-lg shadow-sm hover:text-blue-500 transition-colors opacity-0 group-hover:opacity-100"
+                          >
+                            <Pencil className="w-3 h-3" />
+                          </button>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleDelete("project", proj.id);
+                            }}
+                            className="p-1.5 bg-background border rounded-lg shadow-sm hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100"
+                          >
+                            <Trash2 className="w-3 h-3" />
+                          </button>
+                          {linked ? (
+                            <CheckCircle2 className="w-4 h-4 text-purple-500 shrink-0" />
+                          ) : (
+                            <Circle className="w-4 h-4 opacity-10 shrink-0" />
+                          )}
+                        </div>
+                      </div>
+                    </div>
                   );
                 })}
               </div>
@@ -778,34 +982,108 @@ export function PortfolioContentManager({
 
             {/* Blogs */}
             <div>
-              <h3 className="text-sm font-bold uppercase tracking-widest text-muted-foreground flex items-center gap-2 mb-6">
-                <BookOpen className="w-4 h-4 text-orange-500" />
-                Featured Articles
-              </h3>
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-sm font-bold uppercase tracking-widest text-muted-foreground flex items-center gap-2">
+                  <BookOpen className="w-4 h-4 text-orange-500" />
+                  Featured Articles
+                  <span className="text-xs bg-orange-500/10 text-orange-600 px-2 py-0.5 rounded-full">
+                    {blogs.length}
+                  </span>
+                </h3>
+                <button
+                  onClick={() => {
+                    setCreateType("blog");
+                    setCreateFormData({});
+                    setIsCreateModalOpen(true);
+                  }}
+                  className="flex items-center gap-1.5 px-3 py-1.5 bg-orange-500/10 border border-orange-500/20 rounded-full text-[10px] font-bold text-orange-500 uppercase hover:bg-orange-500/20 transition-all"
+                >
+                  <Plus className="w-3 h-3" />
+                  New Blog
+                </button>
+              </div>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                 {blogs.map((blog) => {
                   const linked = isBlogLinked(blog.id);
+                  const blogRoleLinks = localRoleBlog.filter(
+                    (rb: any) => rb.blog_id === blog.id
+                  );
+                  const linkedRoles = roles.filter((r: any) =>
+                    blogRoleLinks.some((br: any) => br.role_id === r.id)
+                  );
                   return (
-                    <button
+                    <div
                       key={blog.id}
-                      onClick={() =>
-                        handleToggle("role_blogs", blog.id, "blog_id", linked)
-                      }
-                      className={`flex items-center justify-between p-4 rounded-xl border text-left transition-all duration-200 ${
+                      className={`group relative p-4 rounded-xl border text-left transition-all duration-200 ${
                         linked
                           ? "bg-orange-500/5 border-orange-500/50 text-orange-700 shadow-sm ring-1 ring-orange-500/10"
                           : "bg-background hover:bg-muted/50 text-muted-foreground border-border"
                       }`}
                     >
-                      <span className="text-xs font-bold line-clamp-1 flex-1">
-                        {blog.title}
-                      </span>
-                      {linked ? (
-                        <CheckCircle2 className="w-4 h-4 text-orange-500 shrink-0" />
-                      ) : (
-                        <Circle className="w-4 h-4 opacity-10 shrink-0" />
-                      )}
-                    </button>
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="flex-1 min-w-0">
+                          <button
+                            onClick={() =>
+                              handleToggle("role_blogs", blog.id, "blog_id", linked)
+                            }
+                            className="text-xs font-bold line-clamp-1 text-left w-full"
+                          >
+                            {blog.title}
+                          </button>
+                          <p className="text-[10px] opacity-60 mt-1 line-clamp-1">
+                            {blog.excerpt || blog.description}
+                          </p>
+                          
+                          {/* Role Tags */}
+                          {linkedRoles.length > 0 && (
+                            <div className="flex flex-wrap gap-1 mt-2">
+                              {linkedRoles.map((role: any) => (
+                                <span
+                                  key={role.id}
+                                  className="inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-bold bg-orange-500/10 text-orange-600 border border-orange-500/20"
+                                >
+                                  {role.title}
+                                </span>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                        <div className="flex items-center gap-1 shrink-0">
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setEditType("blog");
+                              setEditItem(blog);
+                              setEditFormData({
+                                title: blog.title,
+                                excerpt: blog.excerpt || "",
+                                content: blog.content || "",
+                                tags: (blog.tags || []).join(", "),
+                                roleIds: blogRoleLinks.map((br: any) => br.role_id),
+                              });
+                              setIsEditModalOpen(true);
+                            }}
+                            className="p-1.5 bg-background border rounded-lg shadow-sm hover:text-blue-500 transition-colors opacity-0 group-hover:opacity-100"
+                          >
+                            <Pencil className="w-3 h-3" />
+                          </button>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleDelete("blog", blog.id);
+                            }}
+                            className="p-1.5 bg-background border rounded-lg shadow-sm hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100"
+                          >
+                            <Trash2 className="w-3 h-3" />
+                          </button>
+                          {linked ? (
+                            <CheckCircle2 className="w-4 h-4 text-orange-500 shrink-0" />
+                          ) : (
+                            <Circle className="w-4 h-4 opacity-10 shrink-0" />
+                          )}
+                        </div>
+                      </div>
+                    </div>
                   );
                 })}
               </div>
@@ -995,6 +1273,704 @@ export function PortfolioContentManager({
           isPending={isPending}
         />
       )}
+
+      {/* Create Project/Blog Modal */}
+      {isCreateModalOpen && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-background border border-border rounded-2xl shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-y-auto">
+            <div className="sticky top-0 bg-background/95 backdrop-blur-sm border-b border-border p-6 flex items-center justify-between">
+              <h2 className="text-xl font-bold">
+                Create New {createType === "project" ? "Project" : "Blog"}
+              </h2>
+              <button
+                onClick={() => setIsCreateModalOpen(false)}
+                className="p-2 hover:bg-muted rounded-lg transition-colors"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <form
+              onSubmit={async (e) => {
+                e.preventDefault();
+                setCreateLoading(true);
+                try {
+                  let thumbnailUrl = createFormData.thumbnail_url;
+                  
+                  // Upload image if file selected
+                  if (createFormData.imageFile) {
+                    const uploadFormData = new FormData();
+                    uploadFormData.append("file", createFormData.imageFile);
+                    const result = await uploadProjectImage(uploadFormData);
+                    if (result.error) {
+                      alert("Image upload failed: " + result.error);
+                      setCreateLoading(false);
+                      return;
+                    }
+                    thumbnailUrl = result.url;
+                  }
+                  
+                  if (createType === "project") {
+                    await createProject({
+                      title: createFormData.title,
+                      description: createFormData.description,
+                      thumbnail_url: thumbnailUrl,
+                      technologies: createFormData.technologies
+                        ?.split(",")
+                        .map((t: string) => t.trim())
+                        .filter(Boolean),
+                      live_url: createFormData.live_url,
+                      github_url: createFormData.github_url,
+                      roleIds: createFormData.roleIds || [],
+                    });
+                  } else {
+                    await createBlog({
+                      title: createFormData.title,
+                      excerpt: createFormData.excerpt,
+                      content: createFormData.content,
+                      tags: createFormData.tags
+                        ?.split(",")
+                        .map((t: string) => t.trim())
+                        .filter(Boolean),
+                      roleIds: createFormData.roleIds || [],
+                    });
+                  }
+                  setIsCreateModalOpen(false);
+                  setCreateFormData({});
+                  window.location.reload();
+                } catch (err) {
+                  alert("Error creating content");
+                } finally {
+                  setCreateLoading(false);
+                }
+              }}
+              className="p-6 space-y-5"
+            >
+              <div className="space-y-2">
+                <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                  Title *
+                </label>
+                <input
+                  required
+                  value={createFormData.title || ""}
+                  onChange={(e) =>
+                    setCreateFormData((prev: any) => ({
+                      ...prev,
+                      title: e.target.value,
+                    }))
+                  }
+                  className="w-full bg-background border rounded-lg px-4 py-3 outline-none focus:ring-2 focus:ring-purple-500/50 transition-all text-base"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                  {createType === "project" ? "Description" : "Excerpt"} *
+                </label>
+                <textarea
+                  required
+                  value={
+                    createType === "project"
+                      ? createFormData.description || ""
+                      : createFormData.excerpt || ""
+                  }
+                  onChange={(e) =>
+                    setCreateFormData((prev: any) => ({
+                      ...prev,
+                      [createType === "project" ? "description" : "excerpt"]:
+                        e.target.value,
+                    }))
+                  }
+                  rows={4}
+                  className="w-full bg-background border rounded-lg px-4 py-3 outline-none focus:ring-2 focus:ring-purple-500/50 transition-all resize-none text-base"
+                />
+              </div>
+
+              {createType === "project" && (
+                <>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                        Technologies (comma-separated)
+                      </label>
+                      <input
+                        value={createFormData.technologies || ""}
+                        onChange={(e) =>
+                          setCreateFormData((prev: any) => ({
+                            ...prev,
+                            technologies: e.target.value,
+                          }))
+                        }
+                        placeholder="React, TypeScript, Node.js"
+                        className="w-full bg-background border rounded-lg px-4 py-3 outline-none focus:ring-2 focus:ring-purple-500/50 transition-all text-base"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                        Project Image *
+                      </label>
+                      <div className="relative">
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={(e) => {
+                            const file = e.target.files?.[0];
+                            if (file) {
+                              setCreateFormData((prev: any) => ({
+                                ...prev,
+                                imageFile: file,
+                                thumbnail_url: URL.createObjectURL(file),
+                              }));
+                            }
+                          }}
+                          className="w-full bg-background border rounded-lg px-4 py-3 outline-none focus:ring-2 focus:ring-purple-500/50 transition-all text-base file:mr-4 file:py-1 file:px-3 file:rounded-full file:border-0 file:text-xs file:font-bold file:bg-purple-500/10 file:text-purple-600 hover:file:bg-purple-500/20"
+                        />
+                      </div>
+                      {createFormData.thumbnail_url && (
+                        <div className="mt-2 relative w-full h-32 rounded-lg overflow-hidden border">
+                          <img 
+                            src={createFormData.thumbnail_url} 
+                            alt="Preview" 
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                        Live URL
+                      </label>
+                      <input
+                        type="url"
+                        value={createFormData.live_url || ""}
+                        onChange={(e) =>
+                          setCreateFormData((prev: any) => ({
+                            ...prev,
+                            live_url: e.target.value,
+                          }))
+                        }
+                        className="w-full bg-background border rounded-lg px-4 py-3 outline-none focus:ring-2 focus:ring-purple-500/50 transition-all text-base"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                        GitHub URL
+                      </label>
+                      <input
+                        type="url"
+                        value={createFormData.github_url || ""}
+                        onChange={(e) =>
+                          setCreateFormData((prev: any) => ({
+                            ...prev,
+                            github_url: e.target.value,
+                          }))
+                        }
+                        className="w-full bg-background border rounded-lg px-4 py-3 outline-none focus:ring-2 focus:ring-purple-500/50 transition-all text-base"
+                      />
+                    </div>
+                  </div>
+                </>
+              )}
+
+              {createType === "blog" && (
+                <>
+                  <div className="space-y-2">
+                    <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                      Content
+                    </label>
+                    <textarea
+                      value={createFormData.content || ""}
+                      onChange={(e) =>
+                        setCreateFormData((prev: any) => ({
+                          ...prev,
+                          content: e.target.value,
+                        }))
+                      }
+                      rows={8}
+                      className="w-full bg-background border rounded-lg px-4 py-3 outline-none focus:ring-2 focus:ring-orange-500/50 transition-all resize-none text-base"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                      Tags (comma-separated)
+                    </label>
+                    <input
+                      value={createFormData.tags || ""}
+                      onChange={(e) =>
+                        setCreateFormData((prev: any) => ({
+                          ...prev,
+                          tags: e.target.value,
+                        }))
+                      }
+                      placeholder="Tutorial, React, Web Development"
+                      className="w-full bg-background border rounded-lg px-4 py-3 outline-none focus:ring-2 focus:ring-orange-500/50 transition-all text-base"
+                    />
+                  </div>
+                </>
+              )}
+
+              <div className="space-y-2">
+                <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                  Portfolio Tags *
+                </label>
+                <div className="flex flex-wrap gap-2">
+                  {roles.map((role: any) => (
+                    <button
+                      key={role.id}
+                      type="button"
+                      onClick={() => {
+                        const currentIds = createFormData.roleIds || [];
+                        setCreateFormData((prev: any) => ({
+                          ...prev,
+                          roleIds: currentIds.includes(role.id)
+                            ? currentIds.filter((id: string) => id !== role.id)
+                            : [...currentIds, role.id],
+                        }));
+                      }}
+                      className={`px-3 py-1.5 rounded-full text-[10px] font-bold transition-all border ${
+                        (createFormData.roleIds || []).includes(role.id)
+                          ? createType === "project"
+                            ? "bg-purple-500 text-white border-purple-500"
+                            : "bg-orange-500 text-white border-orange-500"
+                          : "bg-muted text-muted-foreground border-border hover:border-purple-500/30"
+                      }`}
+                    >
+                      {role.title}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="pt-4 border-t">
+                <button
+                  type="submit"
+                  disabled={
+                    createLoading ||
+                    !createFormData.title ||
+                    !(createFormData.roleIds || []).length
+                  }
+                  className="w-full bg-gradient-to-r from-purple-500 to-purple-600 hover:opacity-90 text-white font-bold rounded-xl py-3 transition-all disabled:opacity-50"
+                >
+                  {createLoading ? (
+                    <span className="flex items-center justify-center gap-2">
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      Creating...
+                    </span>
+                  ) : (
+                    <span className="flex items-center justify-center gap-2">
+                      <Plus className="w-4 h-4" />
+                      Create {createType === "project" ? "Project" : "Blog"}
+                    </span>
+                  )}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Edit Project/Blog Modal */}
+      {isEditModalOpen && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-background border border-border rounded-2xl shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-y-auto">
+            <div className="sticky top-0 bg-background/95 backdrop-blur-sm border-b border-border p-6 flex items-center justify-between">
+              <h2 className="text-xl font-bold">
+                Edit {editType === "project" ? "Project" : "Blog"}
+              </h2>
+              <button
+                onClick={() => setIsEditModalOpen(false)}
+                className="p-2 hover:bg-muted rounded-lg transition-colors"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <form
+              onSubmit={async (e) => {
+                e.preventDefault();
+                setEditLoading(true);
+                try {
+                  let thumbnailUrl = editFormData.thumbnail_url;
+                  
+                  // Upload image if file selected
+                  if (editFormData.imageFile) {
+                    const uploadFormData = new FormData();
+                    uploadFormData.append("file", editFormData.imageFile);
+                    const result = await uploadProjectImage(uploadFormData);
+                    if (result.error) {
+                      alert("Image upload failed: " + result.error);
+                      setEditLoading(false);
+                      return;
+                    }
+                    thumbnailUrl = result.url;
+                  }
+                  
+                  if (editType === "project" && editItem) {
+                    await updateProject(editItem.id, {
+                      title: editFormData.title,
+                      description: editFormData.description,
+                      thumbnail_url: thumbnailUrl,
+                      technologies: editFormData.technologies
+                        ?.split(",")
+                        .map((t: string) => t.trim())
+                        .filter(Boolean),
+                      live_url: editFormData.live_url,
+                      github_url: editFormData.github_url,
+                      roleIds: editFormData.roleIds || [],
+                    });
+                  } else if (editType === "blog" && editItem) {
+                    await updateBlog(editItem.id, {
+                      title: editFormData.title,
+                      excerpt: editFormData.excerpt,
+                      content: editFormData.content,
+                      tags: editFormData.tags
+                        ?.split(",")
+                        .map((t: string) => t.trim())
+                        .filter(Boolean),
+                      roleIds: editFormData.roleIds || [],
+                    });
+                  }
+                  setIsEditModalOpen(false);
+                  setEditFormData({});
+                  setEditItem(null);
+                  window.location.reload();
+                } catch (err) {
+                  alert("Error updating content");
+                } finally {
+                  setEditLoading(false);
+                }
+              }}
+              className="p-6 space-y-5"
+            >
+              <div className="space-y-2">
+                <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                  Title *
+                </label>
+                <input
+                  required
+                  value={editFormData.title || ""}
+                  onChange={(e) =>
+                    setEditFormData((prev: any) => ({
+                      ...prev,
+                      title: e.target.value,
+                    }))
+                  }
+                  className="w-full bg-background border rounded-lg px-4 py-3 outline-none focus:ring-2 focus:ring-purple-500/50 transition-all text-base"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                  {editType === "project" ? "Description" : "Excerpt"} *
+                </label>
+                <textarea
+                  required
+                  value={
+                    editType === "project"
+                      ? editFormData.description || ""
+                      : editFormData.excerpt || ""
+                  }
+                  onChange={(e) =>
+                    setEditFormData((prev: any) => ({
+                      ...prev,
+                      [editType === "project" ? "description" : "excerpt"]:
+                        e.target.value,
+                    }))
+                  }
+                  rows={4}
+                  className="w-full bg-background border rounded-lg px-4 py-3 outline-none focus:ring-2 focus:ring-purple-500/50 transition-all resize-none text-base"
+                />
+              </div>
+
+              {editType === "project" && (
+                <>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                        Technologies (comma-separated)
+                      </label>
+                      <input
+                        value={editFormData.technologies || ""}
+                        onChange={(e) =>
+                          setEditFormData((prev: any) => ({
+                            ...prev,
+                            technologies: e.target.value,
+                          }))
+                        }
+                        placeholder="React, TypeScript, Node.js"
+                        className="w-full bg-background border rounded-lg px-4 py-3 outline-none focus:ring-2 focus:ring-purple-500/50 transition-all text-base"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                        Project Image
+                      </label>
+                      <div className="relative">
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={(e) => {
+                            const file = e.target.files?.[0];
+                            if (file) {
+                              setEditFormData((prev: any) => ({
+                                ...prev,
+                                imageFile: file,
+                                thumbnail_url: URL.createObjectURL(file),
+                              }));
+                            }
+                          }}
+                          className="w-full bg-background border rounded-lg px-4 py-3 outline-none focus:ring-2 focus:ring-purple-500/50 transition-all text-base file:mr-4 file:py-1 file:px-3 file:rounded-full file:border-0 file:text-xs file:font-bold file:bg-purple-500/10 file:text-purple-600 hover:file:bg-purple-500/20"
+                        />
+                      </div>
+                      {editFormData.thumbnail_url && (
+                        <div className="mt-2 relative w-full h-32 rounded-lg overflow-hidden border">
+                          <img 
+                            src={editFormData.thumbnail_url} 
+                            alt="Preview" 
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                        Live URL
+                      </label>
+                      <input
+                        type="url"
+                        value={editFormData.live_url || ""}
+                        onChange={(e) =>
+                          setEditFormData((prev: any) => ({
+                            ...prev,
+                            live_url: e.target.value,
+                          }))
+                        }
+                        className="w-full bg-background border rounded-lg px-4 py-3 outline-none focus:ring-2 focus:ring-purple-500/50 transition-all text-base"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                        GitHub URL
+                      </label>
+                      <input
+                        type="url"
+                        value={editFormData.github_url || ""}
+                        onChange={(e) =>
+                          setEditFormData((prev: any) => ({
+                            ...prev,
+                            github_url: e.target.value,
+                          }))
+                        }
+                        className="w-full bg-background border rounded-lg px-4 py-3 outline-none focus:ring-2 focus:ring-purple-500/50 transition-all text-base"
+                      />
+                    </div>
+                  </div>
+                </>
+              )}
+
+              {editType === "blog" && (
+                <>
+                  <div className="space-y-2">
+                    <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                      Content
+                    </label>
+                    <textarea
+                      value={editFormData.content || ""}
+                      onChange={(e) =>
+                        setEditFormData((prev: any) => ({
+                          ...prev,
+                          content: e.target.value,
+                        }))
+                      }
+                      rows={8}
+                      className="w-full bg-background border rounded-lg px-4 py-3 outline-none focus:ring-2 focus:ring-orange-500/50 transition-all resize-none text-base"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                      Tags (comma-separated)
+                    </label>
+                    <input
+                      value={editFormData.tags || ""}
+                      onChange={(e) =>
+                        setEditFormData((prev: any) => ({
+                          ...prev,
+                          tags: e.target.value,
+                        }))
+                      }
+                      placeholder="Tutorial, React, Web Development"
+                      className="w-full bg-background border rounded-lg px-4 py-3 outline-none focus:ring-2 focus:ring-orange-500/50 transition-all text-base"
+                    />
+                  </div>
+                </>
+              )}
+
+              <div className="space-y-2">
+                <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                  Portfolio Tags *
+                </label>
+                <div className="flex flex-wrap gap-2">
+                  {roles.map((role: any) => (
+                    <button
+                      key={role.id}
+                      type="button"
+                      onClick={() => {
+                        const currentIds = editFormData.roleIds || [];
+                        setEditFormData((prev: any) => ({
+                          ...prev,
+                          roleIds: currentIds.includes(role.id)
+                            ? currentIds.filter((id: string) => id !== role.id)
+                            : [...currentIds, role.id],
+                        }));
+                      }}
+                      className={`px-3 py-1.5 rounded-full text-[10px] font-bold transition-all border ${
+                        (editFormData.roleIds || []).includes(role.id)
+                          ? editType === "project"
+                            ? "bg-purple-500 text-white border-purple-500"
+                            : "bg-orange-500 text-white border-orange-500"
+                          : "bg-muted text-muted-foreground border-border hover:border-purple-500/30"
+                      }`}
+                    >
+                      {role.title}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="pt-4 border-t">
+                <button
+                  type="submit"
+                  disabled={
+                    editLoading ||
+                    !editFormData.title ||
+                    !(editFormData.roleIds || []).length
+                  }
+                  className="w-full bg-gradient-to-r from-purple-500 to-purple-600 hover:opacity-90 text-white font-bold rounded-xl py-3 transition-all disabled:opacity-50"
+                >
+                  {editLoading ? (
+                    <span className="flex items-center justify-center gap-2">
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      Saving...
+                    </span>
+                  ) : (
+                    <span className="flex items-center justify-center gap-2">
+                      <Save className="w-4 h-4" />
+                      Save Changes
+                    </span>
+                  )}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+const ICON_LIBRARIES = [
+  { value: "logos", label: "Brand Logos", placeholder: "e.g. microsoft-icon" },
+  { value: "simple-icons", label: "Simple Icons", placeholder: "e.g. microsoftexcel" },
+  { value: "lucide", label: "Lucide", placeholder: "e.g. box" },
+  { value: "fa", label: "Font Awesome", placeholder: "e.g. Microsoft" },
+  { value: "fa6", label: "Font Awesome 6", placeholder: "e.g. Microsoft" },
+  { value: "si", label: "Simple Icons (legacy)", placeholder: "e.g. SiMicrosoftexcel" },
+  { value: "pi", label: "Phosphor", placeholder: "e.g. MicrosoftExcelLogo" },
+  { value: "ri", label: "Remix Icon", placeholder: "e.g. MicrosoftFill" },
+  { value: "io5", label: "Ionicons", placeholder: "e.g. LogoMicrosoft" },
+  { value: "md", label: "Material", placeholder: "e.g. MdAutoAwesome" },
+];
+
+function parseIconName(iconName?: string, iconUrl?: string): { source: string; name: string } {
+  if (iconUrl) return { source: "custom", name: "" };
+  if (!iconName) return { source: "logos", name: "" };
+  const colonIdx = iconName.indexOf(":");
+  if (colonIdx > 0) {
+    const source = iconName.slice(0, colonIdx);
+    const name = iconName.slice(colonIdx + 1);
+    if (ICON_LIBRARIES.some((lib) => lib.value === source)) {
+      return { source, name };
+    }
+  }
+  // Legacy Simple Icons names default to si source
+  if (iconName.startsWith("Si") && iconName.length > 2 && iconName[2] === iconName[2].toUpperCase()) {
+    return { source: "si", name: iconName };
+  }
+  return { source: "logos", name: iconName };
+}
+
+function buildIconName(source: string, name: string): string {
+  if (source === "custom" || !name.trim()) return "";
+  return `${source}:${name.trim()}`;
+}
+
+function IconLibrarySelector({
+  source,
+  name,
+  onChange,
+  onOpenPicker,
+}: {
+  source: string;
+  name: string;
+  onChange: (iconName: string) => void;
+  onOpenPicker: () => void;
+}) {
+  const selectedLib = ICON_LIBRARIES.find((l) => l.value === source) || ICON_LIBRARIES[0];
+
+  return (
+    <div className="space-y-3">
+      <div className="space-y-2">
+        <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground block">
+          Icon Library
+        </label>
+        <select
+          value={source}
+          onChange={(e) => onChange(buildIconName(e.target.value, name))}
+          className="w-full bg-background border rounded-lg px-4 py-2 outline-none focus:ring-2 focus:ring-accent/50 transition-all text-sm"
+        >
+          {ICON_LIBRARIES.map((lib) => (
+            <option key={lib.value} value={lib.value}>
+              {lib.label}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <div className="space-y-2">
+        <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground block">
+          Icon Name
+        </label>
+        <div className="flex items-center gap-3">
+          <input
+            value={name}
+            onChange={(e) => onChange(buildIconName(source, e.target.value))}
+            className="flex-1 bg-background border rounded-lg px-4 py-2 outline-none focus:ring-2 focus:ring-accent/50 transition-all font-mono text-sm"
+            placeholder={selectedLib.placeholder}
+          />
+          <div className="w-12 h-12 rounded-lg border bg-white flex items-center justify-center overflow-hidden shrink-0">
+            <DynamicIcon
+              name={name ? `${source}:${name}` : ""}
+              size={24}
+            />
+          </div>
+        </div>        
+        <p className="text-xs text-muted-foreground">
+          Preview updates as you type. Use the prefix automatically.
+        </p>
+      </div>
+
+      <button
+        type="button"
+        onClick={onOpenPicker}
+        className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-accent/10 border border-accent/20 rounded-lg text-xs font-bold uppercase tracking-widest text-accent hover:bg-accent/20 transition-all"
+      >
+        <Search className="w-4 h-4" />
+        Browse Tool Icons
+      </button>
     </div>
   );
 }
@@ -1012,19 +1988,30 @@ function ContentEditorModal({
   onSave: (data: any) => void;
   isPending: boolean;
 }) {
-  const [formData, setFormData] = useState<any>(
-    item || {
-      // Defaults
+  const [formData, setFormData] = useState<any>(() => {
+    const base = item || {
       highlights: [],
       technologies: [],
       is_webinar: false,
       display_order: 0,
-    },
-  );
+    };
+    if (type === "tech") {
+      const { source, name } = parseIconName(base.icon_name, base.icon_url);
+      return { ...base, _iconSource: source, _iconName: name };
+    }
+    return base;
+  });
+  const [showIconPicker, setShowIconPicker] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSave(formData);
+    const payload = { ...formData };
+    if (type === "tech") {
+      payload.icon_name = buildIconName(formData._iconSource, formData._iconName);
+      delete payload._iconSource;
+      delete payload._iconName;
+    }
+    onSave(payload);
   };
 
   const handleChange = (field: string, value: any) => {
@@ -1079,17 +2066,95 @@ function ContentEditorModal({
                   placeholder="e.g. Next.js"
                 />
               </div>
-              <div className="space-y-2">
-                <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                  Icon Name (Lucide/SimpleIcon)
+
+              <div className="space-y-3 border rounded-lg p-4 bg-muted/30">
+                <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground block">
+                  Skill Icon
                 </label>
-                <input
-                  value={formData.icon_name || ""}
-                  onChange={(e) => handleChange("icon_name", e.target.value)}
-                  className="w-full bg-background border rounded-lg px-4 py-2 outline-none focus:ring-2 focus:ring-accent/50 transition-all font-mono text-sm"
-                  placeholder="e.g. SiNextdotjs"
+
+                {formData.icon_url ? (
+                  <div className="flex items-center gap-4">
+                    <div className="relative w-16 h-16 rounded-lg border bg-white flex items-center justify-center overflow-hidden">
+                      <Image
+                        src={formData.icon_url}
+                        alt="Skill icon"
+                        fill
+                        className="object-contain p-2"
+                      />
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          handleChange("icon_url", "");
+                          handleChange("_iconSource", "logos");
+                          handleChange("_iconName", "");
+                        }}
+                        className="text-xs text-destructive hover:underline"
+                      >
+                        Remove custom icon
+                      </button>
+                      <span className="text-xs text-muted-foreground">
+                        Switches back to library icon below
+                      </span>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="space-y-2">
+                    <input
+                      type="file"
+                      accept="image/svg+xml,image/png,image/jpeg,image/webp"
+                      onChange={async (e) => {
+                        const file = e.target.files?.[0];
+                        if (!file) return;
+                        const fd = new FormData();
+                        fd.append("file", file);
+                        const res = await uploadSkillIcon(fd);
+                        if (res.error) {
+                          alert(res.error);
+                        } else if (res.url) {
+                          handleChange("icon_url", res.url);
+                          handleChange("_iconSource", "custom");
+                          handleChange("_iconName", "");
+                        }
+                      }}
+                      className="block w-full text-sm text-muted-foreground file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-accent file:text-white hover:file:bg-accent/90"
+                    />
+                    <p className="text-xs text-muted-foreground">
+                      SVG, PNG, JPEG or WebP. Max 2 MB.
+                    </p>
+                  </div>
+                )}
+
+                <IconLibrarySelector
+                  source={formData._iconSource || "logos"}
+                  name={formData._iconName || ""}
+                  onChange={(iconName) => {
+                    handleChange("icon_name", iconName);
+                    const { source, name } = parseIconName(iconName);
+                    handleChange("_iconSource", source);
+                    handleChange("_iconName", name);
+                  }}
+                  onOpenPicker={() => setShowIconPicker(true)}
                 />
+
+                {showIconPicker && (
+                  createPortal(
+                    <IconPicker
+                      value={formData.icon_name || ""}
+                      onChange={(iconName) => {
+                        handleChange("icon_name", iconName);
+                        const { source, name } = parseIconName(iconName);
+                        handleChange("_iconSource", source);
+                        handleChange("_iconName", name);
+                      }}
+                      onClose={() => setShowIconPicker(false)}
+                    />,
+                    document.body
+                  )
+                )}
               </div>
+
               <div className="space-y-2">
                 <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
                   Proficiency (0-100)

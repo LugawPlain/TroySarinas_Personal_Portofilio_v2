@@ -16,6 +16,8 @@ export default function ContactForm() {
       return <CinematicContactForm />;
     case "gtm-engineer":
       return <GTMContactForm />;
+    case "ecommerce-developer":
+      return <StandardContactForm />;
     default:
       return <StandardContactForm />;
   }

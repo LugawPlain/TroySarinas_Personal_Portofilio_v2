@@ -196,8 +196,8 @@ const GTMContactForm = () => {
       <div className="mt-8 text-center">
         <p className="text-gray-500 text-sm">
           Prefer to schedule a call? Email me at{" "}
-          <a href="mailto:troysarinas22@gmail.com" className="text-emerald-600 hover:text-emerald-700 font-medium transition-colors">
-            troysarinas22@gmail.com
+          <a href="mailto:troyjeffreysarinas@gmail.com" className="text-emerald-600 hover:text-emerald-700 font-medium transition-colors">
+            troyjeffreysarinas@gmail.com
           </a>
         </p>
       </div>

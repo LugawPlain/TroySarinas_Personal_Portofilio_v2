@@ -39,6 +39,8 @@ interface DashboardTabsProps {
   blogs: any[];
   education: any[];
   certifications: any[];
+  socialLinks: any[];
+  roleSocialLinks: any[];
   stats: {
     totalLinks: number;
     totalVisits: number;
@@ -139,6 +141,10 @@ function OverviewTab({ stats }: DashboardTabsProps) {
             { name: "Data Analyst", slug: "data-analyst", color: "bg-violet-500/10 text-violet-600 border-violet-200" },
             { name: "Social Media Manager", slug: "social-media-manager", color: "bg-pink-500/10 text-pink-600 border-pink-200" },
             { name: "Marketing Manager", slug: "marketing-manager", color: "bg-orange-500/10 text-orange-600 border-orange-200" },
+            { name: "E-Commerce Developer", slug: "ecommerce-developer", color: "bg-emerald-600/10 text-emerald-700 border-emerald-300" },
+            { name: "CPA", slug: "cpa", color: "bg-[#1e3a5f]/10 text-[#1e3a5f] border-[#1e3a5f]/30" },
+            { name: "Sales Representative", slug: "sales-representative", color: "bg-red-500/10 text-red-600 border-red-200" },
+            { name: "Virtual Assistant", slug: "virtual-assistant", color: "bg-[#84a98c]/10 text-[#84a98c] border-[#84a98c]/30" },
           ].map((role) => (
             <a
               key={role.slug}
@@ -185,6 +191,8 @@ function ContentTab(props: DashboardTabsProps) {
       roleCert={props.roleCert}
       roleProj={props.roleProj}
       roleBlog={props.roleBlog}
+      socialLinks={props.socialLinks}
+      roleSocialLinks={props.roleSocialLinks}
     />
   );
 }
@@ -217,6 +225,7 @@ function LinksTab({
                   <tr>
                     <th className="px-6 py-4">Label & Version</th>
                     <th className="px-6 py-4">Target Role</th>
+                    <th className="px-6 py-4">Job URL</th>
                     <th className="px-6 py-4 text-center">Clicks</th>
                     <th className="px-6 py-4">Created</th>
                     <th className="px-6 py-4 text-right">Actions</th>
@@ -241,6 +250,23 @@ function LinksTab({
                           <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-accent/10 text-accent border border-accent/20 capitalize">
                             {link.target_role.replace("-", " ")}
                           </span>
+                        </td>
+                        <td className="px-6 py-4">
+                          {link.job_url ? (
+                            <a
+                              href={link.job_url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-sm text-accent hover:underline truncate block max-w-[200px]"
+                              title={link.job_url}
+                            >
+                              {link.job_url}
+                            </a>
+                          ) : (
+                            <span className="text-xs text-muted-foreground opacity-40">
+                              No link
+                            </span>
+                          )}
                         </td>
                         <td className="px-6 py-4 text-center">
                           <span
@@ -286,7 +312,7 @@ function LinksTab({
                   ) : (
                     <tr>
                       <td
-                        colSpan={5}
+                        colSpan={6}
                         className="px-6 py-20 text-center text-muted-foreground"
                       >
                         <div className="flex flex-col items-center gap-2">

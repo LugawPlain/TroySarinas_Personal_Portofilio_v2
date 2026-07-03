@@ -24,7 +24,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 const RoleProjectsPage = async ({ params }: Props) => {
   const { role } = await params;
 
-  const validRoles = ["software-engineer", "gtm-engineer", "video-editor"];
+  const validRoles = ["software-engineer", "gtm-engineer", "video-editor", "ecommerce-developer"];
   if (!validRoles.includes(role)) {
     return notFound();
   }
