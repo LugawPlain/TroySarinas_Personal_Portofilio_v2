@@ -107,7 +107,7 @@ const StandardFooter = () => {
         <div className="text-xs text-muted-foreground">
           <p className="text-xs text-muted-foreground">© 2025 Troy Sarinas</p>
           <p>+639569878251📞</p>
-          <p>troysarinas22@gmail.com📩</p>
+          <p>troyjeffreysarinas@gmail.com📩</p>
           <p className="text-xs text-muted-foreground">
             Built with React Next & Tailwind
           </p>

@@ -6,6 +6,7 @@ import { revalidatePath } from "next/cache";
 export async function createGatewayLink(prevState: any, formData: FormData) {
   const job_role = formData.get("job_role") as string;
   const label = formData.get("label") as string;
+  const job_url = formData.get("job_url") as string;
 
   if (!job_role || !label) {
     return { error: "Missing required fields" };
@@ -29,6 +30,7 @@ export async function createGatewayLink(prevState: any, formData: FormData) {
       target_role: job_role,
       label: label,
       is_active: true,
+      job_url: job_url || null,
     },
   ]);
 

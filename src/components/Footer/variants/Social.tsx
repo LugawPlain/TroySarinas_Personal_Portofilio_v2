@@ -85,8 +85,8 @@ const SocialFooter = () => {
                 <Mail className="w-5 h-5 text-gray-600 mt-0.5" />
                 <div>
                   <p className="text-sm text-gray-500">Email</p>
-                  <a href="mailto:troysarinas22@gmail.com" className="text-white hover:text-pink-400">
-                    troysarinas22@gmail.com
+                  <a href="mailto:troyjeffreysarinas@gmail.com" className="text-white hover:text-pink-400">
+                    troyjeffreysarinas@gmail.com
                   </a>
                 </div>
               </div>

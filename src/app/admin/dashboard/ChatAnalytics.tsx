@@ -112,6 +112,7 @@ export function ChatAnalytics() {
           <option value="">All Roles</option>
           <option value="software-engineer">Software Engineer</option>
           <option value="gtm-engineer">GTM Engineer</option>
+          <option value="ecommerce-developer">E-Commerce Developer</option>
           <option value="standard">Standard</option>
         </select>
         <span className="text-sm text-muted-foreground">

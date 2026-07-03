@@ -119,8 +119,8 @@ const SoftwareEngineerFooter = () => {
                 <Mail className="w-5 h-5 text-gray-500 mt-0.5" />
                 <div>
                   <p className="text-sm text-gray-400">Email</p>
-                  <a href="mailto:troysarinas22@gmail.com" className="text-white hover:text-blue-400 transition-colors">
-                    troysarinas22@gmail.com
+                  <a href="mailto:troyjeffreysarinas@gmail.com" className="text-white hover:text-blue-400 transition-colors">
+                    troyjeffreysarinas@gmail.com
                   </a>
                 </div>
               </div>

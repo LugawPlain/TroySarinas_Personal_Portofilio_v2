@@ -196,8 +196,8 @@ const SoftwareEngineerContactForm = () => {
       <div className="mt-8 text-center">
         <p className="text-gray-500 text-sm">
           Or reach me directly at{" "}
-          <a href="mailto:troysarinas22@gmail.com" className="text-blue-400 hover:text-blue-300 transition-colors">
-            troysarinas22@gmail.com
+          <a href="mailto:troyjeffreysarinas@gmail.com" className="text-blue-400 hover:text-blue-300 transition-colors">
+            troyjeffreysarinas@gmail.com
           </a>
         </p>
       </div>

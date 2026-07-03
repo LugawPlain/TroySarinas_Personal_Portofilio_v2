@@ -9,13 +9,14 @@ import ContactModal from "@/components/ContactModal";
 import Resume from "@/components/Resume";
 import { useHeroSection } from "@/hooks/use-hero-section";
 import InfoIcon from "@/../public/Icons/InformationIcon";
-import { HeroConfig } from "@/lib/roles";
+import { HeroConfig, SocialLink } from "@/lib/roles";
 
 interface StandardHeroSectionProps {
   headline?: string;
   bio?: string;
   resumeUrl?: string;
   heroConfig?: HeroConfig;
+  socialLinks?: SocialLink[];
 }
 
 const StandardHeroSection = ({
@@ -23,6 +24,7 @@ const StandardHeroSection = ({
   bio,
   resumeUrl,
   heroConfig,
+  socialLinks,
 }: StandardHeroSectionProps) => {
   const hero = useHeroSection(resumeUrl);
   const config = heroConfig || {
@@ -122,7 +124,7 @@ const StandardHeroSection = ({
 
               {/* Social Links */}
               {config.showSocialLinks && (
-                <SocialLinks className="mt-8" size={28} />
+                <SocialLinks className="mt-8" size={28} links={socialLinks} />
               )}
 
               {/* CTA Buttons */}

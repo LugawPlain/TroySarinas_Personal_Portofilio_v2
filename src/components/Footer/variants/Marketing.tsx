@@ -132,8 +132,8 @@ const MarketingFooter = () => {
             <div className="space-y-4">
               <div className="flex items-center gap-3">
                 <Mail className="w-4 h-4 text-orange-500" />
-                <a href="mailto:troysarinas22@gmail.com" className="text-gray-400 hover:text-orange-400 transition-colors">
-                  troysarinas22@gmail.com
+                <a href="mailto:troyjeffreysarinas@gmail.com" className="text-gray-400 hover:text-orange-400 transition-colors">
+                  troyjeffreysarinas@gmail.com
                 </a>
               </div>
               <div className="flex items-center gap-3">

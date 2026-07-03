@@ -5,6 +5,7 @@ import {
   getRoleMetadata,
   getEducation,
   getCertifications,
+  getSocialLinks,
 } from "@/lib/roles";
 import { notFound } from "next/navigation";
 import Projects from "@/components/Projects";
@@ -29,6 +30,7 @@ export default async function MarketingManagerPortfolio() {
     education,
     certifications,
     resumeUrl,
+    socialLinks,
   ] = await Promise.all([
     getRoleMetadata(role),
     getProjects(role),
@@ -37,6 +39,7 @@ export default async function MarketingManagerPortfolio() {
     getEducation(role),
     getCertifications(role),
     getResumeForRole(role),
+    getSocialLinks(role),
   ]);
 
   if (!roleMetadata) {
@@ -53,6 +56,7 @@ export default async function MarketingManagerPortfolio() {
             bio={roleMetadata.bio}
             resumeUrl={resumeUrl}
             heroConfig={roleMetadata.hero_config}
+            socialLinks={socialLinks}
           />
         </TrackedSection>
 

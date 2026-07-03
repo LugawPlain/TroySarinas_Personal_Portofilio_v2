@@ -162,6 +162,15 @@ export function LinkGeneratorForm({ roles }: { roles: any[] }) {
             required
           />
         </div>
+        <div className="space-y-2">
+          <label className="text-sm font-medium">Job URL</label>
+          <input
+            name="job_url"
+            type="url"
+            placeholder="https://boards.greenhouse.io/..."
+            className="w-full h-10 px-3 rounded-md border bg-background border-input focus:ring-2 focus:ring-accent outline-none"
+          />
+        </div>
 
         {state?.error && (
           <div className="text-xs text-destructive flex items-center gap-1">

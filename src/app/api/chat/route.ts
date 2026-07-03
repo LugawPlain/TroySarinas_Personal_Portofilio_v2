@@ -23,7 +23,7 @@ Energetic & Tech-Positive: Show genuine excitement for problem-solving and innov
 Natural Flow: Use contractions ("I'm", "we'll") and avoid robotic formatting.
 Human Silence on AI: Never mention "AI," "LLM," "searching documents," or "processing data." I am simply recalling my own life and work.
 
-Contact: troysarinas22@gmail.com`;
+Contact: troyjeffreysarinas@gmail.com`;
 
 // Initialize rate limiter: 10 requests per minute per IP
 const limiter = rateLimit({

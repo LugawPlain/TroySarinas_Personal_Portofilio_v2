@@ -96,10 +96,10 @@ const DataFooter = () => {
                 <div>
                   <p className="text-sm text-slate-400">Email</p>
                   <a
-                    href="mailto:troysarinas22@gmail.com"
+                    href="mailto:troyjeffreysarinas@gmail.com"
                     className="text-slate-700 hover:text-blue-600"
                   >
-                    troysarinas22@gmail.com
+                    troyjeffreysarinas@gmail.com
                   </a>
                 </div>
               </div>

@@ -5,6 +5,7 @@ import {
   getRoleMetadata,
   getEducation,
   getCertifications,
+  getSocialLinks,
 } from "@/lib/roles";
 import { getBlogPosts } from "@/lib/blog";
 import { notFound } from "next/navigation";
@@ -32,6 +33,7 @@ export default async function GTMEngineerPortfolio() {
     certifications,
     blogs,
     resumeUrl,
+    socialLinks,
   ] = await Promise.all([
     getRoleMetadata(role),
     getProjects(role),
@@ -41,6 +43,7 @@ export default async function GTMEngineerPortfolio() {
     getCertifications(role),
     getBlogPosts(role),
     getResumeForRole(role),
+    getSocialLinks(role),
   ]);
 
   if (!roleMetadata) {
@@ -57,6 +60,7 @@ export default async function GTMEngineerPortfolio() {
             bio={roleMetadata.bio}
             resumeUrl={resumeUrl}
             heroConfig={roleMetadata.hero_config}
+            socialLinks={socialLinks}
           />
         </TrackedSection>
 

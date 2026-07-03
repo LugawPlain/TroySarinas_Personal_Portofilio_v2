@@ -5,6 +5,7 @@ import {
   getRoleMetadata,
   getEducation,
   getCertifications,
+  getSocialLinks,
 } from "@/lib/roles";
 import { notFound } from "next/navigation";
 import Projects from "@/components/Projects";
@@ -30,6 +31,7 @@ export default async function SoftwareEngineerPortfolio() {
     education,
     certifications,
     resumeUrl,
+    socialLinks,
   ] = await Promise.all([
     getRoleMetadata(role),
     getProjects(role),
@@ -38,6 +40,7 @@ export default async function SoftwareEngineerPortfolio() {
     getEducation(role),
     getCertifications(role),
     getResumeForRole(role),
+    getSocialLinks(role),
   ]);
 
   if (!roleMetadata) {
@@ -53,6 +56,7 @@ export default async function SoftwareEngineerPortfolio() {
             headline={roleMetadata.headline}
             bio={roleMetadata.bio}
             resumeUrl={resumeUrl}
+            socialLinks={socialLinks}
           />
         </TrackedSection>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16 sm:space-y-24 lg:space-y-32">

@@ -8,6 +8,10 @@ import CinematicExperience from "./variants/Cinematic";
 import DataExperience from "./variants/Data";
 import SocialExperience from "./variants/Social";
 import MarketingExperience from "./variants/Marketing";
+import EcommerceExperience from "./variants/Ecommerce";
+import CPAExperience from "./variants/CPA";
+import SalesExperience from "./variants/Sales";
+import VAExperience from "./variants/VA";
 
 interface ExperienceHighlights {
   icon?: string;
@@ -48,6 +52,14 @@ export default function Experience(props: ExperienceProps) {
       return <SocialExperience {...props} />;
     case "marketing-manager":
       return <MarketingExperience {...props} />;
+    case "ecommerce-developer":
+      return <EcommerceExperience {...props} />;
+    case "cpa":
+      return <CPAExperience {...props} />;
+    case "sales-representative":
+      return <SalesExperience {...props} />;
+    case "virtual-assistant":
+      return <VAExperience {...props} />;
 
     default:
       return <StandardExperience {...props} />;

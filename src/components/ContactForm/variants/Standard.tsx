@@ -206,8 +206,8 @@ const StandardContactForm = () => {
       <div className="max-lg mx-auto mt-8 text-center">
         <p className="text-gray-600">
           Prefer to reach out directly? Email me at <br />
-          <a href="mailto:troysarinas22@gmail.com" className="text-accent hover:underline font-medium">
-            troysarinas22@gmail.com
+          <a href="mailto:troyjeffreysarinas@gmail.com" className="text-accent hover:underline font-medium">
+            troyjeffreysarinas@gmail.com
           </a>{" "}
           or call{" "}
           <a href="tel:+639569878251" className="text-accent hover:underline font-medium">

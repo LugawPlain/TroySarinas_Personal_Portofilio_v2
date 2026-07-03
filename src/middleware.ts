@@ -8,54 +8,35 @@ export async function middleware(request: NextRequest) {
 
   // ─── 1. Update session (required for Supabase Auth in Server Components)
   let response: NextResponse;
+  let isAdmin = false;
   try {
-    response = await updateSession(request);
+    const { response: updatedResponse, user } = await updateSession(request);
+    response = updatedResponse;
+    isAdmin = !!user;
   } catch (e) {
     console.warn("[Middleware] updateSession failed, continuing:", e);
     response = NextResponse.next({ request });
   }
 
-  // ─── 2. Build Supabase client on the updated response
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY!,
-    {
-      cookies: {
-        getAll() {
-          return request.cookies.getAll();
-        },
-        setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value }) =>
-            request.cookies.set(name, value),
-          );
-          // Re-create response so cookies are forwarded
-          response = NextResponse.next({
-            request: {
-              headers: request.headers,
-            },
-          });
-          cookiesToSet.forEach(({ name, value }) =>
-            response.cookies.set(name, value),
-          );
-        },
-      },
-    },
-  );
-
-  // ─── 3. Check admin auth (with fallback on failure)
-  let isAdmin = false;
-  try {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    isAdmin = !!user;
-  } catch (e) {
-    console.warn("[Middleware] getUser failed, treating as non-admin:", e);
-  }
-
   // ─── A. HANDLE VERSION PARAMETER (?ver=1.23.456)
   if (ver) {
     try {
+      // Create a Supabase client just for DB queries (no auth needed for gateway lookup)
+      const supabase = createServerClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY!,
+        {
+          cookies: {
+            getAll() {
+              return request.cookies.getAll();
+            },
+            setAll() {
+              // No-op - we don't need to set cookies for gateway lookup
+            },
+          },
+        },
+      );
+
       const { data: link, error } = await supabase
         .from("gateway_links")
         .select("id, target_role, is_active")

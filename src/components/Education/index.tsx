@@ -20,6 +20,8 @@ export default function Education({
   switch (activeRole) {
     case "software-engineer":
       return <SoftwareEngineerEducation educationItems={educationItems} />;
+    case "ecommerce-developer":
+      return <StandardEducation educationItems={educationItems} />;
     // case "video-editor": return <CinematicEducation educationItems={educationItems} />;
 
     default:

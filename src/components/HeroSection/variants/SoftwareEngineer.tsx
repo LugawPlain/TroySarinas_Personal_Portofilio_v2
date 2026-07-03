@@ -10,7 +10,7 @@ import Resume from "@/components/Resume";
 import { useHeroSection } from "@/hooks/use-hero-section";
 import InfoIcon from "@/../public/Icons/InformationIcon";
 import Image from "next/image";
-import { HeroConfig } from "@/lib/roles";
+import { HeroConfig, SocialLink } from "@/lib/roles";
 import { Code2, Terminal, Cpu, Layers } from "lucide-react";
 
 interface SoftwareEngineerHeroSectionProps {
@@ -18,6 +18,7 @@ interface SoftwareEngineerHeroSectionProps {
   bio?: string;
   resumeUrl?: string;
   heroConfig?: HeroConfig;
+  socialLinks?: SocialLink[];
 }
 
 const roleTitles = [
@@ -32,6 +33,7 @@ const SoftwareEngineerHeroSection = ({
   bio,
   resumeUrl,
   heroConfig,
+  socialLinks,
 }: SoftwareEngineerHeroSectionProps) => {
   const hero = useHeroSection(resumeUrl);
   const config = heroConfig || {
@@ -174,7 +176,7 @@ const SoftwareEngineerHeroSection = ({
         </div>
 
         {/* Social Links */}
-        {config.showSocialLinks && <SocialLinks className="" size={28} />}
+        {config.showSocialLinks && <SocialLinks className="" size={28} links={socialLinks} />}
 
         <ContactModal
           isOpen={hero.isContactModalOpen}

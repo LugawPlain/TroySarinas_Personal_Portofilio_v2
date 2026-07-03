@@ -285,11 +285,201 @@ No changes needed to the data layer.
 
 ---
 
+## 7. E-Commerce Developer (`/portfolio/ecommerce-developer`)
+
+**Audience:** E-commerce directors, Shopify Plus merchants, DTC brand founders, CTOs of retail companies
+
+**Visual Theme:** Clean, professional — matching the existing portfolio light theme. Emerald/green and amber accents for commerce/money associations. Conversion-focused with metric callouts. Same card-based layout as Software Engineer but with e-commerce-specific iconography and store performance metrics.
+
+### Design Principles
+
+- **Consistency**: Follows the same light-background, gradient-card layout as other portfolio roles
+- **Conversion-Focused**: Display store metrics (conversion rate, AOV, revenue, orders) prominently in experience cards
+- **Trust Signals**: Security badges, verified store labels, payment icons
+- **Commerce Color Palette**: Emerald (#10b981) for success/growth, amber (#f59e0b) for revenue/money accents
+
+### Section Order
+
+1. **Hero** (storefront-style with metrics)
+2. **Projects** (product showcase)
+3. **Experience** (brand portfolio with conversion metrics)
+4. **Education**
+5. **Technologies** (platform stack)
+6. **Certifications** (trust badges)
+
+### Section Details
+
+| Section | Design |
+|---------|--------|
+| **Hero** | Follow existing hero pattern — split layout with headline, bio, and CTA. Add **commerce-specific metrics** below: "$2.4M Revenue Processed", "150K+ Orders", "4.9★ Rating". Use emerald/amber accent colors. Trust bar with payment icons. |
+| **Projects** | Standard card grid (matching Software Engineer layout) but with e-commerce-themed labels. Show ROI metrics on cards. "View Store" or "View Project" CTAs. |
+| **Technologies** | Standard grid with e-commerce platform icons. Group by: Platforms, Payments, Frontend, Tools. Proficiency bars included. |
+| **Experience** | **Same card layout as Software Engineer** — logo sidebar + content area + highlights sidebar. Add **conversion metric mini-cards** (Conversion Rate, AOV, Orders, Rating) displayed as a 4-column grid within each experience card. Use emerald/amber gradients alternating per card. Sidebar labeled "Store Impact" instead of "Key Highlights". |
+| **Certifications** | Standard certification grid. Emphasize: Shopify Partner, Stripe Certified, PCI DSS. |
+| **Education** | Standard education card. |
+
+### Unique Elements
+
+- **Conversion metrics** embedded in experience cards (4 mini stat cards)
+- **E-commerce iconography** (shopping cart, credit card, trending up, star ratings)
+- **Emerald/amber color accents** instead of blue/purple
+- **"Store Portfolio"** and **"Store Impact"** labeling
+- **Verified Store** badge on experience cards
+
+### Component Variants Needed
+
+- `EcommerceExperience` — same structure as SoftwareEngineer but with conversion metrics mini-cards and emerald/amber color scheme
+- `EcommerceHeroSection` — can reuse Standard or SoftwareEngineer hero with emerald accent
+- Other sections use Standard variants (no custom components needed)
+
+---
+
+## 8. CPA — Certified Public Accountant (`/portfolio/cpa`)
+
+**Audience:** Accounting firm partners, CFOs, controllers, audit committees, tax directors
+
+**Visual Theme:** Trustworthy, precise, and conservative. Navy blue (#1e3a5f) and gold (#c9a227) accents on clean white backgrounds. Professional typography with serif accents for authority. Subtle geometric patterns suggesting balance sheets and ledgers. Think Big 4 firm aesthetic meets modern fintech.
+
+### Section Order
+
+1. **Hero** (credentials/trust-focused)
+2. **Certifications** (prominently placed — license numbers)
+3. **Experience** (firm timeline with client impact)
+4. **Projects** (engagement case studies)
+5. **Education**
+6. **Technologies** (accounting stack — minimal)
+
+### Section Details
+
+| Section | Design |
+|---------|--------|
+| **Hero** | Trust-forward layout. Lead with **CPA license number** and state(s) of licensure prominently. "Licensed CPA — State of [X]" badge. Include **years of experience** metric. Split layout: credentials and trust signals left, professional headshot right. Gold accent on license badge. CTA: "Request Engagement Letter" or "Schedule Consultation". Trust bar with firm affiliations (Big 4, regional firms). |
+| **Certifications** | **Highest priority section.** Display as **official license cards**: CPA license (with state board verification link), CMA, CFA (if applicable), Enrolled Agent, CIA. Each card shows: cert logo, license number, issue date, expiration/renewal date, verification URL. Navy blue cards with gold borders. Include **CPE tracking** — hours completed this cycle with progress bar. |
+| **Experience** | Firm-focused timeline. For each role: Firm name, title, period, **client industries served** (tags), **engagement types** (audit, tax, advisory). Highlight **key metrics**: "$50M+ AUM audited", "200+ tax returns prepared", "$10M in identified tax savings". Use conservative card layout with navy sidebar. |
+| **Projects** | Present as **engagement case studies**. Each case: Client Industry → Engagement Type → Scope → Key Findings/Results. Focus on **quantified impact**: tax savings, audit opinions, compliance improvements, risk mitigations. Professional, text-heavy cards with minimal imagery. |
+| **Technologies** | Minimal presentation. Horizontal icon strip: QuickBooks, Sage, Xero, Excel (advanced), Caseware, IDEA, Alteryx. Group by: Accounting Software, Audit Tools, Data Analysis, Tax Prep. No proficiency bars — CPA credential implies expertise. |
+| **Education** | Standard education card. Emphasize: Accounting degree, Master's in Taxation (if applicable), CPA exam pass dates. Include academic honors (Beta Alpha Psi, Dean's List). |
+
+### Unique Elements
+
+- **License verification links** on all certification cards
+- **CPE progress tracking** widget
+- **Engagement type tags** (Audit, Tax, Advisory, Forensic, etc.)
+- **Client industry badges** on experience cards
+- **Conservative color palette**: Navy blue, gold, white, subtle gray
+- **Professional headshot** in hero (unlike other roles)
+
+### Component Variants Needed
+
+- `CPAHeroSection` — credentials-forward split layout with license badge and trust bar
+- `CPACertifications` — official license cards with verification links and CPE tracking
+- `CPAExperience` — firm timeline with engagement metrics and industry tags
+- `CPAProjects` — engagement case studies with quantified impact
+- `CPATechnologies` — minimal accounting tool icon strip
+- `CPAHeader` — conservative, navy-themed, professional
+
+---
+
+## 9. Sales Representative (`/portfolio/sales-representative`)
+
+**Audience:** VP of Sales, sales directors, business owners, hiring managers for sales teams
+
+**Visual Theme:** Energetic, confident, and results-driven. Bold red (#dc2626) and deep charcoal (#1f2937) accents on white. Dynamic typography with large quota numbers. Sales funnel motifs, pipeline visuals, and upward-trending arrows. Think Salesforce or HubSpot career pages — polished but aggressive.
+
+### Section Order
+
+1. **Hero** (quota/attainment metrics)
+2. **Experience** (quota attainment timeline)
+3. **Projects** (deal showcases)
+4. **Certifications** (sales credentials)
+5. **Technologies** (sales stack)
+6. **Blogs** (sales strategy)
+
+### Section Details
+
+| Section | Design |
+|---------|--------|
+| **Hero** | Metrics explosion layout. Large, bold numbers: "185% Quota Attainment", "$2.5M Pipeline Generated", "150% Average Deal Size Growth". Red accent on key metrics. Split layout: stats left, brief value proposition right. Include **quota attainment chart** (bar chart showing % to quota per quarter). Trust bar with company logos worked for. CTA: "Let's Close Deals" or "View My Pipeline". |
+| **Experience** | Quota-focused timeline. Each role card prominently displays: **Quota Attainment %**, **Revenue Generated**, **Deals Closed**, **Average Deal Size**. Use large metric callouts in red/charcoal. Include **territory info** and **vertical/industry focus**. Timeline connects roles showing progression from SDR to AE to Senior AE/Manager. |
+| **Projects** | Showcase as **deal wins**. Each project: Target Account → Deal Size → Sales Cycle → Strategy Used → Result. Include **win rate** and **competitive takeaways**. Use card layout with company logos. Emphasize **largest deals closed** and **complex sales cycles** (enterprise, multi-stakeholder). |
+| **Technologies** | Sales stack diagram grouped by function: CRM (Salesforce, HubSpot), Outreach (Salesloft, Outreach.io), Intelligence (LinkedIn Sales Nav, ZoomInfo), Communication (Slack, Gong), Productivity (Calendly, DocuSign). Show how tools integrate in the sales workflow. |
+| **Certifications** | Sales credentials: Salesforce Certified, HubSpot Sales Software, Challenger Sales, Sandler Training, MEDDPICC Certified. Display as **achievement badges** with completion dates. Include **sales methodology certifications** prominently. |
+| **Blogs** | Sales strategy and tactics. High priority — showcase thought leadership on prospecting, objection handling, negotiation, and pipeline management. Include **win stories** and **lessons learned** from lost deals. |
+
+### Unique Elements
+
+- **Quota attainment metrics** as primary visual element
+- **Pipeline visualization** (funnel or pipeline stage chart)
+- **Deal size progression** showing growth over time
+- **Win rate percentages** prominently displayed
+- **Sales methodology badges** (MEDDPICC, Challenger, SPIN, etc.)
+- **Territory and vertical focus** tags on experience cards
+- **Red and charcoal color scheme** for urgency and confidence
+
+### Component Variants Needed
+
+- `SalesHeroSection` — quota metrics with attainment chart and trust bar
+- `SalesExperience` — quota-focused timeline with large metric callouts
+- `SalesProjects` — deal win cards with account logos and deal metrics
+- `SalesTechnologies` — sales stack diagram by function
+- `SalesCertifications` — achievement badges with methodology emphasis
+- `SalesHeader` — bold, red-accented, with "Let's Close Deals" CTA
+
+---
+
+## 10. Virtual Assistant (`/portfolio/virtual-assistant`)
+
+**Audience:** Business owners, entrepreneurs, executives, solopreneurs, busy professionals
+
+**Visual Theme:** Clean, organized, and calming. Soft sage green (#84a98c) and warm cream (#f8f5f2) accents on white. Think Notion, Asana, Monday.com aesthetic — productivity-focused with a human touch. Organized layouts with checklist motifs, calendar visuals, and task completion indicators. Professional but warm and approachable.
+
+### Section Order
+
+1. **Hero** (productivity metrics)
+2. **Experience** (client support timeline)
+3. **Projects** (service showcases)
+4. **Certifications** (VA credentials)
+5. **Technologies** (productivity stack)
+6. **Education**
+
+### Section Details
+
+| Section | Design |
+|---------|--------|
+| **Hero** | Lead with **productivity impact**: "1,000+ Hours Saved", "99% Task Completion Rate", "50+ Clients Served". Clean split layout with organized dashboard-style metric cards. Include **calendar integration mockup** showing efficient scheduling. Warm sage green accents. Trust bar with client business types (Startups, Agencies, Consultants). CTA: "Let's Get Organized" or "Hire Me". |
+| **Experience** | Client-focused timeline. Each role card shows: **Client Type** (startup, agency, executive), **Services Provided** (tags), **Hours Worked**, **Tasks Completed**. Use warm metric callouts in sage/cream. Include **testimonial snippets** from clients. Timeline shows progression from General VA to Specialized VA to Executive Assistant. |
+| **Projects** | Showcase as **service packages**. Each project: Service Category → Scope of Work → Tools Used → Results (time saved, tasks automated). Include **before/after workflow comparisons**. Use clean card layout with organized checklists. Emphasize **automation** and **systemization** achievements. |
+| **Technologies** | Productivity stack organized by function: Communication (Slack, Zoom, Teams), Project Management (Notion, Asana, Trello, Monday.com), Automation (Zapier, Make, n8n), Calendar/Scheduling (Calendly, Google Calendar), Document Management (Google Workspace, Notion). Show how tools integrate in the VA workflow. |
+| **Certifications** | VA credentials: Certified Virtual Professional, Google Workspace Certification, Project Management (PMI), Social Media Management, Bookkeeping Basics. Display as **skill badge cards** with completion dates. Include **soft skills** badges (Time Management, Communication, Organization). |
+| **Education** | Standard education card. Emphasize: Business Administration, Communication, any specialized training relevant to VA work. |
+
+### Unique Elements
+
+- **Task completion metrics** as primary visual element
+- **Calendar/scheduling visualization** showing organized workflow
+- **Automation workflow diagrams** showing how tasks are streamlined
+- **Client type badges** on experience cards (Startup, Agency, Executive, etc.)
+- **Service category tags** (Administrative, Social Media, Email Management, Research, etc.)
+- **Sage green and warm cream color scheme** for calm and organized feel
+- **Checklist and checkbox motifs** throughout the design
+- **Before/After workflow comparisons** on project cards
+
+### Component Variants Needed
+
+- `VAHeroSection` — productivity metrics with calendar mockup and trust bar
+- `VAExperience` — client-focused timeline with testimonial snippets
+- `VAProjects` — service package cards with before/after workflows
+- `VATechnologies` — productivity stack organized by function
+- `VACertifications` — skill badge grid with soft skills emphasis
+- `VAHeader` — clean, organized, with "Let's Get Organized" CTA
+
+---
+
 ## Cross-Cutting Design Principles
 
 ### Section Ordering Flexibility
 
-Each role page controls its own section order in the page component. The dynamic `[role]` page already supports this. Static role pages (software-engineer, video-editor, gtm-engineer, data-analyst, social-media-manager, marketing-manager) should each define their own ordering.
+Each role page controls its own section order in the page component. The dynamic `[role]` page already supports this. Static role pages (software-engineer, video-editor, gtm-engineer, data-analyst, social-media-manager, marketing-manager, ecommerce-developer, cpa, sales-representative, virtual-assistant) should each define their own ordering.
 
 ### Component Architecture
 
@@ -306,6 +496,10 @@ src/components/<ComponentName>/
     Data.tsx         ← for data-analyst role
     Social.tsx       ← for social-media-manager role
     Marketing.tsx    ← for marketing-manager role
+    Ecommerce.tsx    ← for ecommerce-developer role
+    CPA.tsx          ← for cpa role
+    Sales.tsx        ← for sales-representative role
+    VA.tsx           ← for virtual-assistant role
 ```
 
 ### hero_config Usage
@@ -340,6 +534,10 @@ To minimize duplicate code while maintaining distinct designs:
 | **Data Analyst** | SoftwareEngineer (structure, tech grid) | Hero (dashboard style), Projects (notebook format) |
 | **Social Media Manager** | Video Editor (dark theme option), GTM (metrics) | Hero (gradient + device mockup), Projects (post mockups) |
 | **Marketing Manager** | GTM (metrics, case studies), Data Analyst (charts) | Hero (funnel visual), Projects (before/after metrics) |
+| **E-Commerce Developer** | SoftwareEngineer (card grid structure), GTM (metrics) | Hero (storefront style), Projects (product cards), Experience (brand portfolio) |
+| **CPA** | SoftwareEngineer (card structure), GTM (metrics) | Hero (trust-focused), Certifications (prominent badge display) |
+| **Sales Representative** | GTM (metrics, case studies) | Hero (quota/metrics), Experience (attainment-focused), Projects (deal showcases) |
+| **Virtual Assistant** | SoftwareEngineer (card grid), GTM (metrics) | Hero (productivity dashboard), Projects (service packages), Experience (client testimonials) |
 
 ---
 
@@ -351,3 +549,7 @@ To minimize duplicate code while maintaining distinct designs:
 4. **Data Analyst** — medium effort. Dashboard aesthetic requires new hero and project variants.
 5. **Marketing Manager** — low-medium effort. Can reuse GTM structure with orange/amber theme swap.
 6. **Social Media Manager** — medium effort. Requires gradient hero, campaign mockups, platform-specific styling.
+7. **E-Commerce Developer** — low effort. Reuses Software Engineer card structure with emerald/amber color swap. Only needs custom Experience variant with conversion metrics mini-cards.
+8. **CPA** — low-medium effort. Reuses Software Engineer structure with conservative navy/gold color swap. Unique certification display with license verification.
+9. **Sales Representative** — low-medium effort. Reuses GTM metrics structure with red/charcoal theme. Unique quota attainment focus and deal showcase cards.
+10. **Virtual Assistant** — low effort. Reuses Software Engineer card structure with sage green/cream color swap. Unique productivity dashboard hero and service package project cards.
