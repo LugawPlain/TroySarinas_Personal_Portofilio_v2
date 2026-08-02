@@ -1,10 +1,19 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Award, ExternalLink, CheckCircle, BookOpen, MessageSquare, Clock } from "lucide-react";
+import { Icon, addCollection } from "@iconify/react";
+import mdiData from "@iconify-json/mdi/icons.json";
+
+let mdiCollectionAdded = false;
+
+function loadMDICollection() {
+  if (mdiCollectionAdded) return;
+  addCollection(mdiData as any);
+  mdiCollectionAdded = true;
+}
 
 interface Certification {
   id: string;
@@ -29,6 +38,10 @@ const VACertifications = ({
   title = "Skills & Certifications",
   subtitle = "Professional credentials and specialized training demonstrating expertise in virtual assistance",
 }: CertificationsProps) => {
+  useEffect(() => {
+    loadMDICollection();
+  }, []);
+
   if (allCerts.length === 0) return null;
 
   const professionalCerts = allCerts.filter((c) => !c.is_webinar);
@@ -81,7 +94,7 @@ const VACertifications = ({
 
       <div className="p-6 space-y-3">
         <div className="flex items-start gap-2">
-          <Award className="w-5 h-5 text-[#0d9488] shrink-0 mt-0.5" />
+          <Icon icon="mdi:award" className="w-5 h-5 text-[#0d9488] shrink-0 mt-0.5" />
           <div>
             <h3 className="text-lg font-bold text-gray-900 leading-tight">
               {cert.title}
@@ -101,7 +114,7 @@ const VACertifications = ({
               {cert.date_label && <span>{cert.date_label}</span>}
             </div>
             {cert.cert_url && (
-              <ExternalLink className="w-4 h-4 text-[#0d9488]" />
+              <Icon icon="mdi:open-in-new" className="w-4 h-4 text-[#0d9488]" />
             )}
           </div>
         )}
@@ -119,7 +132,7 @@ const VACertifications = ({
         <div className="text-center mb-12">
           <div className="flex items-center justify-center gap-2 mb-4">
             <div className="w-8 h-8 rounded-lg bg-[#0d9488]/10 flex items-center justify-center">
-              <Award className="w-4 h-4 text-[#0d9488]" />
+              <Icon icon="mdi:award" className="w-4 h-4 text-[#0d9488]" />
             </div>
             <span className="text-sm font-semibold text-[#0d9488] uppercase tracking-wider">
               Credentials
@@ -143,7 +156,7 @@ const VACertifications = ({
                 key={skill}
                 className="bg-white border-2 border-[#0d9488]/30 text-[#0f766e] px-4 py-2 rounded-full font-bold text-sm shadow-sm flex items-center gap-2"
               >
-                <CheckCircle className="w-4 h-4 text-[#0d9488]" />
+                <Icon icon="mdi:check-circle" className="w-4 h-4 text-[#0d9488]" />
                 {skill}
               </div>
             ))}

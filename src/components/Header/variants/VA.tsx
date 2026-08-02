@@ -3,23 +3,26 @@
 import React, { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
+import { Icon, addCollection } from "@iconify/react";
+import mdiData from "@iconify-json/mdi/icons.json";
 import {
   Briefcase,
-  ListChecks,
-  Terminal,
-  Clock,
-  Award,
-  Users,
-  X,
   Menu,
-  Settings2,
   Moon,
-  Sun,
   MousePointer2,
-  ChevronRight,
-  Sparkles,
+  Settings2,
+  Sun,
+  X,
 } from "lucide-react";
 import Link from "next/link";
+
+let mdiCollectionAdded = false;
+
+function loadMDICollection() {
+  if (mdiCollectionAdded) return;
+  addCollection(mdiData as any);
+  mdiCollectionAdded = true;
+}
 
 import { useCursor } from "../../CursorProvider";
 import { Button } from "../../ui/button";
@@ -27,6 +30,10 @@ import ContactModal from "../../ContactModal";
 import { useContactModal } from "@/contexts/ContactModalContext";
 
 const VAHeader = () => {
+  useEffect(() => {
+    loadMDICollection();
+  }, []);
+
   const pathname = usePathname();
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
@@ -45,22 +52,22 @@ const VAHeader = () => {
     {
       name: "Projects",
       href: rolePrefix ? `${rolePrefix}/projects` : "/projects",
-      icon: ListChecks,
+      icon: "mdi:check-list",
     },
     {
       name: "Blogs",
       href: rolePrefix ? `${rolePrefix}/blog` : "/blog",
-      icon: Terminal,
+      icon: "mdi:terminal",
     },
     {
       name: "Experience",
       href: "#experience",
-      icon: Clock,
+      icon: "mdi:clock",
     },
     {
       name: "Certifications",
       href: "#certifications",
-      icon: Award,
+      icon: "mdi:award",
     },
   ];
 
@@ -175,7 +182,6 @@ const VAHeader = () => {
             {/* Desktop Navigation */}
             <nav className="hidden xl:flex items-center gap-1">
               {navLinks.map((link) => {
-                const Icon = link.icon;
                 const active = isActive(link.href);
                 return (
                   <a
@@ -189,7 +195,7 @@ const VAHeader = () => {
                         : "text-stone-600/80 hover:text-[#0f766e] hover:bg-[#0d9488]/5"
                       }`}
                   >
-                    <Icon className="w-3.5 h-3.5" />
+                    <Icon icon={link.icon} className="w-3.5 h-3.5" />
                     {link.name}
                     {active && (
                       <motion.div
@@ -363,7 +369,6 @@ const VAHeader = () => {
                 <nav className="p-3">
                   <ul className="space-y-1">
                     {navLinks.map((link) => {
-                      const Icon = link.icon;
                       const active = isActive(link.href);
                       return (
                         <li key={link.name}>
@@ -377,7 +382,7 @@ const VAHeader = () => {
                                 : "text-stone-600/80 hover:text-[#0f766e] hover:bg-[#0d9488]/5"
                               }`}
                           >
-                            <Icon className="w-4 h-4" />
+                            <Icon icon={link.icon} className="w-4 h-4" />
                             {link.name}
                             {active && (
                               <motion.div

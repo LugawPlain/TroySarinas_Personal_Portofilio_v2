@@ -1,20 +1,21 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { motion } from "framer-motion";
-import {
-  Calendar,
-  Headphones,
-  FolderOpen,
-  Share2,
-  BarChart3,
-  Sparkles,
-  Check,
-  Zap,
-} from "lucide-react";
+import { Check, Sparkles } from "lucide-react";
+import { Icon, addCollection } from "@iconify/react";
+import mdiData from "@iconify-json/mdi/icons.json";
+
+let mdiCollectionAdded = false;
+
+function loadMDICollection() {
+  if (mdiCollectionAdded) return;
+  addCollection(mdiData as any);
+  mdiCollectionAdded = true;
+}
 
 interface ServiceCategory {
-  icon: React.ElementType;
+  icon: string;
   title: string;
   items: string[];
   gradient: string;
@@ -23,7 +24,7 @@ interface ServiceCategory {
 
 const serviceCategories: ServiceCategory[] = [
   {
-    icon: Calendar,
+    icon: "mdi:calendar",
     title: "Executive Assistance",
     items: [
       "Calendar & Schedule Management",
@@ -36,7 +37,7 @@ const serviceCategories: ServiceCategory[] = [
     shadowColor: "shadow-[#0d9488]/15",
   },
   {
-    icon: Headphones,
+    icon: "mdi:headphones",
     title: "Customer Support",
     items: [
       "Phone Support",
@@ -49,7 +50,7 @@ const serviceCategories: ServiceCategory[] = [
     shadowColor: "shadow-[#0891b2]/15",
   },
   {
-    icon: FolderOpen,
+    icon: "mdi:folder-open",
     title: "Administrative Support",
     items: [
       "Data Entry",
@@ -62,7 +63,7 @@ const serviceCategories: ServiceCategory[] = [
     shadowColor: "shadow-[#0f766e]/15",
   },
   {
-    icon: Share2,
+    icon: "mdi:share-variant",
     title: "Social Media Support",
     items: [
       "Canva Graphic Design",
@@ -75,7 +76,7 @@ const serviceCategories: ServiceCategory[] = [
     shadowColor: "shadow-[#14b8a6]/15",
   },
   {
-    icon: BarChart3,
+    icon: "mdi:chart-bar",
     title: "Data & Task Management",
     items: [
       "Data Entry & Updates",
@@ -88,7 +89,7 @@ const serviceCategories: ServiceCategory[] = [
     shadowColor: "shadow-[#0e7490]/15",
   },
   {
-    icon: Zap,
+    icon: "mdi:lightning-bolt",
     title: "AI Tools Proficiency",
     items: [
       "ChatGPT",
@@ -103,10 +104,14 @@ const serviceCategories: ServiceCategory[] = [
 ];
 
 const VAServices = () => {
+  useEffect(() => {
+    loadMDICollection();
+  }, []);
+
   return (
     <section
       id="services"
-      className="relative w-full py-20 sm:py-24 overflow-hidden bg-gradient-to-b from-[#f0fdfa] to-white"
+      className="relative py-20 sm:py-24 overflow-hidden bg-gradient-to-b from-[#f0fdfa] to-white"
     >
       {/* Background decorations */}
       <div className="absolute inset-0 pointer-events-none">
@@ -124,8 +129,10 @@ const VAServices = () => {
           className="text-center mb-14"
         >
           <div className="inline-flex items-center gap-2 mb-4 px-4 py-2 rounded-full bg-white border border-[#0d9488]/20 shadow-sm">
-            <Sparkles className="w-4 h-4 text-[#0d9488]" />
-            <span className="text-sm font-bold text-[#0d9488] uppercase tracking-wider">My Services</span>
+            <Icon icon="mdi:sparkles" className="w-4 h-4 text-[#0d9488]" />
+            <span className="text-sm font-bold text-[#0d9488] uppercase tracking-wider">
+              My Services
+            </span>
           </div>
 
           <h2 className="text-4xl sm:text-5xl xl:text-6xl font-bold text-gray-900 font-fraunces mb-4 leading-tight">
@@ -135,7 +142,8 @@ const VAServices = () => {
             </span>
           </h2>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Reliable support for your daily operations so you can focus on growth.
+            Reliable support for your daily operations so you can focus on
+            growth.
           </p>
         </motion.div>
 
@@ -161,7 +169,7 @@ const VAServices = () => {
                   <div
                     className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${category.gradient} flex items-center justify-center shadow-lg shrink-0`}
                   >
-                    <category.icon className="w-7 h-7 text-white" />
+                    <Icon icon={category.icon} className="w-7 h-7 text-white" />
                   </div>
                   <div className="pt-1">
                     <h3 className="text-xl font-bold text-gray-900 leading-tight">
@@ -199,7 +207,8 @@ const VAServices = () => {
           className="mt-12"
         >
           <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-slate-900 via-[#0f172a] to-slate-900 p-6 sm:p-8 shadow-2xl">
-            <div className="absolute inset-0 opacity-10"
+            <div
+              className="absolute inset-0 opacity-10"
               style={{
                 backgroundImage: `radial-gradient(circle at 1px 1px, #2dd4bf 1px, transparent 0)`,
                 backgroundSize: "32px 32px",
@@ -211,13 +220,15 @@ const VAServices = () => {
               </div>
               <p className="text-center sm:text-left text-white text-lg sm:text-xl font-medium leading-relaxed">
                 I provide{" "}
-                <span className="text-[#2dd4bf] font-bold">efficient</span>
-                ,{" "}
-                <span className="text-[#2dd4bf] font-bold">organized</span>
-                , and{" "}
+                <span className="text-[#2dd4bf] font-bold">efficient</span>,{" "}
+                <span className="text-[#2dd4bf] font-bold">organized</span>, and{" "}
                 <span className="text-[#2dd4bf] font-bold">reliable</span>{" "}
-                support to help your business run smoothly so you can focus on what matters most —{" "}
-                <span className="text-[#2dd4bf] font-bold">growing your business</span>.
+                support to help your business run smoothly so you can focus on
+                what matters most —{" "}
+                <span className="text-[#2dd4bf] font-bold">
+                  growing your business
+                </span>
+                .
               </p>
             </div>
           </div>

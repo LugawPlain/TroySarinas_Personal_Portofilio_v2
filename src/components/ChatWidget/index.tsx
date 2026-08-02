@@ -15,6 +15,8 @@ export default function ChatWidget() {
       return <GTMEngineerChatWidget />;
     case "ecommerce-developer":
       return <StandardChatWidget />;
+    case "virtual-assistant":
+      return <></>;
     default:
       return <StandardChatWidget />;
   }

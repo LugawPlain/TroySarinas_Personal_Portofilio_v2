@@ -50,21 +50,21 @@ export default function VAContent({
           />
         </TrackedSection>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-32">
+        <div className="mx-auto  space-y-32">
           {/* 2. Services - What I Can Do */}
           <TrackedSection id="services_view">
             <Services />
           </TrackedSection>
 
           {/* 3. Experience - Client Support Timeline */}
-          <TrackedSection id="experience_view">
+          {/* <TrackedSection id="experience_view">
             <Experience initialExperience={experience} />
-          </TrackedSection>
+          </TrackedSection> */}
 
           {/* 4. Projects - Service Showcases */}
-          <TrackedSection id="projects_view">
+          {/* <TrackedSection id="projects_view">
             <Projects initialProjects={projects} />
-          </TrackedSection>
+          </TrackedSection> */}
 
           {/* 5. Certifications - VA Credentials */}
           <TrackedSection id="certifications_view">
