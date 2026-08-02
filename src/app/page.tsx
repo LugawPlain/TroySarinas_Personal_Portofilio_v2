@@ -33,7 +33,7 @@ export default async function Home({
         <Education educationItems={educationItems} />
         {/* <Technologies /> */}
         {/* <Certifications /> */}
-        <ChatWidget />
+        {/* <ChatWidget /> */}
       </div>
     </>
   );

@@ -1,11 +1,21 @@
 "use client";
 
 import Image from "next/image";
-import React from "react";
+import React, { useEffect } from "react";
 import { MdImageNotSupported } from "react-icons/md";
+import { Star } from "lucide-react";
 import DynamicIcon from "../../DynamicIcon";
 import { motion } from "framer-motion";
-import { Briefcase, Clock, Users, Star, CheckCircle } from "lucide-react";
+import { Icon, addCollection } from "@iconify/react";
+import mdiData from "@iconify-json/mdi/icons.json";
+
+let mdiCollectionAdded = false;
+
+function loadMDICollection() {
+  if (mdiCollectionAdded) return;
+  addCollection(mdiData as any);
+  mdiCollectionAdded = true;
+}
 
 interface ExperienceHighlights {
   icon?: string;
@@ -39,6 +49,10 @@ const parseMetric = (title: string): { value: string; label: string } | null => 
 };
 
 const VAExperience = ({ initialExperience }: ExperienceProps) => {
+  useEffect(() => {
+    loadMDICollection();
+  }, []);
+
   return (
     <div
       id="experience"
@@ -48,7 +62,7 @@ const VAExperience = ({ initialExperience }: ExperienceProps) => {
       <div className="text-center mb-8">
         <div className="flex items-center justify-center gap-2 mb-4">
           <div className="w-8 h-8 rounded-lg bg-[#0d9488]/10 flex items-center justify-center">
-            <Briefcase className="w-4 h-4 text-[#0d9488]" />
+            <Icon icon="mdi:briefcase" className="w-4 h-4 text-[#0d9488]" />
           </div>
           <span className="text-sm font-semibold text-[#0d9488] uppercase tracking-wider">
             Client Experience
@@ -120,7 +134,7 @@ const VAExperience = ({ initialExperience }: ExperienceProps) => {
                   {metricHighlights.length > 0 && (
                     <div className="bg-gradient-to-r from-[#0d9488]/5 to-[#0d9488]/10 border-b border-[#0d9488]/10 p-6">
                       <div className="flex items-center gap-2 mb-4">
-                        <Clock className="w-4 h-4 text-[#0d9488]" />
+                        <Icon icon="mdi:clock" className="w-4 h-4 text-[#0d9488]" />
                         <span className="text-xs font-bold text-[#0d9488] uppercase tracking-wider">Key Metrics</span>
                       </div>
                       <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
@@ -143,7 +157,7 @@ const VAExperience = ({ initialExperience }: ExperienceProps) => {
                     <div className="flex flex-wrap items-center gap-3 mb-4 text-sm text-gray-500">
                       <span className="bg-gray-100 px-3 py-1 rounded-full font-medium">{exp.period}</span>
                       <span className="flex items-center gap-1">
-                        <Users className="w-3 h-3" />
+                        <Icon icon="mdi:account-multiple" className="w-3 h-3" />
                         {exp.location}
                       </span>
                     </div>

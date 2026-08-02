@@ -1,12 +1,22 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { CheckCircle, Clock, Zap, ExternalLink, ListChecks, ArrowRightLeft } from "lucide-react";
+import { Icon, addCollection } from "@iconify/react";
+import mdiData from "@iconify-json/mdi/icons.json";
+import { ExternalLink } from "lucide-react";
 import { useTrack } from "@/hooks/use-track";
 import { Project } from "@/lib/projects";
+
+let mdiCollectionAdded = false;
+
+function loadMDICollection() {
+  if (mdiCollectionAdded) return;
+  addCollection(mdiData as any);
+  mdiCollectionAdded = true;
+}
 
 interface ProjectsProps {
   projects: Project[];
@@ -14,6 +24,10 @@ interface ProjectsProps {
 }
 
 const VAProjects = ({ projects, role }: ProjectsProps) => {
+  useEffect(() => {
+    loadMDICollection();
+  }, []);
+
   const rolePrefix = role ? `/portfolio/${role}` : "";
   const trackProject = useTrack("project_click", "projects");
 
@@ -27,7 +41,7 @@ const VAProjects = ({ projects, role }: ProjectsProps) => {
         <div className="text-center mb-12">
           <div className="flex items-center justify-center gap-2 mb-4">
             <div className="w-8 h-8 rounded-lg bg-[#0d9488]/10 flex items-center justify-center">
-              <ListChecks className="w-4 h-4 text-[#0d9488]" />
+              <Icon icon="mdi:check-list" className="w-4 h-4 text-[#0d9488]" />
             </div>
             <span className="text-sm font-semibold text-[#0d9488] uppercase tracking-wider">
               Services
@@ -66,7 +80,7 @@ const VAProjects = ({ projects, role }: ProjectsProps) => {
                     <h3 className="text-xl font-bold text-gray-900">{project.title}</h3>
                   </div>
                   <div className="w-12 h-12 bg-[#0d9488]/10 rounded-xl flex items-center justify-center">
-                    <CheckCircle className="w-6 h-6 text-[#0d9488]" />
+                    <Icon icon="mdi:check-circle" className="w-6 h-6 text-[#0d9488]" />
                   </div>
                 </div>
 
@@ -78,17 +92,17 @@ const VAProjects = ({ projects, role }: ProjectsProps) => {
                 {/* Service Metrics */}
                 <div className="grid grid-cols-3 gap-4 mb-6 p-4 bg-[#f0fdfa] rounded-xl">
                   <div className="text-center">
-                    <Clock className="w-4 h-4 text-[#0d9488] mx-auto mb-1" />
+                    <Icon icon="mdi:clock" className="w-4 h-4 text-[#0d9488] mx-auto mb-1" />
                     <div className="text-sm font-bold text-gray-900">20h/mo</div>
                     <div className="text-[10px] text-gray-500">Time Saved</div>
                   </div>
                   <div className="text-center">
-                    <Zap className="w-4 h-4 text-[#0d9488] mx-auto mb-1" />
+                    <Icon icon="mdi:lightning-bolt" className="w-4 h-4 text-[#0d9488] mx-auto mb-1" />
                     <div className="text-sm font-bold text-gray-900">15+</div>
                     <div className="text-[10px] text-gray-500">Tasks/wk</div>
                   </div>
                   <div className="text-center">
-                    <CheckCircle className="w-4 h-4 text-[#0d9488] mx-auto mb-1" />
+                    <Icon icon="mdi:check-circle" className="w-4 h-4 text-[#0d9488] mx-auto mb-1" />
                     <div className="text-sm font-bold text-gray-900">99%</div>
                     <div className="text-[10px] text-gray-500">Accuracy</div>
                   </div>
@@ -97,7 +111,7 @@ const VAProjects = ({ projects, role }: ProjectsProps) => {
                 {/* Before/After */}
                 <div className="space-y-3 mb-6">
                   <div className="flex items-center gap-2">
-                    <ArrowRightLeft className="w-4 h-4 text-[#0d9488]" />
+                    <Icon icon="mdi:arrow-left-right" className="w-4 h-4 text-[#0d9488]" />
                     <span className="text-sm font-bold text-gray-700">Before & After</span>
                   </div>
                   <div className="grid grid-cols-2 gap-3">
@@ -122,7 +136,7 @@ const VAProjects = ({ projects, role }: ProjectsProps) => {
                       className="flex-1"
                     >
                       <button className="w-full py-3 bg-[#0d9488] text-white rounded-xl font-semibold text-sm hover:bg-[#0f766e] transition-colors flex items-center justify-center gap-2">
-                        <ExternalLink className="w-4 h-4" />
+                        <Icon icon="mdi:open-in-new" className="w-4 h-4" />
                         View Details
                       </button>
                     </Link>

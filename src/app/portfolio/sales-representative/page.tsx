@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { getProjects } from "@/lib/projects";
 import {
   getTechnologies,
@@ -11,8 +12,24 @@ import { notFound } from "next/navigation";
 import { getResumeForRole } from "@/lib/resume";
 import SalesContent from "./SalesContent";
 
+const role = "sales-representative";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const roleMetadata = await getRoleMetadata(role);
+
+  if (!roleMetadata) {
+    return {
+      title: "Portfolio Not Found",
+    };
+  }
+
+  return {
+    title: roleMetadata.title,
+    description: roleMetadata.headline,
+  };
+}
+
 export default async function SalesRepresentativePortfolio() {
-  const role = "sales-representative";
 
   const [
     roleMetadata,

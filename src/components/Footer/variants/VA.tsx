@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -11,17 +11,22 @@ import GitHubStarCount from "../../GithubStarCount";
 import GitHubButton from "react-github-btn";
 import BuyMeACoffeeButton from "../../BuyMeACoffeeButton";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
-import {
-  Briefcase,
-  Mail,
-  MapPin,
-  Phone,
-  ArrowUpRight,
-  Sparkles,
-  CheckCircle,
-} from "lucide-react";
+import { Icon, addCollection } from "@iconify/react";
+import mdiData from "@iconify-json/mdi/icons.json";
+
+let mdiCollectionAdded = false;
+
+function loadMDICollection() {
+  if (mdiCollectionAdded) return;
+  addCollection(mdiData as any);
+  mdiCollectionAdded = true;
+}
 
 const VAFooter = () => {
+  useEffect(() => {
+    loadMDICollection();
+  }, []);
+
   const router = useRouter();
   const { setIsContactModalOpen } = useContactModal();
 
@@ -69,7 +74,7 @@ const VAFooter = () => {
           >
             <div className="flex items-center gap-3 mb-6">
               <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#0d9488] to-[#14b8a6] flex items-center justify-center shadow-lg shadow-[#0d9488]/25">
-                <Briefcase className="w-6 h-6 text-white" />
+                <Icon icon="mdi:briefcase" className="w-6 h-6 text-white" />
               </div>
               <div>
                 <span className="text-sm font-medium text-[#2dd4bf]">Virtual Assistant</span>
@@ -91,7 +96,7 @@ const VAFooter = () => {
                 onClick={() => setIsContactModalOpen(true)}
                 className="rounded-full px-6 py-5 bg-gradient-to-r from-[#0d9488] to-[#14b8a6] hover:from-[#0f766e] hover:to-[#0d9488] text-white font-semibold shadow-lg shadow-[#0d9488]/25 transition-all hover:-translate-y-1"
               >
-                <Mail className="w-4 h-4 mr-2" />
+                <Icon icon="mdi:mail" className="w-4 h-4 mr-2" />
                 Let&apos;s Get Organized
               </Button>
               <Button
@@ -126,7 +131,7 @@ const VAFooter = () => {
             <ul className="space-y-3">
               {services.map((service) => (
                 <li key={service} className="flex items-center gap-2 text-slate-400">
-                  <CheckCircle className="w-4 h-4 text-[#0d9488]" />
+                  <Icon icon="mdi:check-circle" className="w-4 h-4 text-[#0d9488]" />
                   <span>{service}</span>
                 </li>
               ))}
@@ -134,7 +139,7 @@ const VAFooter = () => {
 
             <div className="mt-8 p-4 rounded-2xl bg-slate-800/50 border border-slate-700">
               <div className="flex items-center gap-2 mb-2">
-                <Sparkles className="w-4 h-4 text-[#2dd4bf]" />
+                <Icon icon="mdi:sparkles" className="w-4 h-4 text-[#2dd4bf]" />
                 <span className="text-sm font-semibold text-white">Quick Response</span>
               </div>
               <p className="text-xs text-slate-400">Average reply time under 2 hours on business days.</p>
@@ -160,7 +165,7 @@ const VAFooter = () => {
                     className="group flex items-center text-slate-400 hover:text-[#2dd4bf] transition-colors"
                   >
                     <span>{link.name}</span>
-                    <ArrowUpRight className="w-3 h-3 ml-1 opacity-0 group-hover:opacity-100 transition-opacity" />
+                    <Icon icon="mdi:arrow-top-right" className="w-3 h-3 ml-1 opacity-0 group-hover:opacity-100 transition-opacity" />
                   </Link>
                 </li>
               ))}
@@ -171,7 +176,7 @@ const VAFooter = () => {
             </h3>
             <div className="space-y-4">
               <div className="flex items-start gap-3">
-                <Mail className="w-5 h-5 text-slate-500 mt-0.5" />
+                <Icon icon="mdi:mail" className="w-5 h-5 text-slate-500 mt-0.5" />
                 <div>
                   <p className="text-sm text-slate-400">Email</p>
                   <a
@@ -183,14 +188,14 @@ const VAFooter = () => {
                 </div>
               </div>
               <div className="flex items-start gap-3">
-                <Phone className="w-5 h-5 text-slate-500 mt-0.5" />
+                <Icon icon="mdi:phone" className="w-5 h-5 text-slate-500 mt-0.5" />
                 <div>
                   <p className="text-sm text-slate-400">Phone</p>
                   <p className="text-white">+639569878251</p>
                 </div>
               </div>
               <div className="flex items-start gap-3">
-                <MapPin className="w-5 h-5 text-slate-500 mt-0.5" />
+                <Icon icon="mdi:map-marker" className="w-5 h-5 text-slate-500 mt-0.5" />
                 <div>
                   <p className="text-sm text-slate-400">Location</p>
                   <p className="text-white">Remote / Worldwide</p>

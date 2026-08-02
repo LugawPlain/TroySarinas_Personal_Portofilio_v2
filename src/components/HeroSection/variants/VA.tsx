@@ -1,25 +1,24 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { motion } from "framer-motion";
-import {
-  Calendar,
-  CheckCircle,
-  Clock,
-  Users,
-  Briefcase,
-  Mail,
-  MessageSquare,
-  FileText,
-  Search,
-  Sparkles,
-} from "lucide-react";
+import { Icon, addCollection } from "@iconify/react";
+import mdiData from "@iconify-json/mdi/icons.json";
+import { CheckCircle, Sparkles } from "lucide-react";
 import { HeroConfig } from "@/lib/roles";
 import ContactModal from "@/components/ContactModal";
 import Resume from "@/components/Resume";
 import { useHeroSection } from "@/hooks/use-hero-section";
+
+let mdiCollectionAdded = false;
+
+function loadMDICollection() {
+  if (mdiCollectionAdded) return;
+  addCollection(mdiData as any);
+  mdiCollectionAdded = true;
+}
 
 interface VAHeroSectionProps {
   headline?: string;
@@ -29,18 +28,34 @@ interface VAHeroSectionProps {
 }
 
 const trustLogos = [
-  { name: "Startups", initial: "ST", color: "bg-[#0d9488]/10 text-[#0d9488] border-[#0d9488]/30" },
-  { name: "Agencies", initial: "AG", color: "bg-[#0d9488]/10 text-[#0d9488] border-[#0d9488]/30" },
-  { name: "Consultants", initial: "CO", color: "bg-[#0d9488]/10 text-[#0d9488] border-[#0d9488]/30" },
-  { name: "Executives", initial: "EX", color: "bg-[#0d9488]/10 text-[#0d9488] border-[#0d9488]/30" },
+  {
+    name: "Startups",
+    initial: "ST",
+    color: "bg-[#0d9488]/10 text-[#0d9488] border-[#0d9488]/30",
+  },
+  {
+    name: "Agencies",
+    initial: "AG",
+    color: "bg-[#0d9488]/10 text-[#0d9488] border-[#0d9488]/30",
+  },
+  {
+    name: "Consultants",
+    initial: "CO",
+    color: "bg-[#0d9488]/10 text-[#0d9488] border-[#0d9488]/30",
+  },
+  {
+    name: "Executives",
+    initial: "EX",
+    color: "bg-[#0d9488]/10 text-[#0d9488] border-[#0d9488]/30",
+  },
 ];
 
 const servicePills = [
-  { label: "Email Management", icon: Mail },
-  { label: "Calendar Scheduling", icon: Calendar },
-  { label: "Research", icon: Search },
-  { label: "Documentation", icon: FileText },
-  { label: "Communication", icon: MessageSquare },
+  { label: "Email Management", icon: "mdi:mail" },
+  { label: "Calendar Scheduling", icon: "mdi:calendar" },
+  { label: "Research", icon: "mdi:magnify" },
+  { label: "Documentation", icon: "mdi:file-document" },
+  { label: "Communication", icon: "mdi:message-text" },
 ];
 
 const VAHeroSection = ({
@@ -49,6 +64,10 @@ const VAHeroSection = ({
   resumeUrl,
   heroConfig,
 }: VAHeroSectionProps) => {
+  useEffect(() => {
+    loadMDICollection();
+  }, []);
+
   const hero = useHeroSection(resumeUrl);
   const config = heroConfig || {
     subHeadline: "Organizing Your Business, One Task at a Time",
@@ -129,7 +148,7 @@ const VAHeroSection = ({
                   </div>
                 </div>
                 <div className="absolute -bottom-0.5 -right-0.5 w-7 h-7 bg-[#0d9488] rounded-full border-[3px] border-white flex items-center justify-center shadow-md">
-                  <CheckCircle className="w-3.5 h-3.5 text-white" />
+                  <Icon icon="mdi:check-circle" className="w-3.5 h-3.5 text-white" />
                 </div>
               </div>
             )}
@@ -166,7 +185,8 @@ const VAHeroSection = ({
             transition={{ duration: 0.5, delay: 0.3 }}
             className="text-xl sm:text-2xl font-semibold text-gray-600 mb-4 font-fraunces"
           >
-            {config.subHeadline || "Organizing Your Business, One Task at a Time"}
+            {config.subHeadline ||
+              "Organizing Your Business, One Task at a Time"}
           </motion.h3>
 
           {/* Bio */}
@@ -192,7 +212,7 @@ const VAHeroSection = ({
                 key={service.label}
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white border border-[#0d9488]/20 text-xs sm:text-sm font-medium text-[#0f766e] shadow-sm hover:shadow-md hover:border-[#0d9488]/40 transition-all"
               >
-                <service.icon className="w-3.5 h-3.5 text-[#0d9488]" />
+                <Icon icon={service.icon} className="w-3.5 h-3.5 text-[#0d9488]" />
                 {service.label}
               </div>
             ))}
@@ -212,7 +232,7 @@ const VAHeroSection = ({
               }}
               className="rounded-full cursor-pointer font-semibold px-8 py-6 bg-gradient-to-r from-[#0d9488] to-[#14b8a6] hover:from-[#14b8a6] hover:to-[#0f766e] text-white tracking-tight shadow-xl shadow-[#0d9488]/25 hover:shadow-2xl transition-all hover:-translate-y-1 text-base"
             >
-              <Briefcase className="w-4 h-4 mr-2" />
+              <Icon icon="mdi:briefcase" className="w-4 h-4 mr-2" />
               {config.ctaPrimary}
             </Button>
             <Button
@@ -261,11 +281,15 @@ const VAHeroSection = ({
               <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#0d9488] to-[#0f766e] flex items-center justify-center shadow-lg">
-                    <Sparkles className="w-5 h-5 text-white" />
+                    <Icon icon="mdi:sparkles" className="w-5 h-5 text-white" />
                   </div>
                   <div>
-                    <h3 className="font-bold text-gray-900">Productivity Dashboard</h3>
-                    <p className="text-xs text-gray-500">Real-time task overview</p>
+                    <h3 className="font-bold text-gray-900">
+                      Productivity Dashboard
+                    </h3>
+                    <p className="text-xs text-gray-500">
+                      Real-time task overview
+                    </p>
                   </div>
                 </div>
                 <span className="text-xs font-bold text-[#0d9488] bg-[#0d9488]/10 px-3 py-1 rounded-full">
@@ -276,10 +300,30 @@ const VAHeroSection = ({
               {/* Metrics Grid */}
               <div className="grid grid-cols-2 gap-4 mb-6">
                 {[
-                  { label: "Hours Saved", value: "1,000+", icon: Clock, gradient: "from-[#0d9488]/20 to-[#0d9488]/5" },
-                  { label: "Task Completion", value: "99%", icon: CheckCircle, gradient: "from-[#0f766e]/20 to-[#0f766e]/5" },
-                  { label: "Clients Served", value: "50+", icon: Users, gradient: "from-[#5eead4]/40 to-[#5eead4]/10" },
-                  { label: "Response Time", value: "<2h", icon: Calendar, gradient: "from-[#0d9488]/20 to-[#5eead4]/10" },
+                  {
+                    label: "Hours Saved",
+                    value: "1,000+",
+                    icon: "mdi:clock",
+                    gradient: "from-[#0d9488]/20 to-[#0d9488]/5",
+                  },
+                  {
+                    label: "Task Completion",
+                    value: "99%",
+                    icon: "mdi:check-circle",
+                    gradient: "from-[#0f766e]/20 to-[#0f766e]/5",
+                  },
+                  {
+                    label: "Clients Served",
+                    value: "50+",
+                    icon: "mdi:account-multiple",
+                    gradient: "from-[#5eead4]/40 to-[#5eead4]/10",
+                  },
+                  {
+                    label: "Response Time",
+                    value: "<2h",
+                    icon: "mdi:calendar",
+                    gradient: "from-[#0d9488]/20 to-[#5eead4]/10",
+                  },
                 ].map((metric, index) => (
                   <motion.div
                     key={metric.label}
@@ -288,8 +332,10 @@ const VAHeroSection = ({
                     transition={{ delay: 0.5 + index * 0.1, duration: 0.4 }}
                     className={`bg-gradient-to-br ${metric.gradient} rounded-2xl border border-white/60 p-4 hover:shadow-md transition-shadow`}
                   >
-                    <metric.icon className="w-5 h-5 text-[#0d9488] mb-2" />
-                    <h4 className="text-2xl font-bold text-gray-900">{metric.value}</h4>
+                    <Icon icon={metric.icon} className="w-5 h-5 text-[#0d9488] mb-2" />
+                    <h4 className="text-2xl font-bold text-gray-900">
+                      {metric.value}
+                    </h4>
                     <p className="text-xs text-gray-500">{metric.label}</p>
                   </motion.div>
                 ))}
@@ -298,22 +344,41 @@ const VAHeroSection = ({
               {/* Calendar Mockup */}
               <div className="bg-[#f0fdfa] rounded-2xl p-5">
                 <div className="flex items-center justify-between mb-4">
-                  <span className="text-sm font-bold text-gray-700">Efficient Scheduling</span>
-                  <span className="text-xs font-bold text-[#0d9488] bg-[#0d9488]/10 px-2 py-1 rounded-full">Organized</span>
+                  <span className="text-sm font-bold text-gray-700">
+                    Efficient Scheduling
+                  </span>
+                  <span className="text-xs font-bold text-[#0d9488] bg-[#0d9488]/10 px-2 py-1 rounded-full">
+                    Organized
+                  </span>
                 </div>
                 <div className="space-y-2">
                   {[
                     { time: "9:00 AM", task: "Client Meeting", done: true },
                     { time: "10:30 AM", task: "Email Management", done: true },
                     { time: "1:00 PM", task: "Project Research", done: false },
-                    { time: "3:00 PM", task: "Report Preparation", done: false },
+                    {
+                      time: "3:00 PM",
+                      task: "Report Preparation",
+                      done: false,
+                    },
                   ].map((item, i) => (
-                    <div key={i} className="flex items-center gap-3 p-2.5 rounded-xl bg-white shadow-sm">
-                      <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${item.done ? 'bg-[#0d9488] border-[#0d9488]' : 'border-gray-300'}`}>
-                        {item.done && <CheckCircle className="w-3 h-3 text-white" />}
+                    <div
+                      key={i}
+                      className="flex items-center gap-3 p-2.5 rounded-xl bg-white shadow-sm"
+                    >
+                      <div
+                        className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${item.done ? "bg-[#0d9488] border-[#0d9488]" : "border-gray-300"}`}
+                      >
+                        {item.done && (
+                          <CheckCircle className="w-3 h-3 text-white" />
+                        )}
                       </div>
-                      <span className="text-xs text-gray-500 w-16 font-medium">{item.time}</span>
-                      <span className="text-sm font-semibold text-gray-700">{item.task}</span>
+                      <span className="text-xs text-gray-500 w-16 font-medium">
+                        {item.time}
+                      </span>
+                      <span className="text-sm font-semibold text-gray-700">
+                        {item.task}
+                      </span>
                     </div>
                   ))}
                 </div>
@@ -341,41 +406,20 @@ const VAHeroSection = ({
             <div>
               <div className="flex items-center gap-1 mb-0.5">
                 {[1, 2, 3, 4, 5].map((i) => (
-                  <Sparkles key={i} className="w-3 h-3 text-amber-400 fill-amber-400" />
+                  <Sparkles
+                    key={i}
+                    className="w-3 h-3 text-amber-400 fill-amber-400"
+                  />
                 ))}
               </div>
-              <p className="text-xs text-gray-600">Trusted by <span className="font-bold text-[#0d9488]">50+ clients</span></p>
+              <p className="text-xs text-gray-600">
+                Trusted by{" "}
+                <span className="font-bold text-[#0d9488]">50+ clients</span>
+              </p>
             </div>
           </motion.div>
         </div>
       </div>
-
-      {/* Trust Bar */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.8, duration: 0.5 }}
-        className="w-full border-t border-gray-100 bg-gray-50/50 backdrop-blur-sm py-8 relative z-10"
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-8">
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8">
-            <p className="text-xs sm:text-sm font-bold text-gray-400 uppercase tracking-widest whitespace-nowrap">
-              Trusted by professionals
-            </p>
-            <div className="flex flex-wrap justify-center items-center gap-3 sm:gap-4">
-              {trustLogos.map((logo) => (
-                <div
-                  key={logo.name}
-                  className={`flex items-center gap-2 px-4 py-2.5 rounded-xl border shadow-sm hover:shadow-md transition-all hover:-translate-y-0.5 ${logo.color}`}
-                >
-                  <span className="text-xs font-bold">{logo.initial}</span>
-                  <span className="text-sm font-semibold">{logo.name}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </motion.div>
 
       {/* Contact Modal */}
       <ContactModal

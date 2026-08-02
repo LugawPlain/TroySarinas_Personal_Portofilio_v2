@@ -1,20 +1,18 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { motion } from "framer-motion";
 import DynamicIcon from "@/components/DynamicIcon";
-import {
-  Zap,
-  Target,
-  ShieldCheck,
-  TrendingUp,
-  Users,
-  FileText,
-  Palette,
-  BarChart3,
-  MessageSquare,
-  Cpu,
-} from "lucide-react";
+import { Icon, addCollection } from "@iconify/react";
+import mdiData from "@iconify-json/mdi/icons.json";
+
+let mdiCollectionAdded = false;
+
+function loadMDICollection() {
+  if (mdiCollectionAdded) return;
+  addCollection(mdiData as any);
+  mdiCollectionAdded = true;
+}
 
 interface TechItem {
   name: string;
@@ -34,7 +32,7 @@ interface Tool {
 }
 
 interface ToolCategory {
-  icon: React.ElementType;
+  icon: string;
   title: string;
   tools: Tool[];
 }
@@ -78,12 +76,12 @@ const iconifyMap: Record<string, string> = {
 };
 
 const categoryOrder = [
-  { icon: FileText, title: "Productivity & Documents" },
-  { icon: Users, title: "Project Management" },
-  { icon: MessageSquare, title: "Communication & Call Tools" },
-  { icon: BarChart3, title: "CRM & Business Tools" },
-  { icon: Zap, title: "Automation" },
-  { icon: Palette, title: "Design & Content Creation" },
+  { icon: "mdi:file-document", title: "Productivity & Documents" },
+  { icon: "mdi:account-multiple", title: "Project Management" },
+  { icon: "mdi:message-text", title: "Communication & Call Tools" },
+  { icon: "mdi:chart-bar", title: "CRM & Business Tools" },
+  { icon: "mdi:lightning-bolt", title: "Automation" },
+  { icon: "mdi:palette", title: "Design & Content Creation" },
 ];
 
 const categoryKeywords: Record<string, string[]> = {
@@ -138,18 +136,22 @@ function categorizeTools(tech: TechItem[]): ToolCategory[] {
     }
   }
   if (buckets["Other Tools"]?.length) {
-    result.push({ icon: Cpu, title: "Other Tools", tools: buckets["Other Tools"] });
+    result.push({ icon: "mdi:cpu-64-bit", title: "Other Tools", tools: buckets["Other Tools"] });
   }
   return result;
 }
 
 const valueProps = [
-  { icon: Target, title: "Efficient", desc: "Smart tools, better results." },
-  { icon: ShieldCheck, title: "Reliable", desc: "You can count on me." },
-  { icon: TrendingUp, title: "Impactful", desc: "Focused on helping your business grow." },
+  { icon: "mdi:target", title: "Efficient", desc: "Smart tools, better results." },
+  { icon: "mdi:shield-check", title: "Reliable", desc: "You can count on me." },
+  { icon: "mdi:trending-up", title: "Impactful", desc: "Focused on helping your business grow." },
 ];
 
 const VATechnologies = ({ initialTech }: VATechnologiesProps) => {
+  useEffect(() => {
+    loadMDICollection();
+  }, []);
+
   const toolCategories = categorizeTools(initialTech);
 
   return (
@@ -173,7 +175,7 @@ const VATechnologies = ({ initialTech }: VATechnologiesProps) => {
           className="max-w-3xl mb-16"
         >
           <div className="inline-flex items-center gap-2 mb-6 px-4 py-2 rounded-full bg-white border border-[#0d9488]/20 shadow-sm">
-            <Zap className="w-4 h-4 text-[#0d9488]" />
+            <Icon icon="mdi:lightning-bolt" className="w-4 h-4 text-[#0d9488]" />
             <span className="text-sm font-bold text-[#0d9488] uppercase tracking-widest">My Toolkit</span>
           </div>
 
@@ -206,7 +208,7 @@ const VATechnologies = ({ initialTech }: VATechnologiesProps) => {
                 {/* Category Header */}
                 <div className="flex items-center gap-4 mb-6">
                   <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#0d9488] to-[#14b8a6] flex items-center justify-center shadow-lg">
-                    <category.icon className="w-6 h-6 text-white" />
+                    <Icon icon={category.icon} className="w-6 h-6 text-white" />
                   </div>
                   <div>
                     <h3 className="text-xl font-bold text-gray-900">{category.title}</h3>
@@ -262,7 +264,7 @@ const VATechnologies = ({ initialTech }: VATechnologiesProps) => {
             <div className="relative grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
               <div className="flex items-start gap-4">
                 <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#0d9488] to-[#14b8a6] flex items-center justify-center shadow-lg shrink-0">
-                  <Zap className="w-7 h-7 text-white" />
+                  <Icon icon="mdi:lightning-bolt" className="w-7 h-7 text-white" />
                 </div>
                 <p className="text-white text-lg sm:text-xl font-medium leading-relaxed">
                   I adapt quickly, learn continuously, and use the best tools to support businesses,{" "}
@@ -275,7 +277,7 @@ const VATechnologies = ({ initialTech }: VATechnologiesProps) => {
               <div className="grid grid-cols-3 gap-4">
                 {valueProps.map((prop) => (
                   <div key={prop.title} className="text-center">
-                    <prop.icon className="w-6 h-6 text-[#2dd4bf] mx-auto mb-2" />
+                    <Icon icon={prop.icon} className="w-6 h-6 text-[#2dd4bf] mx-auto mb-2" />
                     <h4 className="text-white font-bold text-sm">{prop.title}</h4>
                     <p className="text-slate-400 text-xs mt-1">{prop.desc}</p>
                   </div>

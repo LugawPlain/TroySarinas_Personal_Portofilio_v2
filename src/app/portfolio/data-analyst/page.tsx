@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { getProjects } from "@/lib/projects";
 import {
   getTechnologies,
@@ -19,8 +20,24 @@ import { getResumeForRole } from "@/lib/resume";
 import { TrackedSection } from "@/components/TrackedSection";
 import BubbleChartSection from "@/components/BubbleChartSection";
 
+const role = "data-analyst";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const roleMetadata = await getRoleMetadata(role);
+
+  if (!roleMetadata) {
+    return {
+      title: "Portfolio Not Found",
+    };
+  }
+
+  return {
+    title: roleMetadata.title,
+    description: roleMetadata.headline,
+  };
+}
+
 export default async function DataAnalystPortfolio() {
-  const role = "data-analyst";
 
   // Parallel data fetching
   const [

@@ -947,6 +947,7 @@ export function PortfolioContentManager({
                                 title: proj.title,
                                 description: proj.description,
                                 thumbnail_url: proj.thumbnail_url || "",
+                                hero_image_url: proj.hero_image_url || "",
                                 technologies: (proj.technologies || []).join(", "),
                                 live_url: proj.live_url || "",
                                 github_url: proj.github_url || "",
@@ -1296,18 +1297,30 @@ export function PortfolioContentManager({
                 setCreateLoading(true);
                 try {
                   let thumbnailUrl = createFormData.thumbnail_url;
+                  let heroImageUrl = createFormData.hero_image_url;
                   
-                  // Upload image if file selected
-                  if (createFormData.imageFile) {
+                  if (createFormData.thumbnailFile) {
                     const uploadFormData = new FormData();
-                    uploadFormData.append("file", createFormData.imageFile);
+                    uploadFormData.append("file", createFormData.thumbnailFile);
                     const result = await uploadProjectImage(uploadFormData);
                     if (result.error) {
-                      alert("Image upload failed: " + result.error);
+                      alert("Thumbnail upload failed: " + result.error);
                       setCreateLoading(false);
                       return;
                     }
                     thumbnailUrl = result.url;
+                  }
+
+                  if (createFormData.heroImageFile) {
+                    const uploadFormData = new FormData();
+                    uploadFormData.append("file", createFormData.heroImageFile);
+                    const result = await uploadProjectImage(uploadFormData);
+                    if (result.error) {
+                      alert("Hero image upload failed: " + result.error);
+                      setCreateLoading(false);
+                      return;
+                    }
+                    heroImageUrl = result.url;
                   }
                   
                   if (createType === "project") {
@@ -1315,6 +1328,7 @@ export function PortfolioContentManager({
                       title: createFormData.title,
                       description: createFormData.description,
                       thumbnail_url: thumbnailUrl,
+                      hero_image_url: heroImageUrl,
                       technologies: createFormData.technologies
                         ?.split(",")
                         .map((t: string) => t.trim())
@@ -1388,7 +1402,7 @@ export function PortfolioContentManager({
 
               {createType === "project" && (
                 <>
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
                         Technologies (comma-separated)
@@ -1407,7 +1421,7 @@ export function PortfolioContentManager({
                     </div>
                     <div className="space-y-2">
                       <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                        Project Image *
+                        Thumbnail Image
                       </label>
                       <div className="relative">
                         <input
@@ -1418,7 +1432,7 @@ export function PortfolioContentManager({
                             if (file) {
                               setCreateFormData((prev: any) => ({
                                 ...prev,
-                                imageFile: file,
+                                thumbnailFile: file,
                                 thumbnail_url: URL.createObjectURL(file),
                               }));
                             }
@@ -1430,12 +1444,43 @@ export function PortfolioContentManager({
                         <div className="mt-2 relative w-full h-32 rounded-lg overflow-hidden border">
                           <img 
                             src={createFormData.thumbnail_url} 
-                            alt="Preview" 
+                            alt="Thumbnail preview" 
                             className="w-full h-full object-cover"
                           />
                         </div>
                       )}
                     </div>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                      Hero Image
+                    </label>
+                    <div className="relative">
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) {
+                            setCreateFormData((prev: any) => ({
+                              ...prev,
+                              heroImageFile: file,
+                              hero_image_url: URL.createObjectURL(file),
+                            }));
+                          }
+                        }}
+                        className="w-full bg-background border rounded-lg px-4 py-3 outline-none focus:ring-2 focus:ring-purple-500/50 transition-all text-base file:mr-4 file:py-1 file:px-3 file:rounded-full file:border-0 file:text-xs file:font-bold file:bg-purple-500/10 file:text-purple-600 hover:file:bg-purple-500/20"
+                      />
+                    </div>
+                    {createFormData.hero_image_url && (
+                      <div className="mt-2 relative w-full h-32 rounded-lg overflow-hidden border">
+                        <img 
+                          src={createFormData.hero_image_url} 
+                          alt="Hero preview" 
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                    )}
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
@@ -1593,18 +1638,30 @@ export function PortfolioContentManager({
                 setEditLoading(true);
                 try {
                   let thumbnailUrl = editFormData.thumbnail_url;
+                  let heroImageUrl = editFormData.hero_image_url;
                   
-                  // Upload image if file selected
-                  if (editFormData.imageFile) {
+                  if (editFormData.thumbnailFile) {
                     const uploadFormData = new FormData();
-                    uploadFormData.append("file", editFormData.imageFile);
+                    uploadFormData.append("file", editFormData.thumbnailFile);
                     const result = await uploadProjectImage(uploadFormData);
                     if (result.error) {
-                      alert("Image upload failed: " + result.error);
+                      alert("Thumbnail upload failed: " + result.error);
                       setEditLoading(false);
                       return;
                     }
                     thumbnailUrl = result.url;
+                  }
+
+                  if (editFormData.heroImageFile) {
+                    const uploadFormData = new FormData();
+                    uploadFormData.append("file", editFormData.heroImageFile);
+                    const result = await uploadProjectImage(uploadFormData);
+                    if (result.error) {
+                      alert("Hero image upload failed: " + result.error);
+                      setEditLoading(false);
+                      return;
+                    }
+                    heroImageUrl = result.url;
                   }
                   
                   if (editType === "project" && editItem) {
@@ -1612,6 +1669,7 @@ export function PortfolioContentManager({
                       title: editFormData.title,
                       description: editFormData.description,
                       thumbnail_url: thumbnailUrl,
+                      hero_image_url: heroImageUrl,
                       technologies: editFormData.technologies
                         ?.split(",")
                         .map((t: string) => t.trim())
@@ -1686,7 +1744,7 @@ export function PortfolioContentManager({
 
               {editType === "project" && (
                 <>
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
                         Technologies (comma-separated)
@@ -1705,7 +1763,7 @@ export function PortfolioContentManager({
                     </div>
                     <div className="space-y-2">
                       <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                        Project Image
+                        Thumbnail Image
                       </label>
                       <div className="relative">
                         <input
@@ -1716,7 +1774,7 @@ export function PortfolioContentManager({
                             if (file) {
                               setEditFormData((prev: any) => ({
                                 ...prev,
-                                imageFile: file,
+                                thumbnailFile: file,
                                 thumbnail_url: URL.createObjectURL(file),
                               }));
                             }
@@ -1728,12 +1786,43 @@ export function PortfolioContentManager({
                         <div className="mt-2 relative w-full h-32 rounded-lg overflow-hidden border">
                           <img 
                             src={editFormData.thumbnail_url} 
-                            alt="Preview" 
+                            alt="Thumbnail preview" 
                             className="w-full h-full object-cover"
                           />
                         </div>
                       )}
                     </div>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                      Hero Image
+                    </label>
+                    <div className="relative">
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) {
+                            setEditFormData((prev: any) => ({
+                              ...prev,
+                              heroImageFile: file,
+                              hero_image_url: URL.createObjectURL(file),
+                            }));
+                          }
+                        }}
+                        className="w-full bg-background border rounded-lg px-4 py-3 outline-none focus:ring-2 focus:ring-purple-500/50 transition-all text-base file:mr-4 file:py-1 file:px-3 file:rounded-full file:border-0 file:text-xs file:font-bold file:bg-purple-500/10 file:text-purple-600 hover:file:bg-purple-500/20"
+                      />
+                    </div>
+                    {editFormData.hero_image_url && (
+                      <div className="mt-2 relative w-full h-32 rounded-lg overflow-hidden border">
+                        <img 
+                          src={editFormData.hero_image_url} 
+                          alt="Hero preview" 
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                    )}
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
