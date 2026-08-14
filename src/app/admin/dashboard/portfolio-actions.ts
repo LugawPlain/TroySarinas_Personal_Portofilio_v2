@@ -51,11 +51,87 @@ export async function toggleRoleRelationship(
     if (error) return { error: error.message };
   } else {
     // Unlinked -> Link (Insert)
-    const { error } = await supabase
-      .from(table)
-      .insert({ role_id: roleId, [targetField]: targetId });
+    const insertPayload =
+      table === "role_projects"
+        ? { role_id: roleId, [targetField]: targetId, is_featured: false }
+        : { role_id: roleId, [targetField]: targetId };
+
+    const { error } = await supabase.from(table).insert(insertPayload);
 
     if (error) return { error: error.message };
+  }
+
+  revalidatePath("/admin/dashboard");
+  revalidatePath("/portfolio/[role]", "layout");
+  return { success: true };
+}
+
+export async function setProjectFeaturedForRole(
+  roleId: string,
+  projectId: string,
+  isFeatured: boolean,
+) {
+  const supabase = await createClient();
+
+  console.log("setProjectFeaturedForRole start", {
+    roleId,
+    projectId,
+    isFeatured,
+  });
+
+  const { data: existingRows, error: selectError } = await supabase
+    .from("role_projects")
+    .select("role_id, project_id, is_featured")
+    .eq("role_id", roleId)
+    .eq("project_id", projectId)
+    .limit(1);
+
+  console.log("setProjectFeaturedForRole select result", {
+    existingRows,
+    selectError,
+  });
+
+  if (selectError) {
+    console.error("setProjectFeaturedForRole select error", selectError);
+    return { error: selectError.message };
+  }
+
+  const existing = existingRows?.[0];
+
+  if (existing) {
+    const updatePayload = { is_featured: isFeatured };
+    console.log("setProjectFeaturedForRole attempting update", {
+      matchingKey: { role_id: roleId, project_id: projectId },
+      updatePayload,
+    });
+
+    const { error } = await supabase
+      .from("role_projects")
+      .update(updatePayload)
+      .eq("role_id", roleId)
+      .eq("project_id", projectId);
+
+    if (error) {
+      console.error("setProjectFeaturedForRole update error", error);
+      return { error: error.message };
+    }
+  } else {
+    const insertPayload = {
+      role_id: roleId,
+      project_id: projectId,
+      is_featured: isFeatured,
+    };
+
+    console.log("setProjectFeaturedForRole attempting insert", insertPayload);
+
+    const { error } = await supabase
+      .from("role_projects")
+      .insert(insertPayload);
+
+    if (error) {
+      console.error("setProjectFeaturedForRole insert error", error);
+      return { error: error.message };
+    }
   }
 
   revalidatePath("/admin/dashboard");
@@ -112,7 +188,10 @@ export async function updateRoleResume(roleKey: string, resumeUrl: string) {
 export async function upsertTechnology(tech: any, roleId?: string) {
   const supabase = await createClient();
 
-  console.log("upsertTechnology called", { id: tech.id, icon_url: tech.icon_url });
+  console.log("upsertTechnology called", {
+    id: tech.id,
+    icon_url: tech.icon_url,
+  });
 
   let result;
   if (tech.id) {
@@ -475,14 +554,12 @@ export async function upsertSocialLink(socialLink: any, roleId?: string) {
 
     // Auto-link to role if provided
     if (roleId && newSocialLink) {
-      await supabase
-        .from("role_social_links")
-        .insert({
-          role_id: roleId,
-          social_link_id: newSocialLink.id,
-          is_enabled: true,
-          display_order: socialLink.display_order || 0,
-        });
+      await supabase.from("role_social_links").insert({
+        role_id: roleId,
+        social_link_id: newSocialLink.id,
+        is_enabled: true,
+        display_order: socialLink.display_order || 0,
+      });
     }
     result = { error: null };
   }
@@ -568,6 +645,7 @@ export async function createProject(projectData: {
     const roleInserts = projectData.roleIds.map((roleId) => ({
       role_id: roleId,
       project_id: project.id,
+      is_featured: false,
     }));
     await supabase.from("role_projects").insert(roleInserts);
   }
@@ -698,7 +776,7 @@ export async function updateProject(
     live_url?: string;
     github_url?: string;
     roleIds?: string[];
-  }
+  },
 ) {
   const supabase = await createClient();
 
@@ -731,6 +809,7 @@ export async function updateProject(
       const roleInserts = projectData.roleIds.map((roleId) => ({
         role_id: roleId,
         project_id: id,
+        is_featured: false,
       }));
       await supabase.from("role_projects").insert(roleInserts);
     }
@@ -751,7 +830,7 @@ export async function updateBlog(
     tags?: string[];
     images?: { url: string; alt: string }[];
     roleIds?: string[];
-  }
+  },
 ) {
   const supabase = await createClient();
 

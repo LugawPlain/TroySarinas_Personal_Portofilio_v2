@@ -5,6 +5,7 @@ import { createPortal } from "react-dom";
 import {
   updateRoleMetadata,
   toggleRoleRelationship,
+  setProjectFeaturedForRole,
   updateTechnologyProficiency,
   updateRoleResume,
   upsertTechnology,
@@ -105,7 +106,9 @@ export function PortfolioContentManager({
   const [localRoleCert, setLocalRoleCert] = useState(initialRoleCert);
   const [localRoleProj, setLocalRoleProj] = useState(initialRoleProj);
   const [localRoleBlog, setLocalRoleBlog] = useState(initialRoleBlog);
-  const [localRoleSocialLinks, setLocalRoleSocialLinks] = useState(initialRoleSocialLinks);
+  const [localRoleSocialLinks, setLocalRoleSocialLinks] = useState(
+    initialRoleSocialLinks,
+  );
 
   const [isPending, startTransition] = useTransition();
   const [saveStatus, setSaveStatus] = useState<string | null>(null);
@@ -244,6 +247,50 @@ export function PortfolioContentManager({
       (rp) => rp.role_id === selectedRole.id && rp.project_id === projId,
     );
 
+  const isProjFeatured = (projId: string) =>
+    localRoleProj.some(
+      (rp) =>
+        rp.role_id === selectedRole.id &&
+        rp.project_id === projId &&
+        rp.is_featured === true,
+    );
+
+  const handleToggleFeatured = (projectId: string) => {
+    const currentlyFeatured = isProjFeatured(projectId);
+
+    setLocalRoleProj((prev) => {
+      const existing = prev.some(
+        (rp) => rp.role_id === selectedRole.id && rp.project_id === projectId,
+      );
+
+      if (existing) {
+        return prev.map((rp) =>
+          rp.role_id === selectedRole.id && rp.project_id === projectId
+            ? { ...rp, is_featured: !currentlyFeatured }
+            : rp,
+        );
+      }
+
+      return [
+        ...prev,
+        { role_id: selectedRole.id, project_id: projectId, is_featured: true },
+      ];
+    });
+
+    startTransition(async () => {
+      const result = await setProjectFeaturedForRole(
+        selectedRole.id,
+        projectId,
+        !currentlyFeatured,
+      );
+
+      if (result?.error) {
+        setLocalRoleProj(initialRoleProj);
+        alert("Failed to update project feature flag. Please refresh.");
+      }
+    });
+  };
+
   const isBlogLinked = (blogId: string) =>
     localRoleBlog.some(
       (rb) => rb.role_id === selectedRole.id && rb.blog_id === blogId,
@@ -365,7 +412,11 @@ export function PortfolioContentManager({
       } else {
         setLocalRoleSocialLinks((prev) => [
           ...prev,
-          { role_id: selectedRole.id, social_link_id: targetId, is_enabled: true },
+          {
+            role_id: selectedRole.id,
+            social_link_id: targetId,
+            is_enabled: true,
+          },
         ]);
       }
     }
@@ -552,16 +603,20 @@ export function PortfolioContentManager({
                   <FileText className="w-3.5 h-3.5" />
                   Role Resume
                 </label>
-                
+
                 {(() => {
-                  const currentResume = resumes.find((r) => r.role_key === selectedRole.slug);
+                  const currentResume = resumes.find(
+                    (r) => r.role_key === selectedRole.slug,
+                  );
                   return currentResume?.resume_url ? (
                     <div className="space-y-3">
                       <div className="flex items-center gap-3 p-3 bg-muted/30 rounded-lg border">
                         <FileText className="w-5 h-5 text-accent" />
                         <div className="flex-1 min-w-0">
                           <p className="text-sm font-medium truncate">
-                            {currentResume.is_upload ? "Uploaded Resume" : "External Resume Link"}
+                            {currentResume.is_upload
+                              ? "Uploaded Resume"
+                              : "External Resume Link"}
                           </p>
                           <p className="text-xs text-muted-foreground truncate">
                             {currentResume.resume_url}
@@ -591,12 +646,16 @@ export function PortfolioContentManager({
                       className="border-2 border-dashed border-muted-foreground/25 rounded-xl p-6 flex flex-col items-center gap-2 cursor-pointer hover:border-accent hover:bg-accent/5 transition-all"
                     >
                       <Upload className="w-8 h-8 text-muted-foreground" />
-                      <p className="text-sm font-medium">Click to upload resume</p>
-                      <p className="text-xs text-muted-foreground">PDF, PNG, or JPG</p>
+                      <p className="text-sm font-medium">
+                        Click to upload resume
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        PDF, PNG, or JPG
+                      </p>
                     </div>
                   );
                 })()}
-                
+
                 <input
                   ref={fileInputRef}
                   type="file"
@@ -604,14 +663,14 @@ export function PortfolioContentManager({
                   onChange={handleResumeUpload}
                   className="hidden"
                 />
-                
+
                 {uploadingResume && (
                   <div className="flex items-center gap-2 text-sm text-muted-foreground">
                     <Loader2 className="w-4 h-4 animate-spin" />
                     Uploading...
                   </div>
                 )}
-                
+
                 <p className="text-[10px] text-muted-foreground italic">
                   This file will be served when visitors click "Download Resume"
                   on the {selectedRole.title} page.
@@ -681,11 +740,12 @@ export function PortfolioContentManager({
             </div>
 
             {/* Hero Configuration */}
-            <HeroConfigEditor 
-              selectedRole={selectedRole} 
+            <HeroConfigEditor
+              selectedRole={selectedRole}
               onSave={(status) => {
                 setSaveStatus(status);
-                if (status === "Synced") setTimeout(() => setSaveStatus(null), 2000);
+                if (status === "Synced")
+                  setTimeout(() => setSaveStatus(null), 2000);
               }}
             />
           </div>
@@ -890,10 +950,10 @@ export function PortfolioContentManager({
                 {projects.map((proj) => {
                   const linked = isProjLinked(proj.id);
                   const projRoleLinks = localRoleProj.filter(
-                    (rp: any) => rp.project_id === proj.id
+                    (rp: any) => rp.project_id === proj.id,
                   );
                   const linkedRoles = roles.filter((r: any) =>
-                    projRoleLinks.some((pr: any) => pr.role_id === r.id)
+                    projRoleLinks.some((pr: any) => pr.role_id === r.id),
                   );
                   return (
                     <div
@@ -922,7 +982,7 @@ export function PortfolioContentManager({
                           <p className="text-[10px] opacity-60 mt-1 line-clamp-1">
                             {proj.description}
                           </p>
-                          
+
                           {/* Role Tags */}
                           {linkedRoles.length > 0 && (
                             <div className="flex flex-wrap gap-1 mt-2">
@@ -936,6 +996,32 @@ export function PortfolioContentManager({
                               ))}
                             </div>
                           )}
+
+                          {linked && (
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleToggleFeatured(proj.id);
+                              }}
+                              className={`mt-3 inline-flex items-center gap-1.5 rounded-full border px-2 py-1 text-[9px] font-bold uppercase transition-colors ${
+                                isProjFeatured(proj.id)
+                                  ? "border-yellow-500/40 bg-yellow-500/10 text-yellow-700"
+                                  : "border-border bg-background text-muted-foreground hover:text-purple-600"
+                              }`}
+                            >
+                              <span
+                                className={`inline-block h-2 w-2 rounded-full ${
+                                  isProjFeatured(proj.id)
+                                    ? "bg-yellow-500"
+                                    : "bg-muted-foreground/40"
+                                }`}
+                              />
+                              {isProjFeatured(proj.id)
+                                ? "Featured"
+                                : "Mark Featured"}
+                            </button>
+                          )}
                         </div>
                         <div className="flex items-center gap-1 shrink-0">
                           <button
@@ -948,10 +1034,14 @@ export function PortfolioContentManager({
                                 description: proj.description,
                                 thumbnail_url: proj.thumbnail_url || "",
                                 hero_image_url: proj.hero_image_url || "",
-                                technologies: (proj.technologies || []).join(", "),
+                                technologies: (proj.technologies || []).join(
+                                  ", ",
+                                ),
                                 live_url: proj.live_url || "",
                                 github_url: proj.github_url || "",
-                                roleIds: projRoleLinks.map((pr: any) => pr.role_id),
+                                roleIds: projRoleLinks.map(
+                                  (pr: any) => pr.role_id,
+                                ),
                               });
                               setIsEditModalOpen(true);
                             }}
@@ -1007,10 +1097,10 @@ export function PortfolioContentManager({
                 {blogs.map((blog) => {
                   const linked = isBlogLinked(blog.id);
                   const blogRoleLinks = localRoleBlog.filter(
-                    (rb: any) => rb.blog_id === blog.id
+                    (rb: any) => rb.blog_id === blog.id,
                   );
                   const linkedRoles = roles.filter((r: any) =>
-                    blogRoleLinks.some((br: any) => br.role_id === r.id)
+                    blogRoleLinks.some((br: any) => br.role_id === r.id),
                   );
                   return (
                     <div
@@ -1025,7 +1115,12 @@ export function PortfolioContentManager({
                         <div className="flex-1 min-w-0">
                           <button
                             onClick={() =>
-                              handleToggle("role_blogs", blog.id, "blog_id", linked)
+                              handleToggle(
+                                "role_blogs",
+                                blog.id,
+                                "blog_id",
+                                linked,
+                              )
                             }
                             className="text-xs font-bold line-clamp-1 text-left w-full"
                           >
@@ -1034,7 +1129,7 @@ export function PortfolioContentManager({
                           <p className="text-[10px] opacity-60 mt-1 line-clamp-1">
                             {blog.excerpt || blog.description}
                           </p>
-                          
+
                           {/* Role Tags */}
                           {linkedRoles.length > 0 && (
                             <div className="flex flex-wrap gap-1 mt-2">
@@ -1060,7 +1155,9 @@ export function PortfolioContentManager({
                                 excerpt: blog.excerpt || "",
                                 content: blog.content || "",
                                 tags: (blog.tags || []).join(", "),
-                                roleIds: blogRoleLinks.map((br: any) => br.role_id),
+                                roleIds: blogRoleLinks.map(
+                                  (br: any) => br.role_id,
+                                ),
                               });
                               setIsEditModalOpen(true);
                             }}
@@ -1253,7 +1350,11 @@ export function PortfolioContentManager({
             selectedRole={selectedRole}
             onSave={(status) => {
               setSaveStatus(status);
-              if (status === "Chat config synced" || status === "Persona synced") setTimeout(() => setSaveStatus(null), 2000);
+              if (
+                status === "Chat config synced" ||
+                status === "Persona synced"
+              )
+                setTimeout(() => setSaveStatus(null), 2000);
             }}
           />
         )}
@@ -1298,7 +1399,7 @@ export function PortfolioContentManager({
                 try {
                   let thumbnailUrl = createFormData.thumbnail_url;
                   let heroImageUrl = createFormData.hero_image_url;
-                  
+
                   if (createFormData.thumbnailFile) {
                     const uploadFormData = new FormData();
                     uploadFormData.append("file", createFormData.thumbnailFile);
@@ -1322,7 +1423,7 @@ export function PortfolioContentManager({
                     }
                     heroImageUrl = result.url;
                   }
-                  
+
                   if (createType === "project") {
                     await createProject({
                       title: createFormData.title,
@@ -1442,9 +1543,9 @@ export function PortfolioContentManager({
                       </div>
                       {createFormData.thumbnail_url && (
                         <div className="mt-2 relative w-full h-32 rounded-lg overflow-hidden border">
-                          <img 
-                            src={createFormData.thumbnail_url} 
-                            alt="Thumbnail preview" 
+                          <img
+                            src={createFormData.thumbnail_url}
+                            alt="Thumbnail preview"
                             className="w-full h-full object-cover"
                           />
                         </div>
@@ -1474,9 +1575,9 @@ export function PortfolioContentManager({
                     </div>
                     {createFormData.hero_image_url && (
                       <div className="mt-2 relative w-full h-32 rounded-lg overflow-hidden border">
-                        <img 
-                          src={createFormData.hero_image_url} 
-                          alt="Hero preview" 
+                        <img
+                          src={createFormData.hero_image_url}
+                          alt="Hero preview"
                           className="w-full h-full object-cover"
                         />
                       </div>
@@ -1558,7 +1659,7 @@ export function PortfolioContentManager({
 
               <div className="space-y-2">
                 <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                  Portfolio Tags *
+                  Portfolio Tags (optional)
                 </label>
                 <div className="flex flex-wrap gap-2">
                   {roles.map((role: any) => (
@@ -1591,11 +1692,7 @@ export function PortfolioContentManager({
               <div className="pt-4 border-t">
                 <button
                   type="submit"
-                  disabled={
-                    createLoading ||
-                    !createFormData.title ||
-                    !(createFormData.roleIds || []).length
-                  }
+                  disabled={createLoading || !createFormData.title}
                   className="w-full bg-gradient-to-r from-purple-500 to-purple-600 hover:opacity-90 text-white font-bold rounded-xl py-3 transition-all disabled:opacity-50"
                 >
                   {createLoading ? (
@@ -1639,7 +1736,7 @@ export function PortfolioContentManager({
                 try {
                   let thumbnailUrl = editFormData.thumbnail_url;
                   let heroImageUrl = editFormData.hero_image_url;
-                  
+
                   if (editFormData.thumbnailFile) {
                     const uploadFormData = new FormData();
                     uploadFormData.append("file", editFormData.thumbnailFile);
@@ -1663,7 +1760,7 @@ export function PortfolioContentManager({
                     }
                     heroImageUrl = result.url;
                   }
-                  
+
                   if (editType === "project" && editItem) {
                     await updateProject(editItem.id, {
                       title: editFormData.title,
@@ -1784,9 +1881,9 @@ export function PortfolioContentManager({
                       </div>
                       {editFormData.thumbnail_url && (
                         <div className="mt-2 relative w-full h-32 rounded-lg overflow-hidden border">
-                          <img 
-                            src={editFormData.thumbnail_url} 
-                            alt="Thumbnail preview" 
+                          <img
+                            src={editFormData.thumbnail_url}
+                            alt="Thumbnail preview"
                             className="w-full h-full object-cover"
                           />
                         </div>
@@ -1816,9 +1913,9 @@ export function PortfolioContentManager({
                     </div>
                     {editFormData.hero_image_url && (
                       <div className="mt-2 relative w-full h-32 rounded-lg overflow-hidden border">
-                        <img 
-                          src={editFormData.hero_image_url} 
-                          alt="Hero preview" 
+                        <img
+                          src={editFormData.hero_image_url}
+                          alt="Hero preview"
                           className="w-full h-full object-cover"
                         />
                       </div>
@@ -1900,7 +1997,7 @@ export function PortfolioContentManager({
 
               <div className="space-y-2">
                 <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                  Portfolio Tags *
+                  Portfolio Tags (optional)
                 </label>
                 <div className="flex flex-wrap gap-2">
                   {roles.map((role: any) => (
@@ -1933,11 +2030,7 @@ export function PortfolioContentManager({
               <div className="pt-4 border-t">
                 <button
                   type="submit"
-                  disabled={
-                    editLoading ||
-                    !editFormData.title ||
-                    !(editFormData.roleIds || []).length
-                  }
+                  disabled={editLoading || !editFormData.title}
                   className="w-full bg-gradient-to-r from-purple-500 to-purple-600 hover:opacity-90 text-white font-bold rounded-xl py-3 transition-all disabled:opacity-50"
                 >
                   {editLoading ? (
@@ -1963,18 +2056,29 @@ export function PortfolioContentManager({
 
 const ICON_LIBRARIES = [
   { value: "logos", label: "Brand Logos", placeholder: "e.g. microsoft-icon" },
-  { value: "simple-icons", label: "Simple Icons", placeholder: "e.g. microsoftexcel" },
+  {
+    value: "simple-icons",
+    label: "Simple Icons",
+    placeholder: "e.g. microsoftexcel",
+  },
   { value: "lucide", label: "Lucide", placeholder: "e.g. box" },
   { value: "fa", label: "Font Awesome", placeholder: "e.g. Microsoft" },
   { value: "fa6", label: "Font Awesome 6", placeholder: "e.g. Microsoft" },
-  { value: "si", label: "Simple Icons (legacy)", placeholder: "e.g. SiMicrosoftexcel" },
+  {
+    value: "si",
+    label: "Simple Icons (legacy)",
+    placeholder: "e.g. SiMicrosoftexcel",
+  },
   { value: "pi", label: "Phosphor", placeholder: "e.g. MicrosoftExcelLogo" },
   { value: "ri", label: "Remix Icon", placeholder: "e.g. MicrosoftFill" },
   { value: "io5", label: "Ionicons", placeholder: "e.g. LogoMicrosoft" },
   { value: "md", label: "Material", placeholder: "e.g. MdAutoAwesome" },
 ];
 
-function parseIconName(iconName?: string, iconUrl?: string): { source: string; name: string } {
+function parseIconName(
+  iconName?: string,
+  iconUrl?: string,
+): { source: string; name: string } {
   if (iconUrl) return { source: "custom", name: "" };
   if (!iconName) return { source: "logos", name: "" };
   const colonIdx = iconName.indexOf(":");
@@ -1986,7 +2090,11 @@ function parseIconName(iconName?: string, iconUrl?: string): { source: string; n
     }
   }
   // Legacy Simple Icons names default to si source
-  if (iconName.startsWith("Si") && iconName.length > 2 && iconName[2] === iconName[2].toUpperCase()) {
+  if (
+    iconName.startsWith("Si") &&
+    iconName.length > 2 &&
+    iconName[2] === iconName[2].toUpperCase()
+  ) {
     return { source: "si", name: iconName };
   }
   return { source: "logos", name: iconName };
@@ -2008,7 +2116,8 @@ function IconLibrarySelector({
   onChange: (iconName: string) => void;
   onOpenPicker: () => void;
 }) {
-  const selectedLib = ICON_LIBRARIES.find((l) => l.value === source) || ICON_LIBRARIES[0];
+  const selectedLib =
+    ICON_LIBRARIES.find((l) => l.value === source) || ICON_LIBRARIES[0];
 
   return (
     <div className="space-y-3">
@@ -2041,12 +2150,9 @@ function IconLibrarySelector({
             placeholder={selectedLib.placeholder}
           />
           <div className="w-12 h-12 rounded-lg border bg-white flex items-center justify-center overflow-hidden shrink-0">
-            <DynamicIcon
-              name={name ? `${source}:${name}` : ""}
-              size={24}
-            />
+            <DynamicIcon name={name ? `${source}:${name}` : ""} size={24} />
           </div>
-        </div>        
+        </div>
         <p className="text-xs text-muted-foreground">
           Preview updates as you type. Use the prefix automatically.
         </p>
@@ -2096,7 +2202,10 @@ function ContentEditorModal({
     e.preventDefault();
     const payload = { ...formData };
     if (type === "tech") {
-      payload.icon_name = buildIconName(formData._iconSource, formData._iconName);
+      payload.icon_name = buildIconName(
+        formData._iconSource,
+        formData._iconName,
+      );
       delete payload._iconSource;
       delete payload._iconName;
     }
@@ -2227,7 +2336,7 @@ function ContentEditorModal({
                   onOpenPicker={() => setShowIconPicker(true)}
                 />
 
-                {showIconPicker && (
+                {showIconPicker &&
                   createPortal(
                     <IconPicker
                       value={formData.icon_name || ""}
@@ -2239,9 +2348,8 @@ function ContentEditorModal({
                       }}
                       onClose={() => setShowIconPicker(false)}
                     />,
-                    document.body
-                  )
-                )}
+                    document.body,
+                  )}
               </div>
 
               <div className="space-y-2">
