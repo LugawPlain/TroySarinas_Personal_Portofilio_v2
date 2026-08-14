@@ -38,7 +38,6 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function SoftwareEngineerPortfolio() {
-
   // Parallel data fetching for performance
   const [
     roleMetadata,
@@ -51,7 +50,7 @@ export default async function SoftwareEngineerPortfolio() {
     socialLinks,
   ] = await Promise.all([
     getRoleMetadata(role),
-    getProjects(role),
+    getProjects(role, { featuredOnly: true }),
     getTechnologies(role),
     getExperience(role),
     getEducation(role),

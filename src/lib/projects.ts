@@ -27,15 +27,30 @@ interface ProjectRow {
   created_at?: string;
 }
 
-export async function getProjects(role?: string): Promise<Project[]> {
+export interface GetProjectsOptions {
+  featuredOnly?: boolean;
+}
+
+export async function getProjects(
+  role?: string,
+  options: GetProjectsOptions = {},
+): Promise<Project[]> {
+  const { featuredOnly = false } = options;
+
   let query = supabase
     .from("projects")
-    .select(role ? "*, role_projects!inner(job_roles!inner(slug))" : "*")
+    .select(
+      role ? "*, role_projects!inner(job_roles!inner(slug), is_featured)" : "*",
+    )
     .eq("is_published", true)
     .order("display_order", { ascending: true });
 
   if (role) {
     query = query.eq("role_projects.job_roles.slug", role);
+
+    if (featuredOnly) {
+      query = query.eq("role_projects.is_featured", true);
+    }
   }
 
   const { data, error } = await query;
