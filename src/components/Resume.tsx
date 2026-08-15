@@ -1,6 +1,7 @@
 "use client";
 import Image from "next/image";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { useRouter } from "next/navigation";
 import { X, Download, ExternalLink } from "lucide-react";
 import { useTrack } from "@/hooks/use-track";
@@ -36,33 +37,52 @@ const Resume = ({
 
   const handleViewFullSize = () => {
     trackView({ url: resumeUrl, format: isPdf ? "pdf" : "image" });
-    window.open(
-      resumeUrl || "/SoftwareEngineerDeveloperSarinas.png",
-      "_blank",
-    );
+    window.open(resumeUrl || "/SoftwareEngineerDeveloperSarinas.png", "_blank");
   };
 
   const src = resumeUrl || "/SoftwareEngineerDeveloperSarinas.png";
   const isPdf = src.endsWith(".pdf");
 
-  return (
+  const iframeSrc = isPdf ? `${src}#zoom=100` : src;
+  const [portalEl, setPortalEl] = useState<HTMLElement | null>(null);
+
+  useEffect(() => {
+    const el = document.createElement("div");
+    // give container a stable id/class for debugging
+    el.className = "resume-modal-portal";
+    document.body.appendChild(el);
+    setPortalEl(el);
+    return () => {
+      if (el.parentNode) el.parentNode.removeChild(el);
+    };
+  }, []);
+
+  const modal = (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/90"
+      className="fixed inset-0 z-[99999] flex items-center justify-center bg-black/70 backdrop-blur-sm"
       onClick={handleClose}
     >
       <div
-        className="flex w-[95vw] h-[90vh] gap-0"
+        className="w-[95vw] max-w-[1200px] h-[90vh] rounded-xl overflow-hidden shadow-2xl grid grid-cols-[1fr_56px] bg-white"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex-1 flex items-center justify-center overflow-hidden rounded-l-xl">
+        <div className="w-full h-full bg-white">
           {isPdf ? (
             <iframe
-              src={src}
-              className="w-full h-full bg-zinc-900"
+              src={iframeSrc}
               title="Resume PDF"
+              style={{
+                width: "100%",
+                height: "100%",
+                border: "0",
+                backgroundColor: "#ffffff",
+                transform: "none",
+                zoom: "100%",
+              }}
+              className="block"
             />
           ) : (
-            <div className="relative w-full h-full bg-zinc-900">
+            <div className="relative w-full h-full bg-white">
               <Image
                 alt="Resume"
                 src={src}
@@ -74,20 +94,20 @@ const Resume = ({
           )}
         </div>
 
-        <div className="w-14 bg-zinc-900/95 flex flex-col items-center justify-center gap-3 rounded-r-xl border-l border-white/5">
+        <div className="w-14 bg-white flex flex-col items-center justify-center gap-3 border-l border-gray-100">
           <button
             onClick={handleClose}
-            className="p-2.5 rounded-lg text-white/40 hover:text-white hover:bg-white/10 transition-all"
+            className="p-2.5 rounded-lg text-gray-500 hover:text-black hover:bg-gray-100 transition-all"
             aria-label="Close"
           >
             <X className="w-5 h-5" />
           </button>
 
-          <div className="w-6 h-px bg-white/10" />
+          <div className="w-6 h-px bg-gray-200" />
 
           <button
             onClick={handleDownload}
-            className="p-2.5 rounded-lg text-white/40 hover:text-white hover:bg-white/10 transition-all"
+            className="p-2.5 rounded-lg text-gray-500 hover:text-black hover:bg-gray-100 transition-all"
             aria-label="Download"
           >
             <Download className="w-5 h-5" />
@@ -95,7 +115,7 @@ const Resume = ({
 
           <button
             onClick={handleViewFullSize}
-            className="p-2.5 rounded-lg text-white/40 hover:text-white hover:bg-white/10 transition-all"
+            className="p-2.5 rounded-lg text-gray-500 hover:text-black hover:bg-gray-100 transition-all"
             aria-label="Open in new tab"
           >
             <ExternalLink className="w-5 h-5" />
@@ -104,6 +124,9 @@ const Resume = ({
       </div>
     </div>
   );
+
+  if (!portalEl) return null;
+  return createPortal(modal, portalEl);
 };
 
 export default Resume;

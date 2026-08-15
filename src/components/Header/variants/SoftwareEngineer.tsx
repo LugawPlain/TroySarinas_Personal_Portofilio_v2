@@ -2,16 +2,16 @@
 import React, { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { 
-  Terminal, 
-  Code2, 
-  X, 
+import {
+  Terminal,
+  Code2,
+  X,
   Menu,
   Settings2,
   Moon,
   Sun,
   MousePointer2,
-  ChevronRight
+  ChevronRight,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -41,23 +41,23 @@ const SoftwareEngineerHeader = () => {
       href: rolePrefix ? `${rolePrefix}/projects` : "/projects",
       icon: Code2,
     },
-    { 
-      name: "Blogs", 
+    {
+      name: "Blogs",
       href: rolePrefix ? `${rolePrefix}/blog` : "/blog",
       icon: Terminal,
     },
-    { 
-      name: "Experience", 
+    {
+      name: "Experience",
       href: "#experience",
       icon: ChevronRight,
     },
-    { 
-      name: "Education", 
+    {
+      name: "Education",
       href: "#education",
       icon: ChevronRight,
     },
-    { 
-      name: "Certifications", 
+    {
+      name: "Certifications",
       href: "#certifications",
       icon: ChevronRight,
     },
@@ -80,7 +80,12 @@ const SoftwareEngineerHeader = () => {
 
   useEffect(() => {
     const handleSectionObserver = () => {
-      const sections = ["experience", "education", "certifications", "technologies"];
+      const sections = [
+        "experience",
+        "education",
+        "certifications",
+        "technologies",
+      ];
       const observer = new IntersectionObserver(
         (entries) => {
           entries.forEach((entry) => {
@@ -89,7 +94,7 @@ const SoftwareEngineerHeader = () => {
             }
           });
         },
-        { threshold: 0.3 }
+        { threshold: 0.3 },
       );
 
       sections.forEach((section) => {
@@ -108,7 +113,8 @@ const SoftwareEngineerHeader = () => {
   const handleSmoothScroll = (e: React.MouseEvent, href: string) => {
     if (href.startsWith("#")) {
       // Only smooth scroll if we're on the main portfolio page or home
-      const isMainPortfolioPage = pathname === rolePrefix || pathname === `${rolePrefix}/`;
+      const isMainPortfolioPage =
+        pathname === rolePrefix || pathname === `${rolePrefix}/`;
       if (pathname === "/" || isMainPortfolioPage) {
         e.preventDefault();
         const targetId = href.substring(1);
@@ -117,7 +123,8 @@ const SoftwareEngineerHeader = () => {
         if (targetElement) {
           const headerOffset = 80;
           const elementPosition = targetElement.getBoundingClientRect().top;
-          const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+          const offsetPosition =
+            elementPosition + window.pageYOffset - headerOffset;
 
           window.scrollTo({
             top: offsetPosition,
@@ -144,20 +151,21 @@ const SoftwareEngineerHeader = () => {
         initial={{ y: 0 }}
         animate={{ y: isVisible ? 0 : -100 }}
         transition={{ duration: 0.3, ease: "easeInOut" }}
-        className="fixed top-0 left-0 right-0 z-50"
+        className="fixed top-0 left-0 right-0 z-20"
       >
         <div className="mx-4 sm:mx-6 lg:mx-8 mt-4">
-          <div 
+          <div
             className="backdrop-blur-[20px] bg-white/70 border border-[rgba(102,126,234,0.2)] 
               rounded-2xl shadow-lg shadow-[rgba(102,126,234,0.08)] 
               flex items-center justify-between px-4 sm:px-6 py-3"
           >
             {/* Logo */}
-            <Link 
+            <Link
               href={rolePrefix || "/"}
               className="flex items-center gap-2 sm:gap-3 group"
             >
-              <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-gradient-to-br from-[rgba(102,126,234,0.2)] to-[rgba(118,75,162,0.15)] 
+              <div
+                className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-gradient-to-br from-[rgba(102,126,234,0.2)] to-[rgba(118,75,162,0.15)] 
                 border border-[rgba(102,126,234,0.3)] flex items-center justify-center
                 group-hover:shadow-md transition-all duration-300"
               >
@@ -181,13 +189,18 @@ const SoftwareEngineerHeader = () => {
                 return (
                   <a
                     key={link.name}
-                    href={link.href.startsWith("#") ? (rolePrefix || "") + link.href : link.href}
+                    href={
+                      link.href.startsWith("#")
+                        ? (rolePrefix || "") + link.href
+                        : link.href
+                    }
                     onClick={(e) => handleSmoothScroll(e, link.href)}
                     className={`relative px-4 py-2 rounded-lg font-spacemono text-sm 
                       transition-all duration-300 flex items-center gap-1.5
-                      ${active 
-                        ? "text-secondary bg-[rgba(102,126,234,0.1)] font-semibold" 
-                        : "text-stone-600/80 hover:text-secondary hover:bg-[rgba(102,126,234,0.05)]"
+                      ${
+                        active
+                          ? "text-secondary bg-[rgba(102,126,234,0.1)] font-semibold"
+                          : "text-stone-600/80 hover:text-secondary hover:bg-[rgba(102,126,234,0.05)]"
                       }`}
                   >
                     <Icon className="w-3.5 h-3.5" />
@@ -196,7 +209,11 @@ const SoftwareEngineerHeader = () => {
                       <motion.div
                         layoutId="activeNav"
                         className="absolute bottom-0 left-2 right-2 h-0.5 bg-secondary/60 rounded-full"
-                        transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                        transition={{
+                          type: "spring",
+                          stiffness: 380,
+                          damping: 30,
+                        }}
                       />
                     )}
                   </a>
@@ -220,9 +237,10 @@ const SoftwareEngineerHeader = () => {
               <button
                 onClick={() => setIsSettingsOpen(!isSettingsOpen)}
                 className={`p-2 rounded-lg transition-all duration-300 
-                  ${isSettingsOpen 
-                    ? "bg-[rgba(102,126,234,0.15)] text-secondary" 
-                    : "hover:bg-[rgba(102,126,234,0.08)] text-stone-600/80"
+                  ${
+                    isSettingsOpen
+                      ? "bg-[rgba(102,126,234,0.15)] text-secondary"
+                      : "hover:bg-[rgba(102,126,234,0.08)] text-stone-600/80"
                   }`}
                 aria-label="Settings"
               >
@@ -233,13 +251,18 @@ const SoftwareEngineerHeader = () => {
               <button
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                 className={`xl:hidden p-2 rounded-lg transition-all duration-300 
-                  ${isMobileMenuOpen 
-                    ? "bg-[rgba(102,126,234,0.15)] text-secondary" 
-                    : "hover:bg-[rgba(102,126,234,0.08)] text-stone-600/80"
+                  ${
+                    isMobileMenuOpen
+                      ? "bg-[rgba(102,126,234,0.15)] text-secondary"
+                      : "hover:bg-[rgba(102,126,234,0.08)] text-stone-600/80"
                   }`}
                 aria-label="Toggle menu"
               >
-                {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+                {isMobileMenuOpen ? (
+                  <X className="w-5 h-5" />
+                ) : (
+                  <Menu className="w-5 h-5" />
+                )}
               </button>
             </div>
           </div>
@@ -261,7 +284,7 @@ const SoftwareEngineerHeader = () => {
                     <h3 className="font-spacemono text-xs uppercase tracking-wider text-stone-500 font-semibold mb-2">
                       Preferences
                     </h3>
-                    
+
                     {/* Dark Mode Toggle */}
                     <div className="flex items-center justify-between py-2">
                       <div className="flex items-center gap-2.5">
@@ -270,7 +293,9 @@ const SoftwareEngineerHeader = () => {
                         ) : (
                           <Sun className="w-4 h-4 text-secondary/70" />
                         )}
-                        <span className="text-sm font-medium text-stone-700">Dark Mode</span>
+                        <span className="text-sm font-medium text-stone-700">
+                          Dark Mode
+                        </span>
                       </div>
                       <button
                         onClick={() => setIsDarkMode(!isDarkMode)}
@@ -290,17 +315,25 @@ const SoftwareEngineerHeader = () => {
                     <div className="flex items-center justify-between py-2 border-t border-[rgba(102,126,234,0.1)]">
                       <div className="flex items-center gap-2.5">
                         <MousePointer2 className="w-4 h-4 text-secondary/70" />
-                        <span className="text-sm font-medium text-stone-700">Cursor Effects</span>
+                        <span className="text-sm font-medium text-stone-700">
+                          Cursor Effects
+                        </span>
                       </div>
                       <button
-                        onClick={() => setIsCursorEffectEnabled(!isCursorEffectEnabled)}
+                        onClick={() =>
+                          setIsCursorEffectEnabled(!isCursorEffectEnabled)
+                        }
                         className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-300 ${
-                          isCursorEffectEnabled ? "bg-secondary" : "bg-stone-200"
+                          isCursorEffectEnabled
+                            ? "bg-secondary"
+                            : "bg-stone-200"
                         }`}
                       >
                         <span
                           className={`inline-block h-4 w-4 transform rounded-full bg-white shadow-md transition-transform duration-300 ${
-                            isCursorEffectEnabled ? "translate-x-6" : "translate-x-1"
+                            isCursorEffectEnabled
+                              ? "translate-x-6"
+                              : "translate-x-1"
                           }`}
                         />
                       </button>
@@ -309,9 +342,9 @@ const SoftwareEngineerHeader = () => {
                 </motion.div>
 
                 {/* Backdrop */}
-                <div 
-                  className="fixed inset-0 z-40" 
-                  onClick={() => setIsSettingsOpen(false)} 
+                <div
+                  className="fixed inset-0 z-40"
+                  onClick={() => setIsSettingsOpen(false)}
                 />
               </>
             )}
@@ -338,13 +371,15 @@ const SoftwareEngineerHeader = () => {
               transition={{ duration: 0.3, ease: "easeOut" }}
               className="fixed top-24 left-4 right-4 z-50 xl:hidden"
             >
-              <div className="backdrop-blur-[20px] bg-white/90 border border-[rgba(102,126,234,0.2)] 
+              <div
+                className="backdrop-blur-[20px] bg-white/90 border border-[rgba(102,126,234,0.2)] 
                 rounded-3xl shadow-2xl shadow-[rgba(102,126,234,0.15)] overflow-hidden"
               >
                 {/* Mobile Menu Header */}
                 <div className="px-6 py-4 border-b border-[rgba(102,126,234,0.1)]">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[rgba(102,126,234,0.2)] to-[rgba(118,75,162,0.15)] 
+                    <div
+                      className="w-10 h-10 rounded-xl bg-gradient-to-br from-[rgba(102,126,234,0.2)] to-[rgba(118,75,162,0.15)] 
                       border border-[rgba(102,126,234,0.3)] flex items-center justify-center"
                     >
                       <Terminal className="w-5 h-5 text-secondary/80" />
@@ -369,13 +404,18 @@ const SoftwareEngineerHeader = () => {
                       return (
                         <li key={link.name}>
                           <a
-                            href={link.href.startsWith("#") ? (rolePrefix || "") + link.href : link.href}
+                            href={
+                              link.href.startsWith("#")
+                                ? (rolePrefix || "") + link.href
+                                : link.href
+                            }
                             onClick={(e) => handleSmoothScroll(e, link.href)}
                             className={`flex items-center gap-3 px-4 py-3 rounded-xl font-spacemono text-sm 
                               transition-all duration-300
-                              ${active 
-                                ? "text-secondary bg-[rgba(102,126,234,0.1)] font-semibold" 
-                                : "text-stone-600/80 hover:text-secondary hover:bg-[rgba(102,126,234,0.05)]"
+                              ${
+                                active
+                                  ? "text-secondary bg-[rgba(102,126,234,0.1)] font-semibold"
+                                  : "text-stone-600/80 hover:text-secondary hover:bg-[rgba(102,126,234,0.05)]"
                               }`}
                           >
                             <Icon className="w-4 h-4" />
