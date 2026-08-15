@@ -14,7 +14,10 @@ import {
 import { FaXTwitter } from "react-icons/fa6";
 
 // Icon mapping
-const iconMap: Record<string, React.ComponentType<{ className?: string; size?: number }>> = {
+const iconMap: Record<
+  string,
+  React.ComponentType<{ className?: string; size?: number }>
+> = {
   FaGithub,
   FaLinkedin,
   FaEnvelope,
@@ -37,6 +40,7 @@ interface SocialLinksProps {
   className?: string;
   size?: number;
   links?: SocialLink[];
+  itemClassName?: string;
 }
 
 // Fallback links for backward compatibility
@@ -97,7 +101,12 @@ const fallbackLinks: SocialLink[] = [
   },
 ];
 
-const SocialLinks: React.FC<SocialLinksProps> = ({ className, size = 24, links }) => {
+const SocialLinks: React.FC<SocialLinksProps> = ({
+  className,
+  size = 24,
+  links,
+  itemClassName,
+}) => {
   const trackSocial = useTrack("social_click", "hero");
   const displayLinks = links || fallbackLinks;
 
@@ -120,7 +129,10 @@ const SocialLinks: React.FC<SocialLinksProps> = ({ className, size = 24, links }
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => handleClick(link.platform, link.url)}
-            className="flex p-2 bg-primary justify-center items-center rounded-lg shadow-lg border-[0.5px] border-border hover:-translate-y-1 transition duration-300"
+            className={cn(
+              itemClassName ||
+                "flex p-2 bg-primary justify-center items-center rounded-lg shadow-lg border-[0.5px] border-border hover:-translate-y-1 transition duration-300",
+            )}
           >
             <IconComponent className={link.color_class} size={size} />
           </Link>

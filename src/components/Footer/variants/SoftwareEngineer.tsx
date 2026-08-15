@@ -2,7 +2,7 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { useRouter } from "next/navigation";
+import { useResumeModal } from "@/contexts/ResumeModalContext";
 import Link from "next/link";
 import { Button } from "../../ui/button";
 import { useContactModal } from "@/contexts/ContactModalContext";
@@ -10,7 +10,7 @@ import SocialLinks from "../../SocialLinks";
 import { Code2, Terminal, ArrowUpRight, Mail, MapPin } from "lucide-react";
 
 const SoftwareEngineerFooter = () => {
-  const router = useRouter();
+  const { openResume } = useResumeModal();
   const { setIsContactModalOpen } = useContactModal();
 
   const quickLinks = [
@@ -23,12 +23,16 @@ const SoftwareEngineerFooter = () => {
   ];
 
   return (
-    <footer id="contacts" className="relative bg-gray-900 text-white overflow-hidden">
+    <footer
+      id="contacts"
+      className="relative bg-gray-900 text-white overflow-hidden"
+    >
       {/* Background Pattern */}
-      <div className="absolute inset-0 opacity-5"
+      <div
+        className="absolute inset-0 opacity-5"
         style={{
           backgroundImage: `radial-gradient(circle at 1px 1px, white 1px, transparent 0)`,
-          backgroundSize: '40px 40px'
+          backgroundSize: "40px 40px",
         }}
       />
 
@@ -46,7 +50,9 @@ const SoftwareEngineerFooter = () => {
               <div className="w-10 h-10 rounded-xl bg-blue-500/20 flex items-center justify-center">
                 <Code2 className="w-5 h-5 text-blue-400" />
               </div>
-              <span className="text-sm font-medium text-blue-400">Software Engineer</span>
+              <span className="text-sm font-medium text-blue-400">
+                Software Engineer
+              </span>
             </div>
 
             <h2 className="text-3xl sm:text-4xl font-bold mb-4">
@@ -54,8 +60,9 @@ const SoftwareEngineerFooter = () => {
               <span className="text-blue-400">Amazing</span>
             </h2>
             <p className="text-gray-400 mb-8 max-w-md">
-              Ready to collaborate on innovative projects? I&apos;m always excited to connect 
-              with fellow developers and build scalable solutions.
+              Ready to collaborate on innovative projects? I&apos;m always
+              excited to connect with fellow developers and build scalable
+              solutions.
             </p>
 
             <div className="flex flex-wrap gap-4">
@@ -67,9 +74,9 @@ const SoftwareEngineerFooter = () => {
                 Get in Touch
               </Button>
               <Button
-                onClick={() => router.push("/?resume=true")}
+                onClick={() => openResume()}
                 variant="outline"
-                className="rounded-full px-6 py-5 border-gray-600 hover:border-blue-500 hover:text-blue-400 transition-all"
+                className="rounded-full px-6 py-5 border border-gray-700 text-white hover:border-blue-500 hover:text-blue-400 bg-white/5 transition-all"
               >
                 <Terminal className="w-4 h-4 mr-2" />
                 View Resume
@@ -119,7 +126,10 @@ const SoftwareEngineerFooter = () => {
                 <Mail className="w-5 h-5 text-gray-500 mt-0.5" />
                 <div>
                   <p className="text-sm text-gray-400">Email</p>
-                  <a href="mailto:troyjeffreysarinas@gmail.com" className="text-white hover:text-blue-400 transition-colors">
+                  <a
+                    href="mailto:troyjeffreysarinas@gmail.com"
+                    className="text-white hover:text-blue-400 transition-colors"
+                  >
                     troyjeffreysarinas@gmail.com
                   </a>
                 </div>
@@ -134,7 +144,10 @@ const SoftwareEngineerFooter = () => {
             </div>
 
             <div className="mt-8">
-              <SocialLinks size={22} />
+              <SocialLinks
+                size={22}
+                itemClassName="flex p-2 bg-white/6 justify-center items-center rounded-lg border border-white/10 hover:bg-white/12 transition duration-300"
+              />
             </div>
           </motion.div>
         </div>

@@ -4,6 +4,7 @@ import React from "react";
 import { CursorProvider } from "@/components/CursorProvider";
 import { ContactModalProvider } from "@/contexts/ContactModalContext";
 import { PortfolioProvider } from "@/context/PortfolioContext";
+import { ResumeModalProvider } from "@/contexts/ResumeModalContext";
 
 export default function ClientProviders({
   children,
@@ -12,9 +13,11 @@ export default function ClientProviders({
 }) {
   return (
     <PortfolioProvider>
-      <CursorProvider>
-        <ContactModalProvider>{children}</ContactModalProvider>
-      </CursorProvider>
+      <ResumeModalProvider>
+        <CursorProvider>
+          <ContactModalProvider>{children}</ContactModalProvider>
+        </CursorProvider>
+      </ResumeModalProvider>
     </PortfolioProvider>
   );
 }
