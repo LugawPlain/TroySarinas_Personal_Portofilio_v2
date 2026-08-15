@@ -14,6 +14,11 @@ import SalesFooter from "./variants/Sales";
 import VAFooter from "./variants/VA";
 
 export default function Footer() {
+  const pathname = typeof window !== "undefined" ? window.location.pathname : undefined;
+
+  // Hide footer on root path where there's no role
+  if (pathname === "/") return null;
+
   const { role } = usePortfolio();
 
   switch (role) {

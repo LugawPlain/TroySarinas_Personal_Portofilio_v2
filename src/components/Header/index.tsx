@@ -1,6 +1,7 @@
 "use client";
 
 import { usePortfolio } from "@/context/PortfolioContext";
+import { usePathname } from "next/navigation";
 import StandardHeader from "./variants/Standard";
 import SoftwareEngineerHeader from "./variants/SoftwareEngineer";
 import GTMHeader from "./variants/GTM";
@@ -14,6 +15,11 @@ import SalesHeader from "./variants/Sales";
 import VAHeader from "./variants/VA";
 
 export default function Header() {
+  const pathname = usePathname();
+
+  // Hide header on root path where there's no role
+  if (pathname === "/") return null;
+
   const { role } = usePortfolio();
 
   switch (role) {
