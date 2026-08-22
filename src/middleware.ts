@@ -55,26 +55,26 @@ export async function middleware(request: NextRequest) {
           })
           .then();
 
-        // 2. Redirect to the role page
-        const redirectUrl = new URL(
+        // 2. Render the portfolio internally while keeping the clean URL visible
+        const rewriteUrl = new URL(
           `/portfolio/${link.target_role}`,
           request.url,
         );
-        const redirectResponse = NextResponse.redirect(redirectUrl);
+        const rewriteResponse = NextResponse.rewrite(rewriteUrl);
 
         // 3. Set 30-day sticky cookies
-        redirectResponse.cookies.set("portfolio_role", link.target_role, {
+        rewriteResponse.cookies.set("portfolio_role", link.target_role, {
           maxAge: 60 * 60 * 24 * 30,
           path: "/",
         });
-        redirectResponse.cookies.set("visitor_link_id", link.id, {
+        rewriteResponse.cookies.set("visitor_link_id", link.id, {
           maxAge: 60 * 60 * 24 * 30,
           path: "/",
           httpOnly: false,
           sameSite: "lax",
         });
 
-        return redirectResponse;
+        return rewriteResponse;
       }
     } catch (e) {
       console.warn("[Middleware] Version lookup failed:", e);
@@ -87,6 +87,33 @@ export async function middleware(request: NextRequest) {
 
   if (isPortfolioPage && currentPathRole && !isAdmin) {
     const savedRole = request.cookies.get("portfolio_role")?.value;
+    const visitorLinkId = request.cookies.get("visitor_link_id")?.value;
+
+    if (!visitorLinkId) {
+      const ip = request.headers.get("x-forwarded-for") || "unknown";
+      const roleVisitClient = createServerClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY!,
+        {
+          cookies: {
+            getAll() {
+              return request.cookies.getAll();
+            },
+            setAll() {},
+          },
+        },
+      );
+
+      roleVisitClient
+        .from("portfolio_role_visits")
+        .insert({
+          role_key: currentPathRole,
+          user_agent: request.headers.get("user-agent"),
+          ip_hash: ip,
+        })
+        .then();
+    }
+
     if (!savedRole) {
       console.log(`[Middleware] Setting cookie for role: ${currentPathRole}`);
       response.cookies.set("portfolio_role", currentPathRole, {
@@ -112,7 +139,9 @@ export async function middleware(request: NextRequest) {
     if (savedRole) {
       // 1. Redirect from home to locked role
       if (url.pathname === "/") {
-        console.log(`[Middleware] Cookie found, redirecting / → /portfolio/${savedRole}`);
+        console.log(
+          `[Middleware] Cookie found, redirecting / → /portfolio/${savedRole}`,
+        );
         return NextResponse.redirect(
           new URL(`/portfolio/${savedRole}`, request.url),
         );
@@ -120,7 +149,9 @@ export async function middleware(request: NextRequest) {
 
       // 2. Prevent access to other roles if locked
       if (isPortfolioPage && currentPathRole && currentPathRole !== savedRole) {
-        console.log(`[Middleware] Wrong role, redirecting → /portfolio/${savedRole}`);
+        console.log(
+          `[Middleware] Wrong role, redirecting → /portfolio/${savedRole}`,
+        );
         return NextResponse.redirect(
           new URL(`/portfolio/${savedRole}`, request.url),
         );

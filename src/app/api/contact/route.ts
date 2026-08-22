@@ -6,12 +6,13 @@ interface ContactFormData {
   email: string;
   subject: string;
   message: string;
+  role?: string;
 }
 
 export async function POST(request: NextRequest) {
   try {
     const body: ContactFormData = await request.json();
-    const { name, email, subject, message } = body;
+    const { name, email, subject, message, role } = body;
 
     // Validate required fields
     if (!name || !email || !subject || !message) {
@@ -43,7 +44,7 @@ export async function POST(request: NextRequest) {
     const mailOptions = {
       from: process.env.EMAIL_USER,
       to: "troyjeffreysarinas@gmail.com",
-      subject: `Portfolio Contact: ${subject}`,
+      subject: `Portfolio Contact${role ? ` [${role}]` : ""}: ${subject}`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
           <h2 style="color: #333; border-bottom: 2px solid #007bff; padding-bottom: 10px;">
