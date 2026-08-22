@@ -13,6 +13,7 @@ export interface Project {
   technologies: string[];
   liveUrl?: string;
   githubUrl?: string;
+  demoType?: "lead-generator";
 }
 
 interface ProjectRow {
@@ -24,6 +25,7 @@ interface ProjectRow {
   technologies: string[] | null;
   live_url: string | null;
   github_url: string | null;
+  demo_type: "lead-generator" | null;
   created_at?: string;
 }
 
@@ -69,6 +71,7 @@ export async function getProjects(
     technologies: item.technologies || [],
     liveUrl: item.live_url || undefined,
     githubUrl: item.github_url || undefined,
+    demoType: item.demo_type || undefined,
   }));
 }
 
@@ -94,5 +97,6 @@ export async function getProject(id: string): Promise<Project | undefined> {
     technologies: project.technologies || [],
     liveUrl: project.live_url || undefined,
     githubUrl: project.github_url || undefined,
+    demoType: project.demo_type || undefined,
   };
 }

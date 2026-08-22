@@ -1,8 +1,7 @@
 import { createBrowserClient } from "@supabase/ssr";
 
 /**
- * Tracks a user interaction event if they visited via a tracking link.
- * Only fires if the 'visitor_link_id' cookie is present.
+ * Tracks a user interaction event for either a gateway link or an organic role visit.
  */
 export const trackInteraction = async (
   eventName: string,
@@ -25,18 +24,17 @@ export const trackInteraction = async (
 
     const linkId = cookies["visitor_link_id"];
 
-    // 2. Only track if this is a known employer (linkId present)
-    if (!linkId) {
-      if (process.env.NODE_ENV !== "production") {
-        console.log(
-          "Tracker: No visitor_link_id found in cookies. Skipping tracking.",
-        );
-      }
+    const roleKey = cookies["portfolio_role"];
+
+    // Keep organic role analytics separate from generated-link analytics.
+    if (!linkId && !roleKey) {
       return;
     }
 
     if (process.env.NODE_ENV !== "production") {
-      console.log(`Tracker: Logging ${eventName} for link ${linkId}`);
+      console.log(
+        `Tracker: Logging ${eventName} for ${linkId ? `link ${linkId}` : `role ${roleKey}`}`,
+      );
     }
 
     // 3. Initialize Supabase Browser Client
@@ -47,7 +45,8 @@ export const trackInteraction = async (
 
     // 4. Fire and forget the event logging
     const { error } = await supabase.from("gateway_events").insert({
-      link_id: linkId,
+      link_id: linkId || null,
+      role_key: linkId ? null : roleKey,
       event_name: eventName,
       section: section,
       metadata: metadata,

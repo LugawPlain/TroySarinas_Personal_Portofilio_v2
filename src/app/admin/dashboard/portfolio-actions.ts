@@ -615,6 +615,7 @@ export async function createProject(projectData: {
   technologies?: string[];
   live_url?: string;
   github_url?: string;
+  demo_type?: "lead-generator" | null;
   roleIds?: string[];
 }) {
   const supabase = await createClient();
@@ -629,6 +630,7 @@ export async function createProject(projectData: {
       technologies: projectData.technologies || [],
       live_url: projectData.live_url || null,
       github_url: projectData.github_url || null,
+      demo_type: projectData.demo_type || null,
       is_published: true,
       display_order: 0,
     })
@@ -775,6 +777,7 @@ export async function updateProject(
     technologies?: string[];
     live_url?: string;
     github_url?: string;
+    demo_type?: "lead-generator" | null;
     roleIds?: string[];
   },
 ) {
@@ -790,6 +793,7 @@ export async function updateProject(
       technologies: projectData.technologies || [],
       live_url: projectData.live_url || null,
       github_url: projectData.github_url || null,
+      demo_type: projectData.demo_type || null,
       updated_at: new Date().toISOString(),
     })
     .eq("id", id);

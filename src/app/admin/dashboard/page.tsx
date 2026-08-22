@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { DashboardTabs } from "./DashboardTabs";
+import { getRoleAnalytics } from "./actions";
 
 async function getDashboardData() {
   const supabase = await createClient();
@@ -54,6 +55,10 @@ async function getDashboardData() {
     }
   });
 
+  const roleAnalytics = await getRoleAnalytics(
+    (roles || []).map((role: any) => role.slug || role.key || role.title),
+  );
+
   return {
     links: links || [],
     linkResumesMap,
@@ -73,6 +78,7 @@ async function getDashboardData() {
     certifications: certifications || [],
     socialLinks: socialLinks || [],
     roleSocialLinks: roleSocialLinks || [],
+    roleAnalytics,
     stats: {
       totalLinks: links?.length || 0,
       totalVisits: totalVisits || 0,
@@ -104,6 +110,7 @@ export default async function DashboardPage() {
       certifications={data.certifications}
       socialLinks={data.socialLinks}
       roleSocialLinks={data.roleSocialLinks}
+      roleAnalytics={data.roleAnalytics}
       stats={data.stats}
     />
   );

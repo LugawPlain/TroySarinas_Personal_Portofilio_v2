@@ -81,6 +81,68 @@ export async function getInteractionEvents() {
   return data;
 }
 
+export async function getRoleAnalytics(roleKeys: string[]) {
+  if (roleKeys.length === 0) return {};
+
+  const supabase = await createClient();
+
+  const [
+    { data: visits, error: visitsError },
+    { data: events, error: eventsError },
+  ] = await Promise.all([
+    supabase
+      .from("portfolio_role_visits")
+      .select("role_key, ip_hash, visited_at")
+      .in("role_key", roleKeys),
+    supabase
+      .from("gateway_events")
+      .select("role_key, event_name, section, created_at")
+      .in("role_key", roleKeys),
+  ]);
+
+  if (visitsError || eventsError) {
+    console.error("Error fetching role analytics:", visitsError || eventsError);
+    return {};
+  }
+
+  const analytics: Record<
+    string,
+    {
+      totalVisits: number;
+      uniqueVisitors: number;
+      totalEvents: number;
+      sectionViews: Record<string, number>;
+      recentEvents: any[];
+    }
+  > = {};
+
+  roleKeys.forEach((roleKey) => {
+    const roleVisits = (visits || []).filter(
+      (visit) => visit.role_key === roleKey,
+    );
+    const roleEvents = (events || []).filter(
+      (event) => event.role_key === roleKey,
+    );
+    const sectionViews: Record<string, number> = {};
+
+    roleEvents.forEach((event) => {
+      if (event.event_name === "section_view" && event.section) {
+        sectionViews[event.section] = (sectionViews[event.section] || 0) + 1;
+      }
+    });
+
+    analytics[roleKey] = {
+      totalVisits: roleVisits.length,
+      uniqueVisitors: new Set(roleVisits.map((visit) => visit.ip_hash)).size,
+      totalEvents: roleEvents.length,
+      sectionViews,
+      recentEvents: roleEvents.slice(0, 5),
+    };
+  });
+
+  return analytics;
+}
+
 export async function getLinkAnalytics(linkId: string) {
   const supabase = await createClient();
 
@@ -105,21 +167,21 @@ export async function getLinkAnalytics(linkId: string) {
 
   // Process analytics
   const totalVisits = visits?.length || 0;
-  
+
   // Unique visitors by ip_hash
-  const uniqueVisitors = new Set(visits?.map(v => v.ip_hash) || []).size;
-  
+  const uniqueVisitors = new Set(visits?.map((v) => v.ip_hash) || []).size;
+
   // Visits by day (last 30 days)
   const visitsByDay: Record<string, number> = {};
   const today = new Date();
   for (let i = 29; i >= 0; i--) {
     const d = new Date(today);
     d.setDate(d.getDate() - i);
-    visitsByDay[d.toISOString().split('T')[0]] = 0;
+    visitsByDay[d.toISOString().split("T")[0]] = 0;
   }
-  
-  visits?.forEach(v => {
-    const day = v.visited_at?.split('T')[0];
+
+  visits?.forEach((v) => {
+    const day = v.visited_at?.split("T")[0];
     if (day && visitsByDay[day] !== undefined) {
       visitsByDay[day]++;
     }
@@ -135,7 +197,7 @@ export async function getLinkAnalytics(linkId: string) {
 
   const browserBreakdown: Record<string, number> = {};
 
-  visits?.forEach(v => {
+  visits?.forEach((v) => {
     const ua = v.user_agent || "";
     if (ua.match(/Mobile|Android|iPhone/i) && !ua.match(/iPad/i)) {
       deviceBreakdown.mobile++;
@@ -154,7 +216,7 @@ export async function getLinkAnalytics(linkId: string) {
     else if (ua.match(/Safari/i) && !ua.match(/Chrome/i)) browser = "Safari";
     else if (ua.match(/Edge/i)) browser = "Edge";
     else if (ua.match(/Opera/i)) browser = "Opera";
-    
+
     browserBreakdown[browser] = (browserBreakdown[browser] || 0) + 1;
   });
 
@@ -162,7 +224,7 @@ export async function getLinkAnalytics(linkId: string) {
   const sectionViews: Record<string, number> = {};
   const eventTypes: Record<string, number> = {};
 
-  events?.forEach(e => {
+  events?.forEach((e) => {
     if (e.event_name === "section_view" && e.section) {
       sectionViews[e.section] = (sectionViews[e.section] || 0) + 1;
     }
@@ -171,7 +233,7 @@ export async function getLinkAnalytics(linkId: string) {
 
   // Time distribution (hour of day)
   const hourlyDistribution = new Array(24).fill(0);
-  visits?.forEach(v => {
+  visits?.forEach((v) => {
     const hour = new Date(v.visited_at).getHours();
     hourlyDistribution[hour]++;
   });

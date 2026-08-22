@@ -445,7 +445,8 @@ export function LinkActions({
   const [showResumeModal, setShowResumeModal] = useState(false);
 
   const copyLink = () => {
-    const url = `${window.location.origin}/portfolio/${targetRole}/?ver=${verSlug}`;
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://troysarinas.dev";
+    const url = `${siteUrl.replace(/\/$/, "")}/${targetRole}/?ver=${verSlug}`;
     navigator.clipboard.writeText(url);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);

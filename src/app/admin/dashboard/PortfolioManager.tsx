@@ -1039,13 +1039,16 @@ export function PortfolioContentManager({
                                 ),
                                 live_url: proj.live_url || "",
                                 github_url: proj.github_url || "",
+                                demo_type: proj.demo_type || "",
                                 roleIds: projRoleLinks.map(
                                   (pr: any) => pr.role_id,
                                 ),
                               });
                               setIsEditModalOpen(true);
                             }}
-                            className="p-1.5 bg-background border rounded-lg shadow-sm hover:text-blue-500 transition-colors opacity-0 group-hover:opacity-100"
+                            type="button"
+                            aria-label={`Edit ${proj.title}`}
+                            className="p-1.5 bg-background border rounded-lg shadow-sm hover:text-blue-500 transition-colors"
                           >
                             <Pencil className="w-3 h-3" />
                           </button>
@@ -1054,15 +1057,36 @@ export function PortfolioContentManager({
                               e.stopPropagation();
                               handleDelete("project", proj.id);
                             }}
-                            className="p-1.5 bg-background border rounded-lg shadow-sm hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100"
+                            type="button"
+                            aria-label={`Delete ${proj.title}`}
+                            className="p-1.5 bg-background border rounded-lg shadow-sm hover:text-red-500 transition-colors"
                           >
                             <Trash2 className="w-3 h-3" />
                           </button>
-                          {linked ? (
-                            <CheckCircle2 className="w-4 h-4 text-purple-500 shrink-0" />
-                          ) : (
-                            <Circle className="w-4 h-4 opacity-10 shrink-0" />
-                          )}
+                          <button
+                            type="button"
+                            aria-label={
+                              linked
+                                ? `Unlink ${proj.title} from this role`
+                                : `Link ${proj.title} to this role`
+                            }
+                            title={linked ? "Unlink project" : "Link project"}
+                            onClick={() =>
+                              handleToggle(
+                                "role_projects",
+                                proj.id,
+                                "project_id",
+                                linked,
+                              )
+                            }
+                            className="shrink-0 rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500"
+                          >
+                            {linked ? (
+                              <CheckCircle2 className="w-4 h-4 text-purple-500" />
+                            ) : (
+                              <Circle className="w-4 h-4 text-muted-foreground/40" />
+                            )}
+                          </button>
                         </div>
                       </div>
                     </div>
@@ -1436,6 +1460,7 @@ export function PortfolioContentManager({
                         .filter(Boolean),
                       live_url: createFormData.live_url,
                       github_url: createFormData.github_url,
+                      demo_type: createFormData.demo_type || null,
                       roleIds: createFormData.roleIds || [],
                     });
                   } else {
@@ -1524,7 +1549,26 @@ export function PortfolioContentManager({
                       <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
                         Thumbnail Image
                       </label>
+                      {editFormData.thumbnail_url ? (
+                        <div className="relative w-full h-32 rounded-lg overflow-hidden border">
+                          <img
+                            src={editFormData.thumbnail_url}
+                            alt="Current thumbnail preview"
+                            className="w-full h-full object-cover"
+                          />
+                          <span className="absolute bottom-2 left-2 rounded bg-black/60 px-2 py-1 text-[10px] text-white">
+                            Current image
+                          </span>
+                        </div>
+                      ) : (
+                        <p className="text-xs text-muted-foreground">
+                          No thumbnail image uploaded.
+                        </p>
+                      )}
                       <div className="relative">
+                        <span className="mb-1 block text-[10px] text-muted-foreground">
+                          Choose a replacement image
+                        </span>
                         <input
                           type="file"
                           accept="image/*"
@@ -1615,6 +1659,26 @@ export function PortfolioContentManager({
                         }
                         className="w-full bg-background border rounded-lg px-4 py-3 outline-none focus:ring-2 focus:ring-purple-500/50 transition-all text-base"
                       />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                        Interactive demo
+                      </label>
+                      <select
+                        value={createFormData.demo_type || ""}
+                        onChange={(e) =>
+                          setCreateFormData((prev: any) => ({
+                            ...prev,
+                            demo_type: e.target.value || null,
+                          }))
+                        }
+                        className="w-full bg-background border rounded-lg px-4 py-3 outline-none focus:ring-2 focus:ring-purple-500/50 transition-all text-base"
+                      >
+                        <option value="">No interactive demo</option>
+                        <option value="lead-generator">
+                          Google Maps lead generator
+                        </option>
+                      </select>
                     </div>
                   </div>
                 </>
@@ -1715,17 +1779,29 @@ export function PortfolioContentManager({
 
       {/* Edit Project/Blog Modal */}
       {isEditModalOpen && (
-        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-background border border-border rounded-2xl shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-y-auto">
-            <div className="sticky top-0 bg-background/95 backdrop-blur-sm border-b border-border p-6 flex items-center justify-between">
-              <h2 className="text-xl font-bold">
-                Edit {editType === "project" ? "Project" : "Blog"}
-              </h2>
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm"
+          onClick={() => setIsEditModalOpen(false)}
+        >
+          <div
+            className="flex max-h-[min(90vh,880px)] w-full max-w-5xl flex-col overflow-hidden rounded-2xl border border-border bg-background shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between border-b border-border bg-muted/20 px-5 py-4 sm:px-7">
+              <div>
+                <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-purple-500">
+                  Portfolio editor
+                </p>
+                <h2 className="mt-1 text-xl font-bold">
+                  Edit {editType === "project" ? "Project" : "Blog"}
+                </h2>
+              </div>
               <button
                 onClick={() => setIsEditModalOpen(false)}
-                className="p-2 hover:bg-muted rounded-lg transition-colors"
+                aria-label="Close editor"
+                className="rounded-lg p-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
               >
-                <X className="w-4 h-4" />
+                <X className="h-5 w-5" />
               </button>
             </div>
 
@@ -1773,6 +1849,7 @@ export function PortfolioContentManager({
                         .filter(Boolean),
                       live_url: editFormData.live_url,
                       github_url: editFormData.github_url,
+                      demo_type: editFormData.demo_type || null,
                       roleIds: editFormData.roleIds || [],
                     });
                   } else if (editType === "blog" && editItem) {
@@ -1797,7 +1874,7 @@ export function PortfolioContentManager({
                   setEditLoading(false);
                 }
               }}
-              className="p-6 space-y-5"
+              className="min-h-0 flex-1 space-y-6 overflow-y-auto p-5 sm:p-7"
             >
               <div className="space-y-2">
                 <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
@@ -1841,8 +1918,8 @@ export function PortfolioContentManager({
 
               {editType === "project" && (
                 <>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="space-y-2">
+                  <div className="grid gap-5 md:grid-cols-2">
+                    <div className="space-y-2 md:col-span-2">
                       <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
                         Technologies (comma-separated)
                       </label>
@@ -1855,73 +1932,90 @@ export function PortfolioContentManager({
                           }))
                         }
                         placeholder="React, TypeScript, Node.js"
-                        className="w-full bg-background border rounded-lg px-4 py-3 outline-none focus:ring-2 focus:ring-purple-500/50 transition-all text-base"
+                        className="w-full rounded-lg border bg-background px-4 py-3 text-base outline-none transition-all focus:ring-2 focus:ring-purple-500/50"
                       />
                     </div>
-                    <div className="space-y-2">
-                      <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                        Thumbnail Image
-                      </label>
-                      <div className="relative">
-                        <input
-                          type="file"
-                          accept="image/*"
-                          onChange={(e) => {
-                            const file = e.target.files?.[0];
-                            if (file) {
-                              setEditFormData((prev: any) => ({
-                                ...prev,
-                                thumbnailFile: file,
-                                thumbnail_url: URL.createObjectURL(file),
-                              }));
-                            }
-                          }}
-                          className="w-full bg-background border rounded-lg px-4 py-3 outline-none focus:ring-2 focus:ring-purple-500/50 transition-all text-base file:mr-4 file:py-1 file:px-3 file:rounded-full file:border-0 file:text-xs file:font-bold file:bg-purple-500/10 file:text-purple-600 hover:file:bg-purple-500/20"
-                        />
-                      </div>
-                      {editFormData.thumbnail_url && (
-                        <div className="mt-2 relative w-full h-32 rounded-lg overflow-hidden border">
-                          <img
-                            src={editFormData.thumbnail_url}
-                            alt="Thumbnail preview"
-                            className="w-full h-full object-cover"
-                          />
+                    <div className="rounded-xl border border-border bg-muted/20 p-3 md:col-span-2">
+                      <div className="mb-3 flex items-center justify-between">
+                        <div>
+                          <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                            Project images
+                          </p>
+                          <p className="mt-1 text-xs text-muted-foreground">
+                            Use wide images for the best portfolio presentation.
+                          </p>
                         </div>
-                      )}
-                    </div>
-                  </div>
-                  <div className="space-y-2">
-                    <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                      Hero Image
-                    </label>
-                    <div className="relative">
-                      <input
-                        type="file"
-                        accept="image/*"
-                        onChange={(e) => {
-                          const file = e.target.files?.[0];
-                          if (file) {
-                            setEditFormData((prev: any) => ({
-                              ...prev,
-                              heroImageFile: file,
-                              hero_image_url: URL.createObjectURL(file),
-                            }));
-                          }
-                        }}
-                        className="w-full bg-background border rounded-lg px-4 py-3 outline-none focus:ring-2 focus:ring-purple-500/50 transition-all text-base file:mr-4 file:py-1 file:px-3 file:rounded-full file:border-0 file:text-xs file:font-bold file:bg-purple-500/10 file:text-purple-600 hover:file:bg-purple-500/20"
-                      />
-                    </div>
-                    {editFormData.hero_image_url && (
-                      <div className="mt-2 relative w-full h-32 rounded-lg overflow-hidden border">
-                        <img
-                          src={editFormData.hero_image_url}
-                          alt="Hero preview"
-                          className="w-full h-full object-cover"
-                        />
+                        <Upload className="h-4 w-4 text-purple-500" />
                       </div>
-                    )}
+                      <div className="grid gap-4 md:grid-cols-2">
+                        {[
+                          {
+                            label: "Thumbnail image",
+                            field: "thumbnail_url",
+                            fileField: "thumbnailFile",
+                            alt: "Thumbnail preview",
+                          },
+                          {
+                            label: "Hero image",
+                            field: "hero_image_url",
+                            fileField: "heroImageFile",
+                            alt: "Hero preview",
+                          },
+                        ].map((image) => (
+                          <div
+                            key={image.field}
+                            className="space-y-3 rounded-lg border border-border bg-background p-3"
+                          >
+                            <div className="flex items-center justify-between gap-2">
+                              <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                                {image.label}
+                              </label>
+                              <span className="text-[10px] text-muted-foreground">
+                                {editFormData[image.fileField]
+                                  ? "New image"
+                                  : editFormData[image.field]
+                                    ? "Current"
+                                    : "Not set"}
+                              </span>
+                            </div>
+                            <div className="relative aspect-16/8 overflow-hidden rounded-md border border-border bg-muted">
+                              {editFormData[image.field] ? (
+                                <img
+                                  src={editFormData[image.field]}
+                                  alt={image.alt}
+                                  className="h-full w-full object-cover"
+                                />
+                              ) : (
+                                <div className="flex h-full items-center justify-center text-xs text-muted-foreground">
+                                  No image uploaded
+                                </div>
+                              )}
+                            </div>
+                            <label className="flex cursor-pointer items-center justify-center gap-2 rounded-md border border-dashed border-purple-500/40 px-3 py-2 text-xs font-semibold text-purple-600 transition-colors hover:bg-purple-500/10">
+                              <Upload className="h-3.5 w-3.5" />
+                              Choose replacement
+                              <input
+                                type="file"
+                                accept="image/*"
+                                className="sr-only"
+                                onChange={(e) => {
+                                  const file = e.target.files?.[0];
+                                  if (file) {
+                                    setEditFormData((prev: any) => ({
+                                      ...prev,
+                                      [image.fileField]: file,
+                                      [image.field]: URL.createObjectURL(file),
+                                    }));
+                                  }
+                                }}
+                              />
+                            </label>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
                   </div>
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid gap-5 md:grid-cols-2">
                     <div className="space-y-2">
                       <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
                         Live URL
@@ -1935,7 +2029,7 @@ export function PortfolioContentManager({
                             live_url: e.target.value,
                           }))
                         }
-                        className="w-full bg-background border rounded-lg px-4 py-3 outline-none focus:ring-2 focus:ring-purple-500/50 transition-all text-base"
+                        className="w-full rounded-lg border bg-background px-4 py-3 text-base outline-none transition-all focus:ring-2 focus:ring-purple-500/50"
                       />
                     </div>
                     <div className="space-y-2">
@@ -1951,8 +2045,28 @@ export function PortfolioContentManager({
                             github_url: e.target.value,
                           }))
                         }
-                        className="w-full bg-background border rounded-lg px-4 py-3 outline-none focus:ring-2 focus:ring-purple-500/50 transition-all text-base"
+                        className="w-full rounded-lg border bg-background px-4 py-3 text-base outline-none transition-all focus:ring-2 focus:ring-purple-500/50"
                       />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                        Interactive demo
+                      </label>
+                      <select
+                        value={editFormData.demo_type || ""}
+                        onChange={(e) =>
+                          setEditFormData((prev: any) => ({
+                            ...prev,
+                            demo_type: e.target.value || null,
+                          }))
+                        }
+                        className="w-full rounded-lg border bg-background px-4 py-3 text-base outline-none transition-all focus:ring-2 focus:ring-purple-500/50"
+                      >
+                        <option value="">No interactive demo</option>
+                        <option value="lead-generator">
+                          Google Maps lead generator
+                        </option>
+                      </select>
                     </div>
                   </div>
                 </>
@@ -2027,11 +2141,18 @@ export function PortfolioContentManager({
                 </div>
               </div>
 
-              <div className="pt-4 border-t">
+              <div className="sticky bottom-0 -mx-5 -mb-5 flex flex-col-reverse gap-3 border-t bg-background/95 p-5 backdrop-blur-sm sm:-mx-7 sm:-mb-7 sm:flex-row sm:items-center sm:justify-end sm:p-7">
+                <button
+                  type="button"
+                  onClick={() => setIsEditModalOpen(false)}
+                  className="rounded-lg border border-border px-4 py-2.5 text-sm font-semibold text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                >
+                  Cancel
+                </button>
                 <button
                   type="submit"
                   disabled={editLoading || !editFormData.title}
-                  className="w-full bg-gradient-to-r from-purple-500 to-purple-600 hover:opacity-90 text-white font-bold rounded-xl py-3 transition-all disabled:opacity-50"
+                  className="rounded-lg bg-purple-600 px-5 py-2.5 text-sm font-bold text-white transition-opacity hover:opacity-90 disabled:opacity-50 sm:min-w-36"
                 >
                   {editLoading ? (
                     <span className="flex items-center justify-center gap-2">

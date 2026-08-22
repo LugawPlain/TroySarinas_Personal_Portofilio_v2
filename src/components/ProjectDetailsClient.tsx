@@ -7,12 +7,15 @@ import { Project } from "@/lib/projects";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { FiExternalLink, FiGithub } from "react-icons/fi";
+import LeadGeneratorDemo from "@/components/LeadGeneratorDemo";
 
 interface ProjectDetailsClientProps {
   project: Project;
 }
 
-export const ProjectDetailsClient = ({ project }: ProjectDetailsClientProps) => {
+export const ProjectDetailsClient = ({
+  project,
+}: ProjectDetailsClientProps) => {
   const [isAssetLoaded, setIsAssetLoaded] = useState(false);
 
   const containerVariants = {
@@ -41,7 +44,14 @@ export const ProjectDetailsClient = ({ project }: ProjectDetailsClientProps) => 
   return (
     <div className="space-y-8">
       {/* Image Section - This triggers the reveal */}
-      <ProjectImage project={project} onLoadingComplete={() => setIsAssetLoaded(true)} />
+      <ProjectImage
+        project={project}
+        onLoadingComplete={() => setIsAssetLoaded(true)}
+      />
+
+      {project.demoType === "lead-generator" && (
+        <LeadGeneratorDemo projectId={project.id} />
+      )}
 
       {/* Content Section - Animated only after image starts showing or with a stagger */}
       <motion.div
@@ -84,7 +94,10 @@ export const ProjectDetailsClient = ({ project }: ProjectDetailsClientProps) => 
                   rel="noopener noreferrer"
                   className="block"
                 >
-                  <Button variant="outline" className="w-full gap-2 font-semibold">
+                  <Button
+                    variant="outline"
+                    className="w-full gap-2 font-semibold"
+                  >
                     <FiGithub /> View Code
                   </Button>
                 </Link>

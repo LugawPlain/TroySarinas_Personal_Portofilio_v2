@@ -8,7 +8,6 @@ import { Cpu, Zap } from "lucide-react";
 interface TechItem {
   name: string;
   icon_name: string;
-  icon_url?: string;
   proficiency: number;
 }
 
@@ -104,12 +103,12 @@ const SoftwareEngineerTechnologies = ({ initialTech }: TechnologiesProps) => {
               maskImage:
                 "linear-gradient(to bottom, black 95%, transparent 100%)",
             }}
-            className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 p-4 pb-8"
+            className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 p-4 pb-8n /ne"
             variants={gridVariants}
             initial="hidden"
             animate={showAll ? "visible" : "hidden"}
           >
-            {initialTech.map(({ name, icon_name, icon_url, proficiency }, index) => {
+            {initialTech.map(({ name, icon_name, proficiency }, index) => {
               const isActive = tappedIndex === index;
 
               return (
@@ -138,7 +137,7 @@ const SoftwareEngineerTechnologies = ({ initialTech }: TechnologiesProps) => {
                       className="absolute inset-0 flex flex-col items-center justify-center gap-2 p-4"
                       style={{ backfaceVisibility: "hidden" }}
                     >
-                      <DynamicIcon name={icon_name} iconUrl={icon_url} size={28} />
+                      <DynamicIcon name={icon_name} size={28} />
                       <p className="text-sm font-medium text-secondary text-center">
                         {name}
                       </p>
