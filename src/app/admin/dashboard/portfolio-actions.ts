@@ -3,6 +3,40 @@
 import { createClient, createServiceRoleClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 
+async function placeProjectAtOrder(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+  projectId: string,
+  requestedOrder?: number,
+) {
+  const { data: projects, error } = await supabase
+    .from("projects")
+    .select("id, title, display_order")
+    .neq("id", projectId)
+    .order("display_order", { ascending: true })
+    .order("title", { ascending: true });
+
+  if (error) return error;
+
+  const orderedProjectIds = (projects || []).map((project) => project.id);
+  const requestedPosition =
+    requestedOrder && requestedOrder > 0
+      ? Math.min(Math.floor(requestedOrder), orderedProjectIds.length + 1)
+      : orderedProjectIds.length + 1;
+
+  orderedProjectIds.splice(requestedPosition - 1, 0, projectId);
+
+  for (const [index, orderedProjectId] of orderedProjectIds.entries()) {
+    const { error: updateError } = await supabase
+      .from("projects")
+      .update({ display_order: index + 1 })
+      .eq("id", orderedProjectId);
+
+    if (updateError) return updateError;
+  }
+
+  return null;
+}
+
 export async function updateRoleMetadata(
   roleId: string,
   headline: string,
@@ -616,6 +650,7 @@ export async function createProject(projectData: {
   live_url?: string;
   github_url?: string;
   demo_type?: "lead-generator" | null;
+  display_order?: number;
   roleIds?: string[];
 }) {
   const supabase = await createClient();
@@ -632,7 +667,7 @@ export async function createProject(projectData: {
       github_url: projectData.github_url || null,
       demo_type: projectData.demo_type || null,
       is_published: true,
-      display_order: 0,
+      display_order: projectData.display_order || 0,
     })
     .select()
     .single();
@@ -641,6 +676,13 @@ export async function createProject(projectData: {
     console.error("Error creating project:", error);
     return { error: error.message };
   }
+
+  const orderError = await placeProjectAtOrder(
+    supabase,
+    project.id,
+    projectData.display_order,
+  );
+  if (orderError) return { error: orderError.message };
 
   // Link to roles
   if (projectData.roleIds && projectData.roleIds.length > 0 && project) {
@@ -718,6 +760,53 @@ export async function deleteProject(id: string) {
   return { success: true };
 }
 
+export async function normalizeProjectOrder() {
+  const supabase = await createClient();
+  const { data: projects, error } = await supabase
+    .from("projects")
+    .select("id, title, display_order")
+    .order("display_order", { ascending: true })
+    .order("title", { ascending: true });
+
+  if (error) {
+    return { error: error.message };
+  }
+
+  for (const [index, project] of (projects || []).entries()) {
+    const { error: updateError } = await supabase
+      .from("projects")
+      .update({ display_order: index + 1 })
+      .eq("id", project.id);
+
+    if (updateError) {
+      return { error: updateError.message };
+    }
+  }
+
+  revalidatePath("/admin/dashboard");
+  revalidatePath("/portfolio/[role]", "layout");
+  revalidatePath("/");
+  return { success: true };
+}
+
+export async function saveProjectOrder(projectIds: string[]) {
+  const supabase = await createClient();
+
+  for (const [index, projectId] of projectIds.entries()) {
+    const { error } = await supabase
+      .from("projects")
+      .update({ display_order: index + 1 })
+      .eq("id", projectId);
+
+    if (error) return { error: error.message };
+  }
+
+  revalidatePath("/admin/dashboard");
+  revalidatePath("/portfolio/[role]", "layout");
+  revalidatePath("/");
+  return { success: true };
+}
+
 export async function deleteBlog(id: string) {
   const supabase = await createClient();
   const { error } = await supabase.from("blogs").delete().eq("id", id);
@@ -778,6 +867,7 @@ export async function updateProject(
     live_url?: string;
     github_url?: string;
     demo_type?: "lead-generator" | null;
+    display_order?: number;
     roleIds?: string[];
   },
 ) {
@@ -794,6 +884,7 @@ export async function updateProject(
       live_url: projectData.live_url || null,
       github_url: projectData.github_url || null,
       demo_type: projectData.demo_type || null,
+      display_order: projectData.display_order,
       updated_at: new Date().toISOString(),
     })
     .eq("id", id);
@@ -801,6 +892,15 @@ export async function updateProject(
   if (error) {
     console.error("Error updating project:", error);
     return { error: error.message };
+  }
+
+  if (projectData.display_order !== undefined) {
+    const orderError = await placeProjectAtOrder(
+      supabase,
+      id,
+      projectData.display_order,
+    );
+    if (orderError) return { error: orderError.message };
   }
 
   // Update role associations if provided

@@ -2,7 +2,17 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { rateLimit } from "@/lib/rate-limit";
 
-// Qwen/DashScope Configuration (OpenAI-compatible endpoint)
+// Local Ollama is the primary provider. Set OLLAMA_BASE_URL to
+// http://host.docker.internal:11434/v1/chat/completions when the app runs in Docker.
+const OLLAMA_BASE_URL = process.env.OLLAMA_BASE_URL || "http://localhost:11434/v1/chat/completions";
+const OLLAMA_MODEL = process.env.OLLAMA_MODEL || "qwen2.5:7b-instruct";
+const OLLAMA_MAX_CONCURRENT = Number(process.env.OLLAMA_MAX_CONCURRENT || 2);
+const OLLAMA_MAX_QUEUE = Number(process.env.OLLAMA_MAX_QUEUE || 20);
+const OLLAMA_QUEUE_TIMEOUT_MS = Number(process.env.OLLAMA_QUEUE_TIMEOUT_MS || 10000);
+const OLLAMA_FAILURE_THRESHOLD = 3;
+const OLLAMA_CIRCUIT_RESET_MS = 30000;
+
+// Qwen/DashScope fallback (OpenAI-compatible endpoint)
 const DASHSCOPE_API_KEY = process.env.DASHSCOPE_API_KEY;
 const DASHSCOPE_BASE_URL = "https://dashscope-intl.aliyuncs.com/compatible-mode/v1/chat/completions";
 
@@ -30,6 +40,75 @@ const limiter = rateLimit({
   interval: 60 * 1000,
   uniqueTokenPerInterval: 500,
 });
+
+class OllamaCapacityError extends Error {}
+
+class OllamaConcurrencyGate {
+  private active = 0;
+  private waiting: Array<{
+    resolve: (release: () => void) => void;
+    reject: (error: Error) => void;
+    timeout: ReturnType<typeof setTimeout>;
+  }> = [];
+
+  async acquire(): Promise<() => void> {
+    if (this.active < OLLAMA_MAX_CONCURRENT) {
+      this.active += 1;
+      return this.createRelease();
+    }
+
+    if (this.waiting.length >= OLLAMA_MAX_QUEUE) {
+      throw new OllamaCapacityError("Ollama queue is full");
+    }
+
+    return new Promise((resolve, reject) => {
+      const waiter = {
+        resolve,
+        reject,
+        timeout: setTimeout(() => {
+          const index = this.waiting.indexOf(waiter);
+          if (index !== -1) this.waiting.splice(index, 1);
+          reject(new OllamaCapacityError("Ollama queue wait timed out"));
+        }, OLLAMA_QUEUE_TIMEOUT_MS),
+      };
+      this.waiting.push(waiter);
+    });
+  }
+
+  private createRelease() {
+    let released = false;
+    return () => {
+      if (released) return;
+      released = true;
+      this.active -= 1;
+      const next = this.waiting.shift();
+      if (!next) return;
+      clearTimeout(next.timeout);
+      this.active += 1;
+      next.resolve(this.createRelease());
+    };
+  }
+}
+
+const ollamaGate = new OllamaConcurrencyGate();
+let ollamaConsecutiveFailures = 0;
+let ollamaCircuitOpenUntil = 0;
+
+function isOllamaCircuitOpen() {
+  return Date.now() < ollamaCircuitOpenUntil;
+}
+
+function recordOllamaSuccess() {
+  ollamaConsecutiveFailures = 0;
+  ollamaCircuitOpenUntil = 0;
+}
+
+function recordOllamaFailure() {
+  ollamaConsecutiveFailures += 1;
+  if (ollamaConsecutiveFailures >= OLLAMA_FAILURE_THRESHOLD) {
+    ollamaCircuitOpenUntil = Date.now() + OLLAMA_CIRCUIT_RESET_MS;
+  }
+}
 
 async function getRolePersona(role?: string): Promise<string> {
   if (!role) return TROY_PERSONA;
@@ -128,17 +207,8 @@ async function saveMessage(
   }
 }
 
-async function* streamQwenResponse(
-  message: string,
-  history: any[],
-  persona: string
-) {
-  if (!DASHSCOPE_API_KEY) {
-    throw new Error("DASHSCOPE_API_KEY not configured");
-  }
-
-  // Format messages for Qwen (OpenAI-compatible format)
-  const messages = [
+function buildChatMessages(message: string, history: any[], persona: string) {
+  return [
     { role: "system", content: persona },
     ...history.map((msg: any) => ({
       role: msg.sender === "user" ? "user" : "assistant",
@@ -146,6 +216,67 @@ async function* streamQwenResponse(
     })),
     { role: "user", content: message },
   ];
+}
+
+async function* streamOllamaResponse(
+  message: string,
+  history: any[],
+  persona: string
+) {
+  if (isOllamaCircuitOpen()) {
+    throw new OllamaCapacityError("Ollama circuit is temporarily open");
+  }
+
+  const release = await ollamaGate.acquire();
+  let responseStarted = false;
+  let timeout: ReturnType<typeof setTimeout> | undefined;
+
+  try {
+    const controller = new AbortController();
+    timeout = setTimeout(() => controller.abort(), 90000);
+    const response = await fetch(OLLAMA_BASE_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: OLLAMA_MODEL,
+        messages: buildChatMessages(message, history, persona),
+        stream: true,
+        options: { temperature: 0.7, top_p: 0.8 },
+      }),
+      signal: controller.signal,
+    });
+    clearTimeout(timeout);
+    timeout = undefined;
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`Ollama API error: ${response.status} - ${errorText}`);
+    }
+
+    for await (const chunk of streamOpenAIChunks(response)) {
+      responseStarted = true;
+      recordOllamaSuccess();
+      yield chunk;
+    }
+  } catch (error) {
+    if (!responseStarted && !(error instanceof OllamaCapacityError)) {
+      recordOllamaFailure();
+    }
+    throw error;
+  } finally {
+    if (timeout) clearTimeout(timeout);
+    release();
+  }
+}
+
+async function* streamDashScopeResponse(
+  message: string,
+  history: any[],
+  persona: string
+) {
+  if (!DASHSCOPE_API_KEY) {
+    throw new Error("DASHSCOPE_API_KEY not configured");
+  }
 
   const response = await fetch(DASHSCOPE_BASE_URL, {
     method: "POST",
@@ -155,7 +286,7 @@ async function* streamQwenResponse(
     },
     body: JSON.stringify({
       model: "qwen3.6-flash",
-      messages,
+      messages: buildChatMessages(message, history, persona),
       stream: true,
       max_tokens: 1500,
       temperature: 0.7,
@@ -171,7 +302,11 @@ async function* streamQwenResponse(
     throw new Error(`Qwen API error: ${response.status} - ${errorText}`);
   }
 
-  // Handle streaming response (SSE format)
+  yield* streamOpenAIChunks(response);
+}
+
+async function* streamOpenAIChunks(response: Response) {
+  // Ollama and DashScope both return OpenAI-compatible SSE streams.
   const reader = response.body?.getReader();
   if (!reader) {
     throw new Error("No response body");
@@ -288,9 +423,23 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // 6. Fetch persona and call Qwen
+    // 6. Fetch persona and call the local model
     const persona = await getRolePersona(role);
-    const aiResponse = streamQwenResponse(message, history || [], persona);
+    const aiResponse = (async function* () {
+      let localResponseStarted = false;
+
+      try {
+        for await (const chunk of streamOllamaResponse(message, history || [], persona)) {
+          localResponseStarted = true;
+          yield chunk;
+        }
+      } catch (error) {
+        if (localResponseStarted) throw error;
+
+        console.warn("Ollama unavailable, falling back to DashScope:", error);
+        yield* streamDashScopeResponse(message, history || [], persona);
+      }
+    })();
     
     // Collect full response and stream simultaneously
     let fullResponse = "";

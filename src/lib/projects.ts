@@ -14,6 +14,7 @@ export interface Project {
   liveUrl?: string;
   githubUrl?: string;
   demoType?: "lead-generator";
+  displayOrder: number;
 }
 
 interface ProjectRow {
@@ -26,6 +27,7 @@ interface ProjectRow {
   live_url: string | null;
   github_url: string | null;
   demo_type: "lead-generator" | null;
+  display_order: number;
   created_at?: string;
 }
 
@@ -72,6 +74,7 @@ export async function getProjects(
     liveUrl: item.live_url || undefined,
     githubUrl: item.github_url || undefined,
     demoType: item.demo_type || undefined,
+    displayOrder: item.display_order,
   }));
 }
 
@@ -98,5 +101,6 @@ export async function getProject(id: string): Promise<Project | undefined> {
     liveUrl: project.live_url || undefined,
     githubUrl: project.github_url || undefined,
     demoType: project.demo_type || undefined,
+    displayOrder: project.display_order,
   };
 }
