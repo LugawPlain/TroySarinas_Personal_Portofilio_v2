@@ -40,7 +40,11 @@ async function getDashboardData() {
       .order("created_at", { ascending: false }),
     supabase.from("gateway_visits").select("*", { count: "exact", head: true }),
     supabase.from("gateway_resumes").select("*"),
-    supabase.from("projects").select("*").order("title"),
+    supabase
+      .from("projects")
+      .select("*")
+      .order("display_order", { ascending: true })
+      .order("title", { ascending: true }),
     supabase.from("blogs").select("*").order("date", { ascending: false }),
     supabase.from("education").select("*").order("school"),
     supabase.from("certifications").select("*").order("title"),

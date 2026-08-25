@@ -24,6 +24,7 @@ import {
   updateProject,
   updateBlog,
   uploadProjectImage,
+  saveProjectOrder,
 } from "./portfolio-actions";
 import {
   Briefcase,
@@ -49,6 +50,9 @@ import {
   Link2,
   Share2,
   Search,
+  ArrowUpDown,
+  ListOrdered,
+  GripVertical,
 } from "lucide-react";
 import { uploadResume, deleteResume } from "./resume-upload-actions";
 import { HeroConfigEditor } from "./HeroConfigEditor";
@@ -134,9 +138,34 @@ export function PortfolioContentManager({
   const [editItem, setEditItem] = useState<any>(null);
   const [editFormData, setEditFormData] = useState<any>({});
   const [editLoading, setEditLoading] = useState(false);
+  const [orderedProjects, setOrderedProjects] = useState(projects);
+  const [isSortMode, setIsSortMode] = useState(false);
+  const [draggedProjectId, setDraggedProjectId] = useState<string | null>(null);
+
+  const handleProjectDrop = (targetProjectId: string) => {
+    if (!draggedProjectId || draggedProjectId === targetProjectId) return;
+
+    setOrderedProjects((currentProjects) => {
+      const nextProjects = [...currentProjects];
+      const draggedIndex = nextProjects.findIndex(
+        (project) => project.id === draggedProjectId,
+      );
+      const targetIndex = nextProjects.findIndex(
+        (project) => project.id === targetProjectId,
+      );
+
+      if (draggedIndex === -1 || targetIndex === -1) return currentProjects;
+
+      const [draggedProject] = nextProjects.splice(draggedIndex, 1);
+      nextProjects.splice(targetIndex, 0, draggedProject);
+      return nextProjects;
+    });
+    setDraggedProjectId(null);
+  };
 
   // Sync local state when initial props change
   React.useEffect(() => {
+    setOrderedProjects(projects);
     setLocalRoleTech(initialRoleTech);
     setLocalRoleExp(initialRoleExp);
     setLocalRoleEducation(initialRoleEducation);
@@ -145,6 +174,7 @@ export function PortfolioContentManager({
     setLocalRoleBlog(initialRoleBlog);
     setLocalRoleSocialLinks(initialRoleSocialLinks);
   }, [
+    projects,
     initialRoleTech,
     initialRoleExp,
     initialRoleEducation,
@@ -934,20 +964,72 @@ export function PortfolioContentManager({
                     {projects.length}
                   </span>
                 </h3>
-                <button
-                  onClick={() => {
-                    setCreateType("project");
-                    setCreateFormData({});
-                    setIsCreateModalOpen(true);
-                  }}
-                  className="flex items-center gap-1.5 px-3 py-1.5 bg-purple-500/10 border border-purple-500/20 rounded-full text-[10px] font-bold text-purple-500 uppercase hover:bg-purple-500/20 transition-all"
-                >
-                  <Plus className="w-3 h-3" />
-                  New Project
-                </button>
+                <div className="flex items-center gap-2">
+                  {isSortMode ? (
+                    <>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setOrderedProjects(projects);
+                          setIsSortMode(false);
+                          setDraggedProjectId(null);
+                        }}
+                        className="inline-flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-[10px] font-bold uppercase text-muted-foreground transition-all hover:bg-muted"
+                        disabled={isPending}
+                      >
+                        <X className="w-3 h-3" />
+                        Cancel
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          startTransition(async () => {
+                            const result = await saveProjectOrder(
+                              orderedProjects.map((project) => project.id),
+                            );
+                            if (result?.error) {
+                              alert(`Failed to save project order: ${result.error}`);
+                              return;
+                            }
+                            window.location.reload();
+                          });
+                        }}
+                        className="inline-flex items-center gap-1.5 rounded-full bg-purple-500 px-3 py-1.5 text-[10px] font-bold uppercase text-white transition-all hover:bg-purple-600 disabled:opacity-50"
+                        disabled={isPending}
+                      >
+                        <Save className="w-3 h-3" />
+                        {isPending ? "Saving..." : "Save order"}
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <button
+                        type="button"
+                        title="Drag projects to reorder them"
+                        onClick={() => setIsSortMode(true)}
+                        className="inline-flex items-center gap-1.5 rounded-full border border-purple-500/20 px-3 py-1.5 text-[10px] font-bold uppercase text-purple-600 transition-all hover:bg-purple-500/10"
+                      >
+                        <ListOrdered className="w-3 h-3" />
+                        Sort projects
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setCreateType("project");
+                          setCreateFormData({});
+                          setIsCreateModalOpen(true);
+                        }}
+                        className="flex items-center gap-1.5 px-3 py-1.5 bg-purple-500/10 border border-purple-500/20 rounded-full text-[10px] font-bold text-purple-500 uppercase hover:bg-purple-500/20 transition-all"
+                      >
+                        <Plus className="w-3 h-3" />
+                        New Project
+                      </button>
+                    </>
+                  )}
+                </div>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                {projects.map((proj) => {
+                {orderedProjects.map((proj, projectIndex) => {
                   const linked = isProjLinked(proj.id);
                   const projRoleLinks = localRoleProj.filter(
                     (rp: any) => rp.project_id === proj.id,
@@ -958,27 +1040,51 @@ export function PortfolioContentManager({
                   return (
                     <div
                       key={proj.id}
+                      draggable={isSortMode}
+                      onDragStart={() => setDraggedProjectId(proj.id)}
+                      onDragOver={(event) => {
+                        if (isSortMode) event.preventDefault();
+                      }}
+                      onDrop={() => {
+                        if (isSortMode) handleProjectDrop(proj.id);
+                      }}
+                      onDragEnd={() => setDraggedProjectId(null)}
                       className={`group relative p-4 rounded-xl border text-left transition-all duration-200 ${
                         linked
                           ? "bg-purple-500/5 border-purple-500/50 text-purple-700 shadow-sm ring-1 ring-purple-500/10"
                           : "bg-background hover:bg-muted/50 text-muted-foreground border-border"
-                      }`}
+                      } ${
+                        isSortMode
+                          ? "cursor-grab active:cursor-grabbing hover:border-purple-500/60"
+                          : ""
+                      } ${draggedProjectId === proj.id ? "opacity-50" : ""}`}
                     >
                       <div className="flex items-start justify-between gap-2">
                         <div className="flex-1 min-w-0">
-                          <button
-                            onClick={() =>
-                              handleToggle(
-                                "role_projects",
-                                proj.id,
-                                "project_id",
-                                linked,
-                              )
-                            }
-                            className="text-xs font-bold line-clamp-1 text-left w-full"
-                          >
-                            {proj.title}
-                          </button>
+                          <div className="flex items-center gap-2">
+                            {isSortMode && (
+                              <GripVertical className="h-4 w-4 shrink-0 text-purple-500/70" />
+                            )}
+                            <span
+                              className="inline-flex h-5 min-w-5 items-center justify-center rounded-md bg-purple-500/10 px-1.5 text-[10px] font-bold tabular-nums text-purple-600"
+                              title="Display order: lower numbers appear first"
+                            >
+                              {isSortMode ? projectIndex + 1 : proj.display_order ?? 0}
+                            </span>
+                            <button
+                              onClick={() =>
+                                handleToggle(
+                                  "role_projects",
+                                  proj.id,
+                                  "project_id",
+                                  linked,
+                                )
+                              }
+                              className="text-xs font-bold line-clamp-1 text-left min-w-0"
+                            >
+                              {proj.title}
+                            </button>
+                          </div>
                           <p className="text-[10px] opacity-60 mt-1 line-clamp-1">
                             {proj.description}
                           </p>
@@ -1040,6 +1146,7 @@ export function PortfolioContentManager({
                                 live_url: proj.live_url || "",
                                 github_url: proj.github_url || "",
                                 demo_type: proj.demo_type || "",
+                                display_order: proj.display_order || 0,
                                 roleIds: projRoleLinks.map(
                                   (pr: any) => pr.role_id,
                                 ),
@@ -1461,6 +1568,7 @@ export function PortfolioContentManager({
                       live_url: createFormData.live_url,
                       github_url: createFormData.github_url,
                       demo_type: createFormData.demo_type || null,
+                      display_order: createFormData.display_order || 0,
                       roleIds: createFormData.roleIds || [],
                     });
                   } else {
@@ -1680,6 +1788,34 @@ export function PortfolioContentManager({
                         </option>
                       </select>
                     </div>
+                    <div className="space-y-2">
+                      <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-2">
+                        <ArrowUpDown className="w-3.5 h-3.5" />
+                        Display Order
+                      </label>
+                      <input
+                        type="number"
+                        min="1"
+                        step="1"
+                        aria-label="Display order"
+                        value={createFormData.display_order ?? ""}
+                        onChange={(e) =>
+                          setCreateFormData((prev: any) => ({
+                            ...prev,
+                            display_order:
+                              e.target.value === ""
+                                ? undefined
+                                : Number(e.target.value),
+                          }))
+                        }
+                        className="w-full bg-background border rounded-lg px-4 py-3 outline-none focus:ring-2 focus:ring-purple-500/50 transition-all text-base"
+                        placeholder="End of list"
+                      />
+                      <p className="text-[10px] text-muted-foreground">
+                        Use a position from 1 onward. Leave blank to add this
+                        project last.
+                      </p>
+                    </div>
                   </div>
                 </>
               )}
@@ -1850,6 +1986,7 @@ export function PortfolioContentManager({
                       live_url: editFormData.live_url,
                       github_url: editFormData.github_url,
                       demo_type: editFormData.demo_type || null,
+                      display_order: editFormData.display_order || 0,
                       roleIds: editFormData.roleIds || [],
                     });
                   } else if (editType === "blog" && editItem) {
@@ -2067,6 +2204,34 @@ export function PortfolioContentManager({
                           Google Maps lead generator
                         </option>
                       </select>
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-2">
+                        <ArrowUpDown className="w-3.5 h-3.5" />
+                        Display Order
+                      </label>
+                      <input
+                        type="number"
+                        min="1"
+                        step="1"
+                        aria-label="Display order"
+                        value={editFormData.display_order || ""}
+                        onChange={(e) =>
+                          setEditFormData((prev: any) => ({
+                            ...prev,
+                            display_order:
+                              e.target.value === ""
+                                ? undefined
+                                : Number(e.target.value),
+                          }))
+                        }
+                        className="w-full rounded-lg border bg-background px-4 py-3 text-base outline-none transition-all focus:ring-2 focus:ring-purple-500/50"
+                        placeholder="End of list"
+                      />
+                      <p className="text-[10px] text-muted-foreground">
+                        Use a position from 1 onward. Leave blank to move this
+                        project last.
+                      </p>
                     </div>
                   </div>
                 </>

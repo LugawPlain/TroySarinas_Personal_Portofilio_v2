@@ -7,7 +7,15 @@ import ContactModal from "@/components/ContactModal";
 import Resume from "@/components/Resume";
 import { useHeroSection } from "@/hooks/use-hero-section";
 import { HeroConfig } from "@/lib/roles";
-import { TrendingUp, Users, Target, BarChart3, ArrowDown, Sparkles, Zap } from "lucide-react";
+import {
+  TrendingUp,
+  Users,
+  Target,
+  BarChart3,
+  ArrowDown,
+  Sparkles,
+  Zap,
+} from "lucide-react";
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
 
@@ -19,24 +27,89 @@ interface GTMHeroSectionProps {
 }
 
 const metrics = [
-  { label: "Pipeline Growth", value: "3x", suffix: "", icon: TrendingUp, color: "from-emerald-500/20 to-teal-500/10", borderColor: "border-emerald-500/30", iconColor: "text-emerald-600", shadowColor: "shadow-emerald-500/20" },
-  { label: "Revenue Influenced", value: "2", suffix: "M+", icon: BarChart3, color: "from-blue-500/20 to-cyan-500/10", borderColor: "border-blue-500/30", iconColor: "text-blue-600", shadowColor: "shadow-blue-500/20" },
-  { label: "Lead Quality", value: "340", suffix: "%", icon: Target, color: "from-violet-500/20 to-purple-500/10", borderColor: "border-violet-500/30", iconColor: "text-violet-600", shadowColor: "shadow-violet-500/20" },
-  { label: "Campaigns Launched", value: "50", suffix: "+", icon: Users, color: "from-amber-500/20 to-orange-500/10", borderColor: "border-amber-500/30", iconColor: "text-amber-600", shadowColor: "shadow-amber-500/20" },
+  {
+    label: "Pipeline Growth",
+    value: "3x",
+    suffix: "",
+    icon: TrendingUp,
+    color: "from-emerald-500/20 to-teal-500/10",
+    borderColor: "border-emerald-500/30",
+    iconColor: "text-emerald-600",
+    shadowColor: "shadow-emerald-500/20",
+  },
+  {
+    label: "Revenue Influenced",
+    value: "2",
+    suffix: "M+",
+    icon: BarChart3,
+    color: "from-blue-500/20 to-cyan-500/10",
+    borderColor: "border-blue-500/30",
+    iconColor: "text-blue-600",
+    shadowColor: "shadow-blue-500/20",
+  },
+  {
+    label: "Lead Quality",
+    value: "340",
+    suffix: "%",
+    icon: Target,
+    color: "from-violet-500/20 to-purple-500/10",
+    borderColor: "border-violet-500/30",
+    iconColor: "text-violet-600",
+    shadowColor: "shadow-violet-500/20",
+  },
+  {
+    label: "Campaigns Launched",
+    value: "50",
+    suffix: "+",
+    icon: Users,
+    color: "from-amber-500/20 to-orange-500/10",
+    borderColor: "border-amber-500/30",
+    iconColor: "text-amber-600",
+    shadowColor: "shadow-amber-500/20",
+  },
 ];
 
 const trustLogos = [
-  { name: "Salesforce", initial: "SF", color: "bg-blue-50 text-blue-700 border-blue-200" },
-  { name: "HubSpot", initial: "HS", color: "bg-orange-50 text-orange-700 border-orange-200" },
-  { name: "Google", initial: "G", color: "bg-red-50 text-red-700 border-red-200" },
-  { name: "Meta", initial: "M", color: "bg-indigo-50 text-indigo-700 border-indigo-200" },
-  { name: "LinkedIn", initial: "LI", color: "bg-sky-50 text-sky-700 border-sky-200" },
-  { name: "Marketo", initial: "MK", color: "bg-purple-50 text-purple-700 border-purple-200" },
+  {
+    name: "Salesforce",
+    initial: "SF",
+    color: "bg-blue-50 text-blue-700 border-blue-200",
+  },
+  {
+    name: "HubSpot",
+    initial: "HS",
+    color: "bg-orange-50 text-orange-700 border-orange-200",
+  },
+  {
+    name: "Google",
+    initial: "G",
+    color: "bg-red-50 text-red-700 border-red-200",
+  },
+  {
+    name: "Meta",
+    initial: "M",
+    color: "bg-indigo-50 text-indigo-700 border-indigo-200",
+  },
+  {
+    name: "LinkedIn",
+    initial: "LI",
+    color: "bg-sky-50 text-sky-700 border-sky-200",
+  },
+  {
+    name: "Marketo",
+    initial: "MK",
+    color: "bg-purple-50 text-purple-700 border-purple-200",
+  },
 ];
 
 const floatingBadges = [
   { icon: Zap, text: "CRM Expert", position: "top-20 right-10", delay: 0 },
-  { icon: Sparkles, text: "Automation Pro", position: "bottom-32 right-20", delay: 0.5 },
+  {
+    icon: Sparkles,
+    text: "Automation Pro",
+    position: "bottom-32 right-20",
+    delay: 0.5,
+  },
   { icon: Target, text: "Data-Driven", position: "top-32 left-10", delay: 1 },
 ];
 
@@ -99,14 +172,14 @@ const GTMHeroSection = ({
       {/* Background Elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         {/* Grid Pattern */}
-        <div 
+        <div
           className="absolute inset-0 opacity-[0.03]"
           style={{
             backgroundImage: `linear-gradient(#10b981 1px, transparent 1px), linear-gradient(90deg, #10b981 1px, transparent 1px)`,
-            backgroundSize: '60px 60px'
+            backgroundSize: "60px 60px",
           }}
         />
-        
+
         {/* Gradient Orbs */}
         <div className="absolute -top-40 -right-40 w-[600px] h-[600px] bg-emerald-200/30 rounded-full blur-3xl" />
         <div className="absolute -bottom-40 -left-40 w-[500px] h-[500px] bg-blue-200/30 rounded-full blur-3xl" />
@@ -122,7 +195,9 @@ const GTMHeroSection = ({
             className={`hidden xl:flex absolute ${badge.position} items-center gap-2 px-4 py-2 bg-white/80 backdrop-blur-sm rounded-full shadow-lg border border-gray-200/50`}
           >
             <badge.icon className="w-4 h-4 text-emerald-600" />
-            <span className="text-sm font-semibold text-gray-700">{badge.text}</span>
+            <span className="text-sm font-semibold text-gray-700">
+              {badge.text}
+            </span>
           </motion.div>
         ))}
       </div>
@@ -148,7 +223,7 @@ const GTMHeroSection = ({
           </motion.div>
 
           {/* Profile Header */}
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
@@ -158,7 +233,10 @@ const GTMHeroSection = ({
               <div className="relative">
                 <div className="w-16 h-16 sm:w-20 sm:h-20 overflow-hidden rounded-2xl bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center shadow-xl">
                   <Avatar className="w-14 h-14 sm:w-18 sm:h-18 bg-transparent">
-                    <AvatarImage src={config.avatarUrl || "/Me2.webp"} className="object-cover" />
+                    <AvatarImage
+                      src={config.avatarUrl || "/Me2.webp"}
+                      className="object-cover"
+                    />
                     <AvatarFallback className="text-xl font-bold text-white bg-emerald-600">
                       TS
                     </AvatarFallback>
@@ -180,7 +258,7 @@ const GTMHeroSection = ({
           </motion.div>
 
           {/* Main Headline */}
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
@@ -196,17 +274,18 @@ const GTMHeroSection = ({
           </motion.div>
 
           {/* Sub Headline */}
-          <motion.h3 
+          <motion.h3
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.3 }}
             className="text-xl sm:text-2xl font-semibold text-gray-600 mb-4 font-fraunces"
           >
-            {config.subHeadline || "Driving Revenue Through Strategic GTM Execution"}
+            {config.subHeadline ||
+              "Driving Revenue Through Strategic GTM Execution"}
           </motion.h3>
 
           {/* Bio */}
-          <motion.p 
+          <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.4 }}
@@ -217,7 +296,7 @@ const GTMHeroSection = ({
           </motion.p>
 
           {/* CTA Buttons */}
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.5 }}
@@ -272,21 +351,30 @@ const GTMHeroSection = ({
                 key={metric.label}
                 initial={{ opacity: 0, y: 30, scale: 0.95 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
-                transition={{ delay: 0.2 + index * 0.1, duration: 0.5, type: "spring" }}
+                transition={{
+                  delay: 0.2 + index * 0.1,
+                  duration: 0.5,
+                  type: "spring",
+                }}
                 whileHover={{ scale: 1.03, transition: { duration: 0.2 } }}
                 className={`relative overflow-hidden bg-gradient-to-br ${metric.color} ${metric.borderColor} border-2 rounded-2xl sm:rounded-3xl flex flex-col px-5 sm:px-6 py-5 sm:py-6 gap-3 shadow-lg ${metric.shadowColor} hover:shadow-xl transition-shadow`}
               >
                 {/* Shine Effect */}
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full hover:translate-x-full transition-transform duration-1000" />
-                
+
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-xl bg-white/90 flex items-center justify-center shadow-sm">
                     <metric.icon className={`w-5 h-5 ${metric.iconColor}`} />
                   </div>
-                  <span className="text-xs sm:text-sm font-semibold text-gray-600">{metric.label}</span>
+                  <span className="text-xs sm:text-sm font-semibold text-gray-600">
+                    {metric.label}
+                  </span>
                 </div>
                 <h2 className="text-4xl sm:text-5xl xl:text-6xl font-bold text-gray-900 tracking-tight">
-                  <AnimatedCounter value={metric.value} suffix={metric.suffix} />
+                  <AnimatedCounter
+                    value={metric.value}
+                    suffix={metric.suffix}
+                  />
                 </h2>
               </motion.div>
             ))}
@@ -300,8 +388,12 @@ const GTMHeroSection = ({
             className="bg-white rounded-2xl border border-gray-200 p-6 shadow-lg"
           >
             <div className="flex items-center justify-between mb-4">
-              <span className="text-sm font-semibold text-gray-700">Pipeline Growth Trajectory</span>
-              <span className="text-xs font-medium text-emerald-600 bg-emerald-50 px-2 py-1 rounded-full">+156% YoY</span>
+              <span className="text-sm font-semibold text-gray-700">
+                Pipeline Growth Trajectory
+              </span>
+              <span className="text-xs font-medium text-emerald-600 bg-emerald-50 px-2 py-1 rounded-full">
+                +156% YoY
+              </span>
             </div>
             <div className="flex items-end gap-2 h-24">
               {[35, 45, 40, 55, 50, 70, 65, 85, 80, 100].map((height, i) => (
@@ -325,31 +417,6 @@ const GTMHeroSection = ({
       </div>
 
       {/* Trust Bar */}
-      <motion.div 
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.8, duration: 0.5 }}
-        className="w-full border-t border-gray-100 bg-gray-50/50 backdrop-blur-sm py-8 relative z-10"
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-8">
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8">
-            <p className="text-xs sm:text-sm font-semibold text-gray-400 uppercase tracking-widest whitespace-nowrap">
-              Trusted by leading platforms
-            </p>
-            <div className="flex flex-wrap justify-center items-center gap-3 sm:gap-4">
-              {trustLogos.map((logo) => (
-                <div
-                  key={logo.name}
-                  className={`flex items-center gap-2 px-4 py-2.5 rounded-xl border shadow-sm hover:shadow-md transition-all hover:-translate-y-0.5 ${logo.color}`}
-                >
-                  <span className="text-xs font-bold">{logo.initial}</span>
-                  <span className="text-sm font-semibold">{logo.name}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </motion.div>
 
       {/* Scroll Indicator */}
       <motion.div
@@ -358,7 +425,9 @@ const GTMHeroSection = ({
         transition={{ delay: 1.2 }}
         className="absolute bottom-28 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
       >
-        <span className="text-xs text-gray-400 font-medium">Scroll to explore</span>
+        <span className="text-xs text-gray-400 font-medium">
+          Scroll to explore
+        </span>
         <motion.div
           animate={{ y: [0, 8, 0] }}
           transition={{ duration: 1.5, repeat: Infinity }}
