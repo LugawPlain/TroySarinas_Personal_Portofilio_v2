@@ -60,12 +60,13 @@ export function InteractionFeed() {
   };
 
   return (
-    <div className="bg-card rounded-xl border p-6 space-y-4 shadow-sm h-full flex flex-col">
+      <div className="bg-background rounded-xl border p-5 space-y-4 shadow-sm h-full flex flex-col">
       <div className="flex items-center justify-between mb-2">
-        <h2 className="text-xl font-semibold flex items-center gap-2">
+        <h3 className="text-base font-semibold flex items-center gap-2">
           <Activity className="w-5 h-5 text-accent" />
-          Live Activity Feed
-        </h2>
+          Recent activity
+        </h3>
+        <span className="text-[10px] text-muted-foreground uppercase tracking-wider">Latest 8</span>
         <button
           onClick={refreshEvents}
           disabled={isLoading}
@@ -76,7 +77,7 @@ export function InteractionFeed() {
         </button>
       </div>
 
-      <div className="flex-1 overflow-y-auto space-y-4 pr-2 custom-scrollbar">
+      <div className="flex-1 max-h-[26rem] overflow-y-auto space-y-4 pr-2 custom-scrollbar">
         {events.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-12 text-center">
             <XCircle className="w-8 h-8 text-muted-foreground/20 mb-2" />
@@ -85,7 +86,7 @@ export function InteractionFeed() {
             </p>
           </div>
         ) : (
-          events.map((event) => (
+          events.slice(0, 8).map((event) => (
             <div
               key={event.id}
               className="group relative pl-4 border-l-2 border-muted hover:border-accent transition-colors pb-1"
@@ -111,6 +112,14 @@ export function InteractionFeed() {
                   {event.event_name.replace(/_/g, " ")}
                 </span>
               </div>
+              <div className="text-[10px] text-muted-foreground mt-1">
+                {event.gateway_links?.target_role?.replace(/-/g, " ") || "Unknown role"}
+                {" · "}
+                {new Date(event.created_at).toLocaleDateString([], {
+                  month: "short",
+                  day: "numeric",
+                })}
+              </div>
               {event.section && (
                 <div className="text-[10px] text-muted-foreground mt-0.5 font-bold uppercase tracking-widest opacity-60">
                   Section: {event.section}
@@ -131,11 +140,11 @@ export function LinkGeneratorForm({ roles }: { roles: any[] }) {
   );
 
   return (
-    <div className="bg-card rounded-xl border p-6 space-y-4 shadow-sm h-full">
-      <h2 className="text-xl font-semibold flex items-center gap-2">
+    <div className="bg-background rounded-xl border p-5 space-y-4 shadow-sm h-full">
+      <h3 className="text-base font-semibold flex items-center gap-2">
         <Plus className="w-5 h-5" />
-        Generate Link
-      </h2>
+        Create a tracking link
+      </h3>
 
       <form action={formAction} className="space-y-4">
         <div className="space-y-2">

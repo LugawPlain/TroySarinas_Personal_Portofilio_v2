@@ -51,7 +51,7 @@ export async function getChatStats() {
   const [
     { count: totalConversations },
     { count: totalMessages },
-    { data: roleBreakdown },
+    { data: conversations },
     { data: recentConversations },
   ] = await Promise.all([
     supabase
@@ -60,7 +60,9 @@ export async function getChatStats() {
     supabase
       .from("chat_messages")
       .select("*", { count: "exact", head: true }),
-    supabase.rpc("get_chat_role_breakdown"),
+    supabase
+      .from("chat_conversations")
+      .select("role, message_count"),
     supabase
       .from("chat_conversations")
       .select("*")
@@ -68,10 +70,25 @@ export async function getChatStats() {
       .limit(5),
   ]);
 
+  const roleCounts = (conversations || []).reduce<Record<string, { conversations: number; messages: number }>>(
+    (breakdown, conversation) => {
+      const role = conversation.role || "standard";
+      const current = breakdown[role] || { conversations: 0, messages: 0 };
+      breakdown[role] = {
+        conversations: current.conversations + 1,
+        messages: current.messages + (conversation.message_count || 0),
+      };
+      return breakdown;
+    },
+    {},
+  );
+
   return {
     totalConversations: totalConversations || 0,
     totalMessages: totalMessages || 0,
-    roleBreakdown: roleBreakdown || [],
+    roleBreakdown: Object.entries(roleCounts)
+      .map(([role, values]) => ({ role, ...values }))
+      .sort((a, b) => b.conversations - a.conversations),
     recentConversations: recentConversations || [],
   };
 }

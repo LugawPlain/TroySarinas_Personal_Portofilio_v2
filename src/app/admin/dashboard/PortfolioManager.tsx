@@ -529,19 +529,18 @@ export function PortfolioContentManager({
   };
 
   return (
-    <div className="flex flex-col h-full -m-6 md:-m-8">
-      <div className="p-6 border-b flex flex-col md:flex-row md:items-center justify-between gap-4 bg-muted/20">
+    <div className="flex flex-col h-full -m-5 md:-m-7">
+      <div className="p-5 md:px-6 md:py-5 border-b flex flex-col md:flex-row md:items-center justify-between gap-4 bg-muted/20">
         <div className="flex items-center gap-3">
-          <div className="p-2 bg-accent/10 rounded-lg">
+          <div className="p-2.5 bg-accent/10 rounded-xl">
             <Layout className="w-5 h-5 text-accent" />
           </div>
           <div>
-            <h2 className="text-xl font-bold tracking-tight">
-              Content Manager
+            <h2 className="text-lg font-semibold tracking-tight">
+              Portfolio content
             </h2>
-            <p className="text-[10px] text-muted-foreground uppercase font-bold tracking-wider mt-0.5">
-              Refining Variant:{" "}
-              <span className="text-accent">{selectedRole.title}</span>
+            <p className="text-sm text-muted-foreground mt-1">
+              Editing <span className="font-medium text-foreground">{selectedRole.title}</span>
             </p>
           </div>
         </div>
@@ -553,63 +552,71 @@ export function PortfolioContentManager({
               {saveStatus}
             </div>
           )}
-          <select
+          <label className="flex items-center gap-2 text-xs font-medium text-muted-foreground">
+            Role
+            <select
             value={selectedRole.slug}
             onChange={(e) =>
               setSelectedRole(roles.find((r) => r.slug === e.target.value))
             }
-            className="h-10 px-4 rounded-lg border bg-background font-bold text-sm focus:ring-2 focus:ring-accent outline-none cursor-pointer hover:border-accent transition-colors"
-          >
-            {roles.map((r) => (
-              <option key={r.id} value={r.slug}>
-                {r.title}
-              </option>
-            ))}
-          </select>
+              className="h-10 px-3 rounded-lg border bg-background font-semibold text-sm text-foreground focus:ring-2 focus:ring-accent outline-none cursor-pointer hover:border-accent transition-colors"
+            >
+              {roles.map((r) => (
+                <option key={r.id} value={r.slug}>
+                  {r.title}
+                </option>
+              ))}
+            </select>
+          </label>
         </div>
       </div>
 
-      {/* Modern Tabs Navigation */}
-      <div className="px-6 pt-4 flex items-center gap-1 border-b bg-muted/5 overflow-x-auto no-scrollbar">
-        <TabButton
-          active={activeTab === "identity"}
-          onClick={() => setActiveTab("identity")}
-          icon={<Layout className="w-4 h-4" />}
-          label="Identity"
-        />
-        <TabButton
-          active={activeTab === "skills"}
-          onClick={() => setActiveTab("skills")}
-          icon={<Cpu className="w-4 h-4" />}
-          label="Skills"
-        />
-        <TabButton
-          active={activeTab === "career"}
-          onClick={() => setActiveTab("career")}
-          icon={<Briefcase className="w-4 h-4" />}
-          label="Career"
-        />
-        <TabButton
-          active={activeTab === "work"}
-          onClick={() => setActiveTab("work")}
-          icon={<FolderGit2 className="w-4 h-4" />}
-          label="Projects & Blogs"
-        />
-        <TabButton
-          active={activeTab === "academia"}
-          onClick={() => setActiveTab("academia")}
-          icon={<GraduationCap className="w-4 h-4" />}
-          label="Education & Certs"
-        />
-        <TabButton
-          active={activeTab === "chat"}
-          onClick={() => setActiveTab("chat")}
-          icon={<MessageSquare className="w-4 h-4" />}
-          label="Chat Config"
-        />
-      </div>
+      <div className="flex flex-col md:flex-row min-h-125">
+        <aside className="md:w-56 shrink-0 border-b md:border-b-0 md:border-r bg-muted/10 p-3">
+          <p className="px-3 pt-2 pb-3 text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+            Edit sections
+          </p>
+          <nav className="flex md:flex-col gap-1 overflow-x-auto no-scrollbar" aria-label="Content sections">
+            <TabButton
+              active={activeTab === "identity"}
+              onClick={() => setActiveTab("identity")}
+              icon={<Layout className="w-4 h-4" />}
+              label="Identity"
+            />
+            <TabButton
+              active={activeTab === "skills"}
+              onClick={() => setActiveTab("skills")}
+              icon={<Cpu className="w-4 h-4" />}
+              label="Skills"
+            />
+            <TabButton
+              active={activeTab === "career"}
+              onClick={() => setActiveTab("career")}
+              icon={<Briefcase className="w-4 h-4" />}
+              label="Career"
+            />
+            <TabButton
+              active={activeTab === "work"}
+              onClick={() => setActiveTab("work")}
+              icon={<FolderGit2 className="w-4 h-4" />}
+              label="Projects & Blogs"
+            />
+            <TabButton
+              active={activeTab === "academia"}
+              onClick={() => setActiveTab("academia")}
+              icon={<GraduationCap className="w-4 h-4" />}
+              label="Education & Certs"
+            />
+            <TabButton
+              active={activeTab === "chat"}
+              onClick={() => setActiveTab("chat")}
+              icon={<MessageSquare className="w-4 h-4" />}
+              label="Chat Config"
+            />
+          </nav>
+        </aside>
 
-      <div className="p-6 md:p-8 min-h-[500px]">
+      <div className="flex-1 p-5 md:p-8">
         {/* Tab 1: Identity */}
         {activeTab === "identity" && (
           <div className="space-y-8 animate-in fade-in slide-in-from-bottom-2 duration-300">
@@ -1490,8 +1497,9 @@ export function PortfolioContentManager({
           />
         )}
       </div>
+      </div>
 
-      <div className="p-4 bg-muted/30 border-t flex items-center gap-2 text-[10px] text-muted-foreground">
+      <div className="p-4 bg-muted/30 border-t flex items-center gap-2 text-xs text-muted-foreground">
         <AlertCircle className="w-3.5 h-3.5" />
         Note: The Gateway Protocol ensures that visitors only see the content
         mapped to the specific role they access.
@@ -2984,9 +2992,11 @@ function TabButton({
   return (
     <button
       onClick={onClick}
-      className={`flex items-center gap-2 px-6 py-3 border-b-2 transition-all duration-200 text-xs font-bold uppercase tracking-widest whitespace-nowrap ${
+      type="button"
+      aria-current={active ? "page" : undefined}
+      className={`flex items-center gap-2 w-full md:justify-start rounded-lg px-3 py-2.5 border-l-2 transition-colors duration-200 text-sm font-medium whitespace-nowrap ${
         active
-          ? "border-accent text-accent bg-accent/5"
+          ? "border-accent text-foreground bg-background shadow-sm"
           : "border-transparent text-muted-foreground hover:text-foreground hover:bg-muted/30"
       }`}
     >

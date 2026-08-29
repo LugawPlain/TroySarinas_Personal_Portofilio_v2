@@ -17,6 +17,7 @@ import {
   BarChart3,
   Clock,
   Hash,
+  UsersRound,
 } from "lucide-react";
 
 interface Conversation {
@@ -80,7 +81,7 @@ export function ChatAnalytics() {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       {/* Stats */}
       {stats && (
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -102,9 +103,47 @@ export function ChatAnalytics() {
         </div>
       )}
 
+      {stats?.roleBreakdown?.length > 0 && (
+        <div className="rounded-xl border bg-background p-5 space-y-4">
+          <div className="flex items-center justify-between gap-4">
+            <div>
+              <h3 className="font-semibold flex items-center gap-2">
+                <UsersRound className="w-4 h-4 text-accent" />
+                Conversations by role
+              </h3>
+              <p className="text-xs text-muted-foreground mt-1">Where visitors are asking for help.</p>
+            </div>
+            <span className="text-xs text-muted-foreground">{stats.totalConversations} total</span>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            {stats.roleBreakdown.map((item: { role: string; conversations: number; messages: number }) => {
+              const percentage = stats.totalConversations
+                ? Math.round((item.conversations / stats.totalConversations) * 100)
+                : 0;
+              return (
+                <div key={item.role} className="rounded-lg border bg-muted/20 p-3">
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="font-medium capitalize">{item.role.replace(/-/g, " ")}</span>
+                    <span className="font-bold tabular-nums">{item.conversations} / {percentage}%</span>
+                  </div>
+                  <div className="h-2 bg-muted rounded-full overflow-hidden mt-2">
+                    <div className="h-full rounded-full bg-accent" style={{ width: `${percentage}%` }} />
+                  </div>
+                  <p className="text-[11px] text-muted-foreground mt-2">{item.messages} messages</p>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
       {/* Filter */}
-      <div className="flex items-center gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center gap-3 p-4 rounded-xl border bg-muted/20">
+        <label className="text-sm font-medium" htmlFor="chat-role-filter">
+          Filter by role
+        </label>
         <select
+          id="chat-role-filter"
           value={filterRole}
           onChange={(e) => setFilterRole(e.target.value)}
           className="px-4 py-2 rounded-lg border bg-background text-sm"
@@ -115,13 +154,34 @@ export function ChatAnalytics() {
           <option value="ecommerce-developer">E-Commerce Developer</option>
           <option value="standard">Standard</option>
         </select>
-        <span className="text-sm text-muted-foreground">
+        <span className="text-sm text-muted-foreground sm:ml-auto">
           {conversations.length} conversation{conversations.length !== 1 ? "s" : ""}
         </span>
       </div>
 
       {/* Conversations Table */}
       <div className="border rounded-xl overflow-hidden">
+        <div className="md:hidden divide-y">
+          {conversations.length > 0 ? conversations.map((conv) => (
+            <div key={conv.id} className="p-4 space-y-3">
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <span className="text-sm font-semibold capitalize">{conv.role.replace(/-/g, " ")}</span>
+                  <p className="text-xs text-muted-foreground mt-1">{conv.gateway_links?.label || "Organic"}</p>
+                </div>
+                <span className="text-xs text-muted-foreground">{conv.message_count} messages</span>
+              </div>
+              <div className="flex items-center justify-between text-xs text-muted-foreground">
+                <span>{new Date(conv.started_at).toLocaleString()}</span>
+                <div className="flex gap-2">
+                  <button onClick={() => viewConversation(conv.id)} className="p-2 hover:bg-muted rounded-md" title="View Messages"><Eye className="w-4 h-4" /></button>
+                  <button onClick={() => handleDelete(conv.id)} className="p-2 hover:bg-red-50 text-red-500 rounded-md" title="Delete"><Trash2 className="w-4 h-4" /></button>
+                </div>
+              </div>
+            </div>
+          )) : <p className="p-8 text-center text-sm text-muted-foreground">No conversations yet.</p>}
+        </div>
+        <div className="hidden md:block overflow-x-auto max-h-[28rem] overflow-y-auto">
         <table className="w-full text-left">
           <thead className="bg-muted/50 text-xs uppercase font-medium text-muted-foreground border-b">
             <tr>
@@ -184,6 +244,7 @@ export function ChatAnalytics() {
             )}
           </tbody>
         </table>
+        </div>
       </div>
 
       {/* Message Viewer Modal */}
