@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: "/",
       disallow: "/private/",
     },
-    sitemap: "https://troysarinas.vercel.app/sitemap.xml",
+    sitemap: "https://www.troysarinas.dev/sitemap.xml",
   };
 }
