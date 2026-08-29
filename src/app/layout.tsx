@@ -57,8 +57,10 @@ const spaceMono = Space_Mono({
 });
 
 export const metadata: Metadata = {
-  // ... existing metadata
-  metadataBase: new URL("https://troysarinas.vercel.app"),
+  metadataBase: new URL("https://www.troysarinas.dev"),
+  alternates: {
+    canonical: "https://www.troysarinas.dev",
+  },
   title: {
     default: "Troy Sarinas | Software Engineer & Web Developer",
     template: "%s | Troy Sarinas",
@@ -85,11 +87,11 @@ export const metadata: Metadata = {
     title: "Troy Sarinas | Software Engineer & Web Developer",
     description:
       "Portfolio of Troy Sarinas, a Software Engineer specializing in Next.js, React, Automation, and Full Stack Development.",
-    url: "https://troysarinas.vercel.app",
+    url: "https://www.troysarinas.dev",
     siteName: "Troy Sarinas Portfolio",
     images: [
       {
-        url: "/og-image.png",
+        url: "https://www.troysarinas.dev/og-image.png",
         width: 1200,
         height: 630,
         alt: "Troy Sarinas Portfolio Preview",
@@ -103,7 +105,7 @@ export const metadata: Metadata = {
     title: "Troy Sarinas | Software Engineer & Web Developer",
     description:
       "Portfolio of Troy Sarinas, a Software Engineer specializing in Next.js, React, Automation, and Full Stack Development.",
-    images: ["/og-image.png"],
+    images: ["https://www.troysarinas.dev/og-image.png"],
     creator: "@troysarinas",
   },
   robots: {
