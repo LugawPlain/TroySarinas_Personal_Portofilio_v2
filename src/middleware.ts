@@ -157,10 +157,9 @@ export async function middleware(request: NextRequest) {
         );
       }
     } else {
-      // No saved role - root page should be inaccessible (404)
+      // No saved role: allow the public homepage to render normally.
       if (url.pathname === "/") {
-        console.log("[Middleware] No cookie, showing 404 for root");
-        return NextResponse.rewrite(new URL("/not-found", request.url));
+        console.log("[Middleware] No cookie, allowing homepage access");
       }
     }
   }
