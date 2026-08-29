@@ -78,31 +78,37 @@ export function DashboardTabs(props: DashboardTabsProps) {
   const [activeTab, setActiveTab] = useState<TabId>("overview");
 
   return (
-    <div className="space-y-8">
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+    <div className="space-y-6">
+      <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-5">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">
-            Portfolio Command Center
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-accent">
+            Admin workspace
+          </p>
+          <h1 className="text-3xl font-bold tracking-tight mt-2">
+            Portfolio overview
           </h1>
-          <p className="text-muted-foreground mt-2 text-sm">
-            Full control over your camouflage links and role-specific content.
+          <p className="text-muted-foreground mt-2 max-w-xl text-sm leading-6">
+            Keep your portfolio content, tracking links, and audience signals
+            in one place.
           </p>
         </div>
-        <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-muted-foreground bg-muted/30 px-4 py-2 rounded-full border">
-          <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-          Gateway Protocol Active
+        <div className="flex items-center gap-2 text-xs font-medium text-muted-foreground">
+          <span className="w-2 h-2 rounded-full bg-emerald-500" />
+          All systems operational
         </div>
       </div>
 
-      <div className="bg-card rounded-xl border shadow-sm overflow-hidden">
-        <div className="flex items-center gap-1 border-b bg-muted/20 overflow-x-auto no-scrollbar">
+      <div className="bg-card rounded-2xl border shadow-sm overflow-hidden">
+        <div className="flex items-center gap-1 border-b bg-muted/20 px-2 overflow-x-auto no-scrollbar">
           {tabs.map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`flex items-center gap-2 px-6 py-3.5 border-b-2 transition-all duration-200 text-xs font-bold uppercase tracking-widest whitespace-nowrap ${
+              type="button"
+              aria-current={activeTab === tab.id ? "page" : undefined}
+              className={`flex items-center gap-2 px-4 py-3 border-b-2 transition-colors duration-200 text-sm font-medium whitespace-nowrap ${
                 activeTab === tab.id
-                  ? "border-accent text-accent bg-accent/5"
+                  ? "border-accent text-foreground bg-background"
                   : "border-transparent text-muted-foreground hover:text-foreground hover:bg-muted/30"
               }`}
             >
@@ -112,7 +118,7 @@ export function DashboardTabs(props: DashboardTabsProps) {
           ))}
         </div>
 
-        <div className="p-6 md:p-8">
+        <div className="p-5 md:p-7">
           {activeTab === "overview" && <OverviewTab {...props} />}
           {activeTab === "content" && <ContentTab {...props} />}
           {activeTab === "links" && <LinksTab {...props} />}
@@ -129,10 +135,20 @@ export function DashboardTabs(props: DashboardTabsProps) {
   );
 }
 
-function OverviewTab({ stats }: DashboardTabsProps) {
+function OverviewTab({ stats, roles }: DashboardTabsProps) {
   return (
-    <div className="space-y-8">
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div className="space-y-10">
+      <div className="flex items-end justify-between gap-4">
+        <div>
+          <h2 className="text-lg font-semibold">At a glance</h2>
+          <p className="text-sm text-muted-foreground mt-1">
+            The signals that matter most today.
+          </p>
+        </div>
+        <Activity className="w-5 h-5 text-accent hidden sm:block" />
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         <StatCard
           title="Total Links"
           value={stats.totalLinks}
@@ -154,84 +170,38 @@ function OverviewTab({ stats }: DashboardTabsProps) {
       </div>
 
       <div>
-        <h3 className="text-sm font-bold uppercase tracking-widest text-muted-foreground flex items-center gap-2 mb-4">
+        <h3 className="text-base font-semibold flex items-center gap-2 mb-4">
           <ShieldCheck className="w-4 h-4 text-accent" />
           Portfolio Roles
         </h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {[
-            {
-              name: "Software Engineer",
-              slug: "software-engineer",
-              color: "bg-blue-500/10 text-blue-600 border-blue-200",
-            },
-            {
-              name: "Video Editor",
-              slug: "video-editor",
-              color: "bg-purple-500/10 text-purple-600 border-purple-200",
-            },
-            {
-              name: "GTM Engineer",
-              slug: "gtm-engineer",
-              color: "bg-emerald-500/10 text-emerald-600 border-emerald-200",
-            },
-            {
-              name: "Data Analyst",
-              slug: "data-analyst",
-              color: "bg-violet-500/10 text-violet-600 border-violet-200",
-            },
-            {
-              name: "Social Media Manager",
-              slug: "social-media-manager",
-              color: "bg-pink-500/10 text-pink-600 border-pink-200",
-            },
-            {
-              name: "Marketing Manager",
-              slug: "marketing-manager",
-              color: "bg-orange-500/10 text-orange-600 border-orange-200",
-            },
-            {
-              name: "E-Commerce Developer",
-              slug: "ecommerce-developer",
-              color: "bg-emerald-600/10 text-emerald-700 border-emerald-300",
-            },
-            {
-              name: "CPA",
-              slug: "cpa",
-              color: "bg-[#1e3a5f]/10 text-[#1e3a5f] border-[#1e3a5f]/30",
-            },
-            {
-              name: "Sales Representative",
-              slug: "sales-representative",
-              color: "bg-red-500/10 text-red-600 border-red-200",
-            },
-            {
-              name: "Virtual Assistant",
-              slug: "virtual-assistant",
-              color: "bg-[#84a98c]/10 text-[#84a98c] border-[#84a98c]/30",
-            },
-          ].map((role) => (
+          {roles.map((role, index) => (
             <a
-              key={role.slug}
-              href={`/portfolio/${role.slug}`}
+              key={role.id || role.slug || role.key}
+              href={`/portfolio/${role.slug || role.key}`}
               target="_blank"
               rel="noopener noreferrer"
-              className={`flex items-center justify-between p-4 rounded-xl border ${role.color} hover:shadow-md transition-all group`}
+              className="flex items-center justify-between p-4 rounded-xl border bg-background hover:border-accent/50 hover:shadow-sm transition-all group"
             >
               <div>
-                <div className="font-semibold text-sm">{role.name}</div>
+                <div className="font-semibold text-sm text-foreground">
+                  {role.title}
+                </div>
                 <div className="text-[10px] opacity-70 mt-0.5">
-                  /portfolio/{role.slug}
+                  /portfolio/{role.slug || role.key}
                 </div>
               </div>
-              <Link2 className="w-4 h-4 opacity-50 group-hover:opacity-100 transition-opacity" />
+              <span className="flex items-center gap-2 text-xs text-muted-foreground">
+                <span className="hidden sm:inline">Open</span>
+                <Link2 className="w-4 h-4 group-hover:text-accent transition-colors" />
+              </span>
             </a>
           ))}
         </div>
       </div>
 
       <div>
-        <h3 className="text-sm font-bold uppercase tracking-widest text-muted-foreground flex items-center gap-2 mb-4">
+        <h3 className="text-base font-semibold flex items-center gap-2 mb-4">
           <Activity className="w-4 h-4 text-accent" />
           Recent Activity
         </h3>
@@ -268,16 +238,26 @@ function LinksTab({ links, linkResumesMap, roles }: DashboardTabsProps) {
   const [analyticsLink, setAnalyticsLink] = useState<any>(null);
 
   return (
-    <div className="space-y-8">
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+    <div className="space-y-6">
+      <div>
+        <h2 className="text-lg font-semibold">Tracking links</h2>
+        <p className="text-sm text-muted-foreground mt-1">
+          Create, share, and inspect links that route visitors to a role-specific portfolio.
+        </p>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-[minmax(240px,0.8fr)_minmax(0,2.2fr)] gap-5 items-start">
         <div className="lg:col-span-1">
           <LinkGeneratorForm roles={roles} />
         </div>
 
-        <div className="lg:col-span-3">
+        <div className="lg:col-span-1 min-w-0">
           <div className="bg-background rounded-xl border shadow-sm overflow-hidden flex flex-col h-full">
-            <div className="p-6 border-b flex justify-between items-center">
-              <h2 className="text-xl font-semibold">Active Gateway Links</h2>
+            <div className="p-5 border-b flex justify-between items-center gap-4">
+              <div>
+                <h3 className="text-base font-semibold">Active links</h3>
+                <p className="text-xs text-muted-foreground mt-1">Manage destinations and link performance.</p>
+              </div>
               <span className="text-xs text-muted-foreground">
                 {links.length} link{links.length !== 1 ? "s" : ""}
               </span>
@@ -403,7 +383,17 @@ function LinksTab({ links, linkResumesMap, roles }: DashboardTabsProps) {
 }
 
 function ChatTab() {
-  return <ChatAnalytics />;
+  return (
+    <div className="space-y-6">
+      <div>
+        <h2 className="text-lg font-semibold">Chat analytics</h2>
+        <p className="text-sm text-muted-foreground mt-1">
+          Understand how visitors use the portfolio assistant across roles.
+        </p>
+      </div>
+      <ChatAnalytics />
+    </div>
+  );
 }
 
 function StatCard({
@@ -418,7 +408,7 @@ function StatCard({
   description: string;
 }) {
   return (
-    <div className="bg-background rounded-xl border p-6 shadow-sm flex flex-col justify-between hover:shadow-md transition-all duration-300 group">
+    <div className="bg-background rounded-xl border p-5 shadow-sm flex flex-col justify-between hover:border-accent/40 hover:shadow-md transition-all duration-300 group">
       <div className="flex justify-between items-start">
         <div className="p-2.5 rounded-xl bg-muted group-hover:bg-accent/10 group-hover:text-accent transition-colors">
           {icon}
@@ -426,8 +416,8 @@ function StatCard({
         <TrendingUp className="w-4 h-4 text-muted-foreground opacity-30 group-hover:opacity-100 group-hover:text-accent transition-all" />
       </div>
       <div className="mt-5">
-        <div className="text-3xl font-bold tracking-tight">{value}</div>
-        <div className="text-sm font-semibold text-muted-foreground mt-1">
+        <div className="text-3xl font-bold tracking-tight tabular-nums">{value}</div>
+        <div className="text-sm font-semibold text-foreground mt-1">
           {title}
         </div>
         <p className="text-xs text-muted-foreground/60 mt-1.5 leading-relaxed">

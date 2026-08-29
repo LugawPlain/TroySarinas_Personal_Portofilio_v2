@@ -26,23 +26,29 @@ export default async function AdminLayout({
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <nav className="border-b bg-card/50 backdrop-blur-md sticky top-0 z-50">
+    <div className="min-h-screen bg-muted/30">
+      <nav className="border-b bg-background/95 backdrop-blur-md sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16 items-center">
-            <div className="flex items-center gap-2">
-              <span className="text-xl font-bold bg-gradient-to-r from-accent to-primary bg-clip-text text-transparent">
-                Gateway Admin
-              </span>
+          <div className="flex justify-between min-h-16 items-center gap-4">
+            <div className="flex items-center gap-3 min-w-0">
+              <span className="w-2 h-8 rounded-full bg-accent shrink-0" />
+              <div className="min-w-0">
+                <span className="text-sm font-bold tracking-tight block truncate">
+                  Portfolio admin
+                </span>
+                <span className="text-[11px] text-muted-foreground hidden sm:block">
+                  Manage your public presence
+                </span>
+              </div>
             </div>
-            <div className="flex items-center gap-4">
-              <span className="text-sm text-muted-foreground hidden sm:block">
+            <div className="flex items-center gap-3 shrink-0">
+              <span className="text-xs text-muted-foreground hidden md:block">
                 {user.email}
               </span>
               <form action="/api/auth/signout" method="POST">
                 <button
                   type="submit"
-                  className="text-sm font-medium hover:text-accent transition-colors"
+                  className="text-xs font-semibold border rounded-md px-3 py-2 hover:border-accent hover:text-accent transition-colors"
                 >
                   Sign Out
                 </button>
@@ -52,7 +58,7 @@ export default async function AdminLayout({
         </div>
       </nav>
 
-      <main className="max-w-7xl mx-auto py-10 px-4 sm:px-6 lg:px-8 animate-fade-in-up">
+      <main className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8 animate-fade-in-up">
         {children}
       </main>
     </div>

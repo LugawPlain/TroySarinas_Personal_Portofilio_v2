@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
+import { createClient, createServiceRoleClient } from "@/lib/supabase/server";
 import { rateLimit } from "@/lib/rate-limit";
 
 // Local Ollama is the primary provider. Set OLLAMA_BASE_URL to
@@ -114,7 +114,7 @@ async function getRolePersona(role?: string): Promise<string> {
   if (!role) return TROY_PERSONA;
 
   try {
-    const supabase = await createClient();
+    const supabase = createServiceRoleClient();
     const { data, error } = await supabase
       .from("job_roles")
       .select("chat_persona")
@@ -141,7 +141,7 @@ async function getOrCreateConversation(
   userAgent: string | null
 ) {
   try {
-    const supabase = await createClient();
+    const supabase = createServiceRoleClient();
     
     // Try to find existing conversation
     const { data: existing } = await supabase
@@ -190,7 +190,7 @@ async function saveMessage(
   content: string
 ) {
   try {
-    const supabase = await createClient();
+    const supabase = createServiceRoleClient();
     
     await supabase.from("chat_messages").insert({
       conversation_id: conversationId,
