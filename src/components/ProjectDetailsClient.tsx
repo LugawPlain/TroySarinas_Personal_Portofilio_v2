@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { motion } from "framer-motion";
+import { Layers } from "lucide-react";
 import ProjectImage from "@/components/ProjectImage";
 import { Project } from "@/lib/projects";
 import Link from "next/link";
@@ -58,22 +59,31 @@ export const ProjectDetailsClient = ({
         variants={containerVariants}
         initial="hidden"
         animate={isAssetLoaded ? "visible" : "hidden"}
-        className="grid grid-cols-1 md:grid-cols-3 gap-8"
+        className="grid grid-cols-1 gap-8 md:grid-cols-3 md:gap-12"
       >
-        <motion.div variants={itemVariants} className="md:col-span-2 space-y-6">
-          <h2 className="text-2xl font-semibold text-foreground/90">
+        <motion.div variants={itemVariants} className="space-y-5 md:col-span-2">
+          <div className="flex items-center gap-3">
+            <span className="h-px w-8 bg-secondary/50" />
+            <p className="text-xs font-bold uppercase tracking-[0.18em] text-secondary/70">
+              Project story
+            </p>
+          </div>
+          <h2 className="text-3xl font-semibold tracking-tight text-foreground/90">
             About the Project
           </h2>
-          <p className="text-lg text-muted-foreground leading-relaxed">
+          <p className="max-w-2xl text-lg leading-8 text-muted-foreground">
             {project.description}
           </p>
         </motion.div>
 
         <motion.div variants={itemVariants} className="space-y-6">
-          <div className="p-6 bg-primary rounded-xl border border-border shadow-sm">
-            <h3 className="text-lg font-semibold mb-4 text-foreground text-center">
-              Project Links
-            </h3>
+          <div className="rounded-2xl border border-border bg-primary p-6 shadow-sm">
+            <div className="mb-5 flex items-center justify-between">
+              <h3 className="text-lg font-semibold text-foreground">
+                Project Links
+              </h3>
+              <Layers className="h-5 w-5 text-secondary/60" />
+            </div>
             <div className="space-y-3">
               {project.liveUrl && (
                 <Link
