@@ -3,6 +3,48 @@
 import { createClient, createServiceRoleClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 
+async function getNextRoleProjectDisplayOrder(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+  roleId: string,
+) {
+  const { data, error } = await supabase
+    .from("role_projects")
+    .select("display_order")
+    .eq("role_id", roleId)
+    .eq("is_featured", false)
+    .order("display_order", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  if (error) {
+    console.error("Error fetching next role project display order:", error);
+    return 0;
+  }
+
+  return (data?.display_order ?? 0) + 1;
+}
+
+async function getNextRoleFeaturedDisplayOrder(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+  roleId: string,
+) {
+  const { data, error } = await supabase
+    .from("role_projects")
+    .select("featured_display_order")
+    .eq("role_id", roleId)
+    .eq("is_featured", true)
+    .order("featured_display_order", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  if (error) {
+    console.error("Error fetching next role featured display order:", error);
+    return 0;
+  }
+
+  return (data?.featured_display_order ?? 0) + 1;
+}
+
 async function placeProjectAtOrder(
   supabase: Awaited<ReturnType<typeof createClient>>,
   projectId: string,
@@ -87,7 +129,12 @@ export async function toggleRoleRelationship(
     // Unlinked -> Link (Insert)
     const insertPayload =
       table === "role_projects"
-        ? { role_id: roleId, [targetField]: targetId, is_featured: false }
+        ? {
+            role_id: roleId,
+            [targetField]: targetId,
+            is_featured: false,
+            display_order: await getNextRoleProjectDisplayOrder(supabase, roleId),
+          }
         : { role_id: roleId, [targetField]: targetId };
 
     const { error } = await supabase.from(table).insert(insertPayload);
@@ -115,7 +162,9 @@ export async function setProjectFeaturedForRole(
 
   const { data: existingRows, error: selectError } = await supabase
     .from("role_projects")
-    .select("role_id, project_id, is_featured")
+    .select(
+      "role_id, project_id, is_featured, display_order, featured_display_order",
+    )
     .eq("role_id", roleId)
     .eq("project_id", projectId)
     .limit(1);
@@ -133,7 +182,22 @@ export async function setProjectFeaturedForRole(
   const existing = existingRows?.[0];
 
   if (existing) {
-    const updatePayload = { is_featured: isFeatured };
+    const updatePayload = isFeatured
+      ? {
+          is_featured: true,
+          featured_display_order:
+            existing.featured_display_order ??
+            (await getNextRoleFeaturedDisplayOrder(supabase, roleId)),
+          display_order: existing.display_order ??
+            (await getNextRoleProjectDisplayOrder(supabase, roleId)),
+        }
+      : {
+          is_featured: false,
+          display_order:
+            existing.display_order ??
+            (await getNextRoleProjectDisplayOrder(supabase, roleId)),
+          featured_display_order: null,
+        };
     console.log("setProjectFeaturedForRole attempting update", {
       matchingKey: { role_id: roleId, project_id: projectId },
       updatePayload,
@@ -154,6 +218,10 @@ export async function setProjectFeaturedForRole(
       role_id: roleId,
       project_id: projectId,
       is_featured: isFeatured,
+      display_order: await getNextRoleProjectDisplayOrder(supabase, roleId),
+      featured_display_order: isFeatured
+        ? await getNextRoleFeaturedDisplayOrder(supabase, roleId)
+        : null,
     };
 
     console.log("setProjectFeaturedForRole attempting insert", insertPayload);
@@ -647,6 +715,7 @@ export async function createProject(projectData: {
   thumbnail_url?: string;
   hero_image_url?: string;
   technologies?: string[];
+  tags?: string[];
   live_url?: string;
   github_url?: string;
   demo_type?: "lead-generator" | null;
@@ -663,6 +732,7 @@ export async function createProject(projectData: {
       thumbnail_url: projectData.thumbnail_url || null,
       hero_image_url: projectData.hero_image_url || null,
       technologies: projectData.technologies || [],
+      tags: projectData.tags || [],
       live_url: projectData.live_url || null,
       github_url: projectData.github_url || null,
       demo_type: projectData.demo_type || null,
@@ -686,11 +756,15 @@ export async function createProject(projectData: {
 
   // Link to roles
   if (projectData.roleIds && projectData.roleIds.length > 0 && project) {
-    const roleInserts = projectData.roleIds.map((roleId) => ({
-      role_id: roleId,
-      project_id: project.id,
-      is_featured: false,
-    }));
+    const roleInserts = await Promise.all(
+      projectData.roleIds.map(async (roleId) => ({
+        role_id: roleId,
+        project_id: project.id,
+        is_featured: false,
+        display_order: await getNextRoleProjectDisplayOrder(supabase, roleId),
+        featured_display_order: null,
+      })),
+    );
     await supabase.from("role_projects").insert(roleInserts);
   }
 
@@ -789,14 +863,43 @@ export async function normalizeProjectOrder() {
   return { success: true };
 }
 
-export async function saveProjectOrder(projectIds: string[]) {
+export async function saveProjectOrder(roleId: string, projectIds: string[]) {
   const supabase = await createClient();
 
-  for (const [index, projectId] of projectIds.entries()) {
+  const { data: linkedRows, error: linkError } = await supabase
+    .from("role_projects")
+    .select("project_id, is_featured, display_order, featured_display_order")
+    .eq("role_id", roleId);
+
+  if (linkError) return { error: linkError.message };
+
+  const rowMap = new Map(
+    (linkedRows || []).map((row: any) => [String(row.project_id), row]),
+  );
+
+  const featuredProjectIds = projectIds.filter(
+    (projectId) => rowMap.get(String(projectId))?.is_featured,
+  );
+  const regularProjectIds = projectIds.filter(
+    (projectId) => !rowMap.get(String(projectId))?.is_featured,
+  );
+
+  for (const [index, projectId] of featuredProjectIds.entries()) {
     const { error } = await supabase
-      .from("projects")
+      .from("role_projects")
+      .update({ featured_display_order: index + 1 })
+      .eq("role_id", roleId)
+      .eq("project_id", projectId);
+
+    if (error) return { error: error.message };
+  }
+
+  for (const [index, projectId] of regularProjectIds.entries()) {
+    const { error } = await supabase
+      .from("role_projects")
       .update({ display_order: index + 1 })
-      .eq("id", projectId);
+      .eq("role_id", roleId)
+      .eq("project_id", projectId);
 
     if (error) return { error: error.message };
   }
@@ -864,6 +967,7 @@ export async function updateProject(
     thumbnail_url?: string;
     hero_image_url?: string;
     technologies?: string[];
+    tags?: string[];
     live_url?: string;
     github_url?: string;
     demo_type?: "lead-generator" | null;
@@ -881,6 +985,7 @@ export async function updateProject(
       thumbnail_url: projectData.thumbnail_url || null,
       hero_image_url: projectData.hero_image_url || null,
       technologies: projectData.technologies || [],
+      tags: projectData.tags || [],
       live_url: projectData.live_url || null,
       github_url: projectData.github_url || null,
       demo_type: projectData.demo_type || null,
@@ -903,19 +1008,56 @@ export async function updateProject(
     if (orderError) return { error: orderError.message };
   }
 
-  // Update role associations if provided
+  // Update role associations without recreating existing rows, because those
+  // rows contain the role-specific order and featured metadata.
   if (projectData.roleIds !== undefined) {
-    // Delete existing associations
-    await supabase.from("role_projects").delete().eq("project_id", id);
+    const { data: existingRoleProjects, error: roleProjectsError } =
+      await supabase
+        .from("role_projects")
+        .select("role_id")
+        .eq("project_id", id);
 
-    // Insert new associations
-    if (projectData.roleIds.length > 0) {
-      const roleInserts = projectData.roleIds.map((roleId) => ({
-        role_id: roleId,
-        project_id: id,
-        is_featured: false,
-      }));
-      await supabase.from("role_projects").insert(roleInserts);
+    if (roleProjectsError) return { error: roleProjectsError.message };
+
+    const existingRoleIds = new Set(
+      (existingRoleProjects || []).map((row) => row.role_id),
+    );
+    const requestedRoleIds = new Set(projectData.roleIds);
+    const removedRoleIds = [...existingRoleIds].filter(
+      (roleId) => !requestedRoleIds.has(roleId),
+    );
+    const addedRoleIds = projectData.roleIds.filter(
+      (roleId) => !existingRoleIds.has(roleId),
+    );
+
+    if (removedRoleIds.length > 0) {
+      const { error } = await supabase
+        .from("role_projects")
+        .delete()
+        .eq("project_id", id)
+        .in("role_id", removedRoleIds);
+
+      if (error) return { error: error.message };
+    }
+
+    if (addedRoleIds.length > 0) {
+      const roleInserts = await Promise.all(
+        addedRoleIds.map(async (roleId) => ({
+          role_id: roleId,
+          project_id: id,
+          is_featured: false,
+          display_order: await getNextRoleProjectDisplayOrder(
+            supabase,
+            roleId,
+          ),
+          featured_display_order: null,
+        })),
+      );
+      const { error } = await supabase
+        .from("role_projects")
+        .insert(roleInserts);
+
+      if (error) return { error: error.message };
     }
   }
 

@@ -5,9 +5,11 @@ import { getProjects } from "@/lib/projects";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Code2, Layers, ArrowLeft, ExternalLink } from "lucide-react";
+import ProjectTagFilter from "@/components/Projects/ProjectTagFilter";
 
 interface Props {
   params: Promise<{ role: string }>;
+  searchParams: Promise<{ tag?: string }>;
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -21,21 +23,34 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-const RoleProjectsPage = async ({ params }: Props) => {
+const RoleProjectsPage = async ({ params, searchParams }: Props) => {
   const { role } = await params;
+  const { tag } = await searchParams;
 
-  const validRoles = ["software-engineer", "gtm-engineer", "video-editor", "ecommerce-developer"];
+  const validRoles = [
+    "software-engineer",
+    "gtm-engineer",
+    "video-editor",
+    "ecommerce-developer",
+  ];
   if (!validRoles.includes(role)) {
     return notFound();
   }
 
-  const projects = await getProjects(role);
+  const allProjects = await getProjects(role);
+  const projects = tag
+    ? allProjects.filter((project) =>
+        project.tags.some(
+          (projectTag) => projectTag.toLowerCase() === tag.toLowerCase(),
+        ),
+      )
+    : allProjects;
 
   return (
     <div className="min-h-screen relative overflow-hidden bg-background">
       <div className="max-w-7xl mx-auto px-4 sm:px-8 py-12">
         {/* Back Link */}
-        <Link 
+        <Link
           href={`/portfolio/${role}`}
           className="inline-flex items-center gap-2 text-sm font-spacemono text-secondary/70 hover:text-secondary transition-colors mb-8"
         >
@@ -61,6 +76,8 @@ const RoleProjectsPage = async ({ params }: Props) => {
           </p>
         </div>
 
+        <ProjectTagFilter role={role} projects={allProjects} activeTag={tag} />
+
         {/* Projects Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {projects.length > 0 ? (
@@ -85,8 +102,7 @@ const RoleProjectsPage = async ({ params }: Props) => {
                     hover:shadow-2xl transition-all duration-500 hover:-translate-y-1`}
                 >
                   <div className="h-full flex flex-col">
-                    <div className="relative w-full aspect-video overflow-hidden"
-                    >
+                    <div className="relative w-full aspect-video overflow-hidden bg-white/50">
                       {project.image ? (
                         <Image
                           src={project.image}
@@ -97,41 +113,54 @@ const RoleProjectsPage = async ({ params }: Props) => {
                           loading={index < 3 ? "eager" : "lazy"}
                         />
                       ) : (
-                        <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200"
-                        >
+                        <div className="w-full h-full flex items-center justify-center bg-linear-to-br from-gray-100 to-gray-200">
                           <Layers className="w-12 h-12 text-gray-400" />
                         </div>
                       )}
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                      <div className="absolute inset-0 bg-linear-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                     </div>
                     <div className="p-6 flex flex-col flex-1">
-                      <h2 className="font-fraunces text-xl font-semibold text-secondary mb-2 group-hover:text-secondary/80 transition-colors"
-                      >
+                      {project.tags.length > 0 && (
+                        <div className="flex flex-wrap gap-1.5 mb-3">
+                          {project.tags.slice(0, 3).map((tag) => (
+                            <span
+                              key={tag}
+                              className="rounded-full bg-secondary/15 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-secondary"
+                            >
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                      <h2 className="font-fraunces text-xl font-semibold leading-tight text-secondary mb-2 group-hover:text-secondary/80 transition-colors">
                         {project.title}
                       </h2>
-                      <p className="text-stone-600/80 font-light text-sm line-clamp-3 mb-4 flex-1"
-                      >
+                      <p className="text-stone-600/80 font-light text-sm leading-6 line-clamp-3 mb-5 flex-1">
                         {project.description}
                       </p>
-                      <div className="flex flex-wrap gap-2 mt-auto">
-                        {project.technologies.slice(0, 4).map((tech) => (
-                          <span
-                            key={tech}
-                            className="text-xs px-3 py-1 rounded-full bg-white/40 backdrop-blur-sm text-secondary border border-white/50 font-medium"
-                          >
-                            {tech}
-                          </span>
-                        ))}
-                        {project.technologies.length > 4 && (
-                          <span className="text-xs px-3 py-1 rounded-full bg-white/30 text-secondary/70 font-medium"
-                          >
-                            +{project.technologies.length - 4}
-                          </span>
-                        )}
+                      <div className="mt-auto border-t border-secondary/15 pt-4">
+                        <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.16em] text-secondary/55">
+                          Built with
+                        </p>
+                        <div className="flex flex-wrap gap-1.5">
+                          {project.technologies.slice(0, 4).map((tech) => (
+                            <span
+                              key={tech}
+                              className="rounded-md border border-secondary/15 bg-white/45 px-2.5 py-1 text-[11px] font-medium text-secondary/80"
+                            >
+                              {tech}
+                            </span>
+                          ))}
+                          {project.technologies.length > 4 && (
+                            <span className="rounded-md border border-secondary/10 bg-white/30 px-2.5 py-1 text-[11px] font-medium text-secondary/60">
+                              +{project.technologies.length - 4}
+                            </span>
+                          )}
+                        </div>
                       </div>
-                      <div className="mt-4 text-sm font-semibold text-secondary flex items-center gap-1 group-hover:gap-2 transition-all"
-                      >
-                        View Details <ExternalLink className="w-4 h-4" />
+                      <div className="mt-5 flex items-center justify-between text-sm font-semibold text-secondary">
+                        <span>View details</span>
+                        <ExternalLink className="w-4 h-4 transition-transform group-hover:translate-x-1" />
                       </div>
                     </div>
                   </div>
@@ -139,8 +168,7 @@ const RoleProjectsPage = async ({ params }: Props) => {
               );
             })
           ) : (
-            <div className="col-span-1 md:col-span-2 lg:col-span-3 text-center py-20 backdrop-blur-[20%] bg-linear-to-br from-[rgba(102,126,234,0.1)] to-[rgba(118,75,162,0.05)] border-2 border-[rgba(102,126,234,0.2)] rounded-3xl"
-            >
+            <div className="col-span-1 md:col-span-2 lg:col-span-3 text-center py-20 backdrop-blur-[20%] bg-linear-to-br from-[rgba(102,126,234,0.1)] to-[rgba(118,75,162,0.05)] border-2 border-[rgba(102,126,234,0.2)] rounded-3xl">
               <Layers className="w-12 h-12 text-secondary/30 mx-auto mb-4" />
               <p className="text-stone-500 font-spacemono">
                 No projects found for this role yet.
