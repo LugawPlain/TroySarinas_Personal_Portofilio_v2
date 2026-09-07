@@ -3,7 +3,6 @@
 import { BaseChatWidget, ChatConfig } from "../BaseChatWidget";
 
 export const softwareEngineerChatConfig: ChatConfig = {
-  accentColor: "#3b82f6", // Blue
   welcomeMessage:
     "👋 Hey! I'm Troy. Ask me about my engineering work, tech stack, or how I approach building scalable systems.",
   suggestedQuestions: [

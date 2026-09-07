@@ -1,17 +1,23 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
+import { extractResumeText } from "@/lib/resume-text";
 import { revalidatePath } from "next/cache";
 
 async function upsertResume(
-  supabase: ReturnType<() => ReturnType<typeof createClient>> extends Promise<infer T> ? T : never,
+  supabase: ReturnType<() => ReturnType<typeof createClient>> extends Promise<
+    infer T
+  >
+    ? T
+    : never,
   data: {
     role_key: string;
     link_id: string | null;
     resume_url: string;
     file_path: string | null;
     is_upload: boolean;
-  }
+    resume_text: string | null;
+  },
 ) {
   let query = supabase
     .from("gateway_resumes")
@@ -24,7 +30,11 @@ async function upsertResume(
     query = query.is("link_id", null);
   }
 
-  const { data: existing } = await query.single();
+  const { data: existingRows } = await query
+    .order("updated_at", { ascending: false })
+    .order("created_at", { ascending: false })
+    .limit(1);
+  const existing = existingRows?.[0];
 
   if (existing) {
     const { error } = await supabase
@@ -33,6 +43,7 @@ async function upsertResume(
         resume_url: data.resume_url,
         file_path: data.file_path,
         is_upload: data.is_upload,
+        resume_text: data.resume_text,
         updated_at: new Date().toISOString(),
       })
       .eq("id", existing.id);
@@ -58,6 +69,7 @@ export async function uploadResume(formData: FormData) {
     const fileExt = file.name.split(".").pop() || "pdf";
     const fileName = `${crypto.randomUUID()}.${fileExt}`;
     const filePath = `resumes/${roleKey}/${fileName}`;
+    const resumeText = await extractResumeText(file);
 
     const { error: uploadError } = await supabase.storage
       .from("resumes")
@@ -80,6 +92,7 @@ export async function uploadResume(formData: FormData) {
       resume_url: publicUrl,
       file_path: filePath,
       is_upload: true,
+      resume_text: resumeText,
     });
 
     if (dbError) {
@@ -99,7 +112,7 @@ export async function uploadResume(formData: FormData) {
 export async function setResumeUrl(
   roleKey: string,
   url: string,
-  linkId?: string
+  linkId?: string,
 ) {
   const supabase = await createClient();
 
@@ -109,6 +122,7 @@ export async function setResumeUrl(
     resume_url: url,
     file_path: null,
     is_upload: false,
+    resume_text: null,
   });
 
   if (error) {
@@ -135,7 +149,19 @@ export async function deleteResume(roleKey: string, linkId?: string) {
     query = query.is("link_id", null);
   }
 
-  const { data: record } = await query.single();
+  const { data: records, error: lookupError } = await query
+    .order("updated_at", { ascending: false })
+    .order("created_at", { ascending: false })
+    .limit(1);
+
+  if (lookupError) {
+    return { error: lookupError.message };
+  }
+
+  const record = records?.[0];
+  if (!record) {
+    return { error: `No default resume found for role "${roleKey}".` };
+  }
 
   if (record?.is_upload && record.file_path) {
     await supabase.storage.from("resumes").remove([record.file_path]);
@@ -144,7 +170,7 @@ export async function deleteResume(roleKey: string, linkId?: string) {
   const { error } = await supabase
     .from("gateway_resumes")
     .delete()
-    .eq("id", record?.id);
+    .eq("id", record.id);
 
   if (error) {
     return { error: error.message };

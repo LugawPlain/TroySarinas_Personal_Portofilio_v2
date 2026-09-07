@@ -83,12 +83,13 @@ export async function updateRoleMetadata(
   roleId: string,
   headline: string,
   bio: string,
+  personalProfile?: Record<string, unknown>,
 ) {
   const supabase = await createClient();
 
   const { error } = await supabase
     .from("job_roles")
-    .update({ headline, bio })
+    .update({ headline, bio, ...(personalProfile && { personal_profile: personalProfile }) })
     .eq("id", roleId);
 
   if (error) {
@@ -133,7 +134,10 @@ export async function toggleRoleRelationship(
             role_id: roleId,
             [targetField]: targetId,
             is_featured: false,
-            display_order: await getNextRoleProjectDisplayOrder(supabase, roleId),
+            display_order: await getNextRoleProjectDisplayOrder(
+              supabase,
+              roleId,
+            ),
           }
         : { role_id: roleId, [targetField]: targetId };
 
@@ -188,7 +192,8 @@ export async function setProjectFeaturedForRole(
           featured_display_order:
             existing.featured_display_order ??
             (await getNextRoleFeaturedDisplayOrder(supabase, roleId)),
-          display_order: existing.display_order ??
+          display_order:
+            existing.display_order ??
             (await getNextRoleProjectDisplayOrder(supabase, roleId)),
         }
       : {
@@ -561,15 +566,22 @@ export async function updateHeroConfig(roleId: string, heroConfig: any) {
 
 export async function updateChatConfig(roleId: string, chatConfig: any) {
   const supabase = await createClient();
+  const { accentColor: _legacyAccentColor, ...configWithoutAccentColor } =
+    chatConfig || {};
 
-  const { error } = await supabase
+  const { data, error } = await supabase
     .from("job_roles")
-    .update({ chat_config: chatConfig })
-    .eq("id", roleId);
+    .update({ chat_config: configWithoutAccentColor })
+    .eq("id", roleId)
+    .select("id, chat_config")
+    .single();
 
   if (error) {
     console.error("Error updating chat config:", error);
     return { error: error.message };
+  }
+  if (!data) {
+    return { error: "Chat config was not saved: no matching role was updated." };
   }
 
   revalidatePath("/admin/dashboard");
@@ -580,14 +592,19 @@ export async function updateChatConfig(roleId: string, chatConfig: any) {
 export async function updateChatPersona(roleId: string, chatPersona: string) {
   const supabase = await createClient();
 
-  const { error } = await supabase
+  const { data, error } = await supabase
     .from("job_roles")
     .update({ chat_persona: chatPersona })
-    .eq("id", roleId);
+    .eq("id", roleId)
+    .select("id, chat_persona")
+    .single();
 
   if (error) {
     console.error("Error updating chat persona:", error);
     return { error: error.message };
+  }
+  if (!data) {
+    return { error: "Persona was not saved: no matching role was updated." };
   }
 
   revalidatePath("/admin/dashboard");
@@ -1046,10 +1063,7 @@ export async function updateProject(
           role_id: roleId,
           project_id: id,
           is_featured: false,
-          display_order: await getNextRoleProjectDisplayOrder(
-            supabase,
-            roleId,
-          ),
+          display_order: await getNextRoleProjectDisplayOrder(supabase, roleId),
           featured_display_order: null,
         })),
       );

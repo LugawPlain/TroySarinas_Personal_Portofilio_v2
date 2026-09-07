@@ -9,7 +9,6 @@ import { usePortfolio } from "@/context/PortfolioContext";
 import { trackInteraction } from "@/lib/tracker";
 
 export interface ChatConfig {
-  accentColor?: string;
   welcomeMessage?: string;
   suggestedQuestions?: string[];
   avatarIcon?: string;
@@ -127,9 +126,10 @@ const StreamingText = ({ text }: { text: string }) => {
 
 interface BaseChatWidgetProps {
   config: ChatConfig;
+  themeColor?: string;
 }
 
-export function BaseChatWidget({ config }: BaseChatWidgetProps) {
+export function BaseChatWidget({ config, themeColor }: BaseChatWidgetProps) {
   const { role } = usePortfolio();
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -145,7 +145,7 @@ export function BaseChatWidget({ config }: BaseChatWidgetProps) {
   const [isSending, setIsSending] = useState(false);
   const MAX_MESSAGES_PER_SESSION = 20;
 
-  const accentColor = config.accentColor || "#3b82f6";
+  const accentColor = themeColor || "#3b82f6";
   const welcomeMessage =
     config.welcomeMessage ||
     "Hi there! I'm Troy Sarinas. You can ask more about my background, skills, and projects.";

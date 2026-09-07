@@ -133,8 +133,14 @@ const MemoSortableProjectCard = React.memo(function SortableProjectCard({
   setIsEditModalOpen: (open: boolean) => void;
   handleDelete: (type: string, id: string) => Promise<void>;
 }) {
-  const { attributes, listeners, setNodeRef, transform, transition, isDragging } =
-    useSortable({ id: project.id });
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: project.id });
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -454,7 +460,8 @@ const ProjectSortableList = React.memo(function ProjectSortableList({
   );
 
   const regularProjects = orderedProjects.filter(
-    (project) => !featuredProjects.some((featured) => featured.id === project.id),
+    (project) =>
+      !featuredProjects.some((featured) => featured.id === project.id),
   );
 
   const renderProjectCards = (projects: any[]) =>
@@ -671,10 +678,33 @@ export function PortfolioContentManager({
   const handleMetadataChange = async (
     e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
-    const field = e.target.name as "headline" | "bio";
+    const field = e.target.name as
+      | "headline"
+      | "bio"
+      | "hobbies"
+      | "interests"
+      | "workStyle"
+      | "goals"
+      | "languages";
     const value = e.target.value;
 
-    if (value === selectedRole[field]) return;
+    const personalFields = [
+      "hobbies",
+      "interests",
+      "workStyle",
+      "goals",
+      "languages",
+    ] as const;
+    const isPersonalField = personalFields.includes(field as (typeof personalFields)[number]);
+    if (!isPersonalField && value === selectedRole[field]) return;
+    if (isPersonalField && value === selectedRole.personal_profile?.[field]) return;
+
+    const personalProfile = isPersonalField
+      ? {
+          ...(selectedRole.personal_profile || {}),
+          [field]: value,
+        }
+      : undefined;
 
     // Background save
     startTransition(async () => {
@@ -683,6 +713,7 @@ export function PortfolioContentManager({
         selectedRole.id,
         field === "headline" ? value : selectedRole.headline,
         field === "bio" ? value : selectedRole.bio,
+        personalProfile,
       );
 
       if (!result.error) {
@@ -721,7 +752,9 @@ export function PortfolioContentManager({
   };
 
   const handleResumeDelete = async () => {
-    const currentResume = resumes.find((r) => r.role_key === selectedRole.slug);
+    const currentResume = resumes.find(
+      (r) => r.role_key === selectedRole.slug && !r.link_id,
+    );
     if (!currentResume) return;
 
     if (!confirm("Are you sure you want to delete this resume?")) return;
@@ -791,7 +824,11 @@ export function PortfolioContentManager({
 
         return [
           ...prev,
-          { role_id: selectedRole.id, project_id: projectId, is_featured: true },
+          {
+            role_id: selectedRole.id,
+            project_id: projectId,
+            is_featured: true,
+          },
         ];
       });
 
@@ -847,7 +884,8 @@ export function PortfolioContentManager({
             prev.filter(
               (re) =>
                 !(
-                  re.role_id === selectedRole.id && re.experience_id === targetId
+                  re.role_id === selectedRole.id &&
+                  re.experience_id === targetId
                 ),
             ),
           );
@@ -862,7 +900,9 @@ export function PortfolioContentManager({
           setLocalRoleEducation((prev) =>
             prev.filter(
               (re) =>
-                !(re.role_id === selectedRole.id && re.education_id === targetId),
+                !(
+                  re.role_id === selectedRole.id && re.education_id === targetId
+                ),
             ),
           );
         } else {
@@ -984,47 +1024,54 @@ export function PortfolioContentManager({
     setIsEditorOpen(true);
   };
 
-  const handleDelete = React.useCallback(async (type: string, id: string) => {
-    if (!confirm("Are you sure you want to delete this item?")) return;
+  const handleDelete = React.useCallback(
+    async (type: string, id: string) => {
+      if (!confirm("Are you sure you want to delete this item?")) return;
 
-    setSaveStatus("Deleting...");
-    startTransition(async () => {
-      let result;
-      if (type === "tech") result = await deleteTechnology(id);
-      else if (type === "exp") result = await deleteExperience(id);
-      else if (type === "edu") result = await deleteEducation(id);
-      else if (type === "cert") result = await deleteCertification(id);
-      else if (type === "project") result = await deleteProject(id);
-      else if (type === "blog") result = await deleteBlog(id);
+      setSaveStatus("Deleting...");
+      startTransition(async () => {
+        let result;
+        if (type === "tech") result = await deleteTechnology(id);
+        else if (type === "exp") result = await deleteExperience(id);
+        else if (type === "edu") result = await deleteEducation(id);
+        else if (type === "cert") result = await deleteCertification(id);
+        else if (type === "project") result = await deleteProject(id);
+        else if (type === "blog") result = await deleteBlog(id);
 
-      if (result?.error) alert(result.error);
-      setSaveStatus(null);
-    });
-  }, [startTransition]);
+        if (result?.error) alert(result.error);
+        setSaveStatus(null);
+      });
+    },
+    [startTransition],
+  );
 
-  const handleUpsert = React.useCallback(async (data: any) => {
-    setSaveStatus("Saving...");
-    startTransition(async () => {
-      let result;
-      // Auto-link to currently selected role if it's a NEW item
-      const roleId = data.id ? undefined : selectedRole.id;
+  const handleUpsert = React.useCallback(
+    async (data: any) => {
+      setSaveStatus("Saving...");
+      startTransition(async () => {
+        let result;
+        // Auto-link to currently selected role if it's a NEW item
+        const roleId = data.id ? undefined : selectedRole.id;
 
-      if (editingType === "tech") result = await upsertTechnology(data, roleId);
-      else if (editingType === "exp")
-        result = await upsertExperience(data, roleId);
-      else if (editingType === "edu")
-        result = await upsertEducation(data, roleId);
-      else if (editingType === "cert")
-        result = await upsertCertification(data, roleId);
+        if (editingType === "tech")
+          result = await upsertTechnology(data, roleId);
+        else if (editingType === "exp")
+          result = await upsertExperience(data, roleId);
+        else if (editingType === "edu")
+          result = await upsertEducation(data, roleId);
+        else if (editingType === "cert")
+          result = await upsertCertification(data, roleId);
 
-      if (result?.error) {
-        alert(result.error);
-      } else {
-        setIsEditorOpen(false);
-      }
-      setSaveStatus(null);
-    });
-  }, [editingType, selectedRole.id, startTransition]);
+        if (result?.error) {
+          alert(result.error);
+        } else {
+          setIsEditorOpen(false);
+        }
+        setSaveStatus(null);
+      });
+    },
+    [editingType, selectedRole.id, startTransition],
+  );
 
   return (
     <div className="flex flex-col h-full -m-5 md:-m-7">
@@ -1147,7 +1194,7 @@ export function PortfolioContentManager({
 
                   {(() => {
                     const currentResume = resumes.find(
-                      (r) => r.role_key === selectedRole.slug,
+                      (r) => r.role_key === selectedRole.slug && !r.link_id,
                     );
                     return currentResume?.resume_url ? (
                       <div className="space-y-3">
@@ -1179,6 +1226,12 @@ export function PortfolioContentManager({
                           >
                             <Trash2 className="w-4 h-4" />
                           </button>
+                          <button
+                            onClick={() => fileInputRef.current?.click()}
+                            className="rounded-md border border-accent/30 px-2 py-1 text-xs text-accent hover:bg-accent/5"
+                          >
+                            Replace PDF
+                          </button>
                         </div>
                       </div>
                     ) : (
@@ -1191,7 +1244,7 @@ export function PortfolioContentManager({
                           Click to upload resume
                         </p>
                         <p className="text-xs text-muted-foreground">
-                          PDF, PNG, or JPG
+                          PDF only for automatic AI resume parsing
                         </p>
                       </div>
                     );
@@ -1200,7 +1253,7 @@ export function PortfolioContentManager({
                   <input
                     ref={fileInputRef}
                     type="file"
-                    accept=".pdf,.png,.jpg,.jpeg"
+                    accept=".pdf,application/pdf"
                     onChange={handleResumeUpload}
                     className="hidden"
                   />
@@ -1232,6 +1285,41 @@ export function PortfolioContentManager({
                   className="w-full p-4 rounded-xl border bg-background focus:ring-2 focus:ring-accent outline-none text-sm leading-relaxed shadow-sm transition-all"
                   placeholder="Briefly describe your expertise for this specific role..."
                 />
+              </div>
+
+              <div className="md:col-span-2 space-y-4 pt-6 border-t border-border">
+                <div>
+                  <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
+                    Personal Profile (Optional)
+                  </label>
+                  <p className="mt-1 text-[10px] text-muted-foreground">
+                    Public details the role chatbot may use when visitors ask personal or conversational questions.
+                  </p>
+                </div>
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                  {[
+                    ["hobbies", "Hobbies", "Hardware tinkering, AI exploration"],
+                    ["interests", "Interests", "Automation, design, emerging technology"],
+                    ["workStyle", "Work Style", "Independent, practical, collaborative"],
+                    ["goals", "Goals", "Build useful systems that improve productivity"],
+                    ["languages", "Languages", "English (Native), Spanish (Conversational)"],
+                  ].map(([name, label, placeholder]) => (
+                    <div key={name} className="space-y-2">
+                      <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                        {label}
+                      </label>
+                      <textarea
+                        key={`${name}-${selectedRole.id}`}
+                        name={name}
+                        rows={2}
+                        defaultValue={selectedRole.personal_profile?.[name] || ""}
+                        onBlur={handleMetadataChange}
+                        className="w-full rounded-lg border bg-background p-3 text-sm outline-none transition-all focus:ring-2 focus:ring-accent"
+                        placeholder={placeholder}
+                      />
+                    </div>
+                  ))}
+                </div>
               </div>
 
               {/* Social Links Configuration */}
@@ -2289,7 +2377,7 @@ export function PortfolioContentManager({
                       demo_type: editFormData.demo_type || null,
                       roleIds: editFormData.roleIds || [],
                       ...(Number(editFormData.display_order) !==
-                        Number(editItem.display_order)
+                      Number(editItem.display_order)
                         ? { display_order: Number(editFormData.display_order) }
                         : {}),
                     };

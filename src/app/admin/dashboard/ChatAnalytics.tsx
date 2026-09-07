@@ -19,6 +19,7 @@ import {
   Hash,
   UsersRound,
 } from "lucide-react";
+import { ProviderDiagnostics } from "./ProviderDiagnostics";
 
 interface Conversation {
   id: string;
@@ -82,6 +83,8 @@ export function ChatAnalytics() {
 
   return (
     <div className="space-y-6">
+      <ProviderDiagnostics />
+
       {/* Stats */}
       {stats && (
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">

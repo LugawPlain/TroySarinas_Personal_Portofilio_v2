@@ -4,7 +4,6 @@ import { BaseChatWidget, ChatConfig } from "../BaseChatWidget";
 import { standardChatConfig } from "./Standard";
 
 export const vaChatConfig: ChatConfig = {
-  accentColor: "#8b5cf6", // Violet
   welcomeMessage:
     "👋 Hi there! I'm Troy Sarinas. You can ask more about my background, skills, and projects.",
   suggestedQuestions: [
