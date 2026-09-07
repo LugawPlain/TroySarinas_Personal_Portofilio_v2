@@ -20,7 +20,7 @@ const ProjectImage = ({
   return (
     <div className="relative">
       <motion.div
-        className="relative w-full aspect-video scale-125 my-24"
+        className="relative z-10 w-full aspect-video my-24 "
         initial={{ opacity: 0, y: 20 }}
         animate={isLoaded ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
         transition={{ duration: 2, ease: [0.16, 1, 0.3, 1] }}
@@ -31,7 +31,7 @@ const ProjectImage = ({
             alt={project.title}
             fill
             sizes="(max-width: 1280px) 100vw, 1280px"
-            className="object-contain p-2 sm:p-4"
+            className="object-contain p-2 sm:p-4 origin-center"
             priority
             onLoad={handleLoad}
           />

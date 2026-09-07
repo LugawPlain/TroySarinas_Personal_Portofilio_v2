@@ -96,7 +96,7 @@ const SoftwareEngineerHeroSection = ({
         className="flex flex-col xl:flex-row w-full min-h-[auto] xl:min-h-screen relative overflow-hidden"
       >
         {/* Left Content */}
-        <div className="flex flex-col justify-center px-4 sm:px-8 py-12 sm:py-16 xl:px-20 xl:py-20 w-full xl:w-[55%] xl:max-w-[55%] z-10">
+        <div className="flex flex-col justify-center px-4 sm:px-8 pt-24 pb-12 sm:py-16 xl:px-20 xl:py-20 w-full xl:w-[55%] xl:max-w-[55%] z-10">
           {/* Profile Header */}
           <div className="flex items-center gap-3 sm:gap-4 mb-6 sm:mb-8">
             {config.showAvatar && (

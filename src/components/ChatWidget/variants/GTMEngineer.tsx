@@ -3,7 +3,6 @@
 import { BaseChatWidget, ChatConfig } from "../BaseChatWidget";
 
 export const gtmEngineerChatConfig: ChatConfig = {
-  accentColor: "#10b981", // Emerald green
   welcomeMessage:
     "👋 Hi there! I'm Troy. Let's talk growth, product strategy, and how engineering drives business outcomes.",
   suggestedQuestions: [

@@ -154,11 +154,10 @@ export function HeroConfigEditor({ selectedRole, onSave }: HeroConfigEditorProps
             Accent Color
           </label>
           <input
-            type="text"
-            value={config.accentColor || ""}
+            type="color"
+            value={config.accentColor || "#3b82f6"}
             onChange={(e) => handleChange("accentColor", e.target.value)}
-            className="w-full p-3 rounded-lg border bg-background focus:ring-2 focus:ring-accent outline-none text-sm shadow-sm transition-all"
-            placeholder="#3b82f6"
+            className="h-11 w-full cursor-pointer rounded-lg border bg-background p-1 focus:ring-2 focus:ring-accent outline-none transition-all"
           />
         </div>
 

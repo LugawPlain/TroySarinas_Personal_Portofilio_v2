@@ -124,8 +124,9 @@ export async function getProjects(
       ? bRow.featured_display_order
       : bRow.display_order;
 
-    return (aOrder ?? Number.MAX_SAFE_INTEGER) -
-      (bOrder ?? Number.MAX_SAFE_INTEGER);
+    return (
+      (aOrder ?? Number.MAX_SAFE_INTEGER) - (bOrder ?? Number.MAX_SAFE_INTEGER)
+    );
   });
 }
 

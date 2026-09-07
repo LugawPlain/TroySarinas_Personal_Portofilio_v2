@@ -40,7 +40,6 @@ export interface HeroConfig {
 }
 
 export interface ChatConfig {
-  accentColor?: string;
   welcomeMessage?: string;
   suggestedQuestions?: string[];
   avatarIcon?: string;
