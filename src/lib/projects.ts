@@ -1,4 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
+import type { SiteExampleSlug } from "@lugawplain/website-examples/thumbnails";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY!;
@@ -15,6 +16,7 @@ export interface Project {
   liveUrl?: string;
   githubUrl?: string;
   demoType?: "lead-generator";
+  websiteExampleSlug?: SiteExampleSlug;
   displayOrder: number;
 }
 
@@ -29,6 +31,7 @@ interface ProjectRow {
   live_url: string | null;
   github_url: string | null;
   demo_type: "lead-generator" | null;
+  website_example_slug: SiteExampleSlug | null;
   display_order: number;
   created_at?: string;
   role_projects?: Array<{
@@ -99,12 +102,13 @@ export async function getProjects(
     liveUrl: item.live_url || undefined,
     githubUrl: item.github_url || undefined,
     demoType: item.demo_type || undefined,
+    websiteExampleSlug: item.website_example_slug || undefined,
     displayOrder: item.display_order,
   }));
 
   if (!role) return mappedProjects;
 
-  return mappedProjects.sort((a, b) => {
+  const roleProjects = mappedProjects.sort((a, b) => {
     const aRow = (data as unknown as ProjectRow[]).find(
       (item) => item.id === a.id,
     )?.role_projects?.[0];
@@ -128,6 +132,8 @@ export async function getProjects(
       (aOrder ?? Number.MAX_SAFE_INTEGER) - (bOrder ?? Number.MAX_SAFE_INTEGER)
     );
   });
+
+  return roleProjects;
 }
 
 export async function getProject(id: string): Promise<Project | undefined> {
@@ -154,6 +160,7 @@ export async function getProject(id: string): Promise<Project | undefined> {
     liveUrl: project.live_url || undefined,
     githubUrl: project.github_url || undefined,
     demoType: project.demo_type || undefined,
+    websiteExampleSlug: project.website_example_slug || undefined,
     displayOrder: project.display_order,
   };
 }

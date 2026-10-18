@@ -42,7 +42,7 @@ const SoftwareEngineerProjects = ({ projects, role }: ProjectsProps) => {
 
         {/* Projects Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8">
-          {projects.slice(0, 3).map((project, index) => {
+          {projects.map((project, index) => {
             const gradients = [
               "from-[rgba(17,153,142,0.15)] to-[rgba(56,239,125,0.1)]",
               "from-[rgba(102,126,234,0.15)] to-[rgba(118,75,162,0.1)]",
@@ -126,7 +126,19 @@ const SoftwareEngineerProjects = ({ projects, role }: ProjectsProps) => {
 
                   {/* Action Buttons */}
                   <div className="flex gap-3 mt-auto">
-                    {project.liveUrl ? (
+                    {project.websiteExampleSlug ? (
+                      <Link
+                        href={`/website-preview/${project.websiteExampleSlug}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex-1"
+                      >
+                        <Button className="w-full rounded-full text-xs font-semibold px-4 py-2 bg-secondary hover:bg-secondary/90 text-secondary-foreground shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5">
+                          <FiExternalLink size={14} className="mr-1.5" />
+                          Live Preview
+                        </Button>
+                      </Link>
+                    ) : project.liveUrl ? (
                       <Link
                         href={project.liveUrl}
                         target="_blank"

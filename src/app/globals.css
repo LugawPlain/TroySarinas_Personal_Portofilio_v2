@@ -1,7 +1,14 @@
+@import "../../tokens.css";
+@import "../components/automation-engineer.css";
 @import "tailwindcss";
 @import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
+
+html,
+body {
+  overflow-x: clip;
+}
 
 :root {
   --background: oklch(1 0 0);

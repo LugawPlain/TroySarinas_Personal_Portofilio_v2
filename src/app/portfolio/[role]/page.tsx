@@ -44,6 +44,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function RolePortfolioPage({ params }: Props) {
   const { role } = await params;
+  const isAutomationEngineer = role === "automation-engineer";
 
   // 1. Fetch Role Data
   const roleData = await getRoleMetadata(role);
@@ -74,8 +75,18 @@ export default async function RolePortfolioPage({ params }: Props) {
   ]);
 
   return (
-    <div className="min-h-screen bg-background selection:bg-accent/30">
-      <main className="space-y-24 pb-20">
+    <div
+      className={
+        isAutomationEngineer
+          ? "automation-page"
+          : "min-h-screen bg-background selection:bg-accent/30"
+      }
+    >
+      <main
+        className={
+          isAutomationEngineer ? "automation-main" : "space-y-24 pb-20"
+        }
+      >
         <TrackedSection id="hero_view">
           <HeroSection
             headline={roleData.headline}
@@ -86,37 +97,58 @@ export default async function RolePortfolioPage({ params }: Props) {
           />
         </TrackedSection>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-32">
-          {/* Projects Section (Filtered) */}
-          <TrackedSection id="projects_view">
-            <section id="projects">
-              <div className="space-y-4 mb-12">
-                <h2 className="text-4xl font-bold tracking-tight">
-                  Featured Projects
-                </h2>
-                <p className="text-muted-foreground text-lg max-w-2xl">
-                  A curated selection of my work specifically relevant to{" "}
-                  {roleData.title} roles.
-                </p>
-              </div>
+        <div
+          className={
+            isAutomationEngineer
+              ? "automation-sections"
+              : "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-32"
+          }
+        >
+          {isAutomationEngineer ? (
+            <TrackedSection id="projects_view">
               <Projects initialProjects={projects} />
-            </section>
-          </TrackedSection>
+            </TrackedSection>
+          ) : (
+            <TrackedSection id="projects_view">
+              <section id="projects">
+                <div className="space-y-4 mb-12">
+                  <h2 className="text-4xl font-bold tracking-tight">
+                    Featured Projects
+                  </h2>
+                  <p className="text-muted-foreground text-lg max-w-2xl">
+                    A curated selection of my work specifically relevant to{" "}
+                    {roleData.title} roles.
+                  </p>
+                </div>
+                <Projects initialProjects={projects} />
+              </section>
+            </TrackedSection>
+          )}
 
-          <TrackedSection id="skills_view">
-            <Technologies initialTech={techData} />
-          </TrackedSection>
+          {(!isAutomationEngineer || techData.length > 0) && (
+            <TrackedSection id="skills_view">
+              <Technologies initialTech={techData} />
+            </TrackedSection>
+          )}
 
-          <TrackedSection id="blog_view">
-            <Blogs initialBlogs={blogs} />
-          </TrackedSection>
+          {(!isAutomationEngineer || blogs.length > 0) && (
+            <TrackedSection id="blog_view">
+              <Blogs initialBlogs={blogs} />
+            </TrackedSection>
+          )}
 
-          <TrackedSection id="experience_view">
-            <Experience initialExperience={experienceData} />
-          </TrackedSection>
+          {(!isAutomationEngineer || experienceData.length > 0) && (
+            <TrackedSection id="experience_view">
+              <Experience initialExperience={experienceData} />
+            </TrackedSection>
+          )}
 
-          <Education educationItems={education} />
-          <Certifications certifications={certifications} />
+          {(!isAutomationEngineer || education.length > 0) && (
+            <Education educationItems={education} />
+          )}
+          {(!isAutomationEngineer || certifications.length > 0) && (
+            <Certifications certifications={certifications} />
+          )}
         </div>
       </main>
     </div>

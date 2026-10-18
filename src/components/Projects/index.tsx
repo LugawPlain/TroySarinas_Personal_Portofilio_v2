@@ -27,8 +27,6 @@ export default function Projects({
   const { role: contextRole } = usePortfolio();
   const activeRole = contextRole || propRole;
 
-  // If no projects provided, we might need a client-side fetcher or just handle empty state
-  // But typically the page passes them down.
   const projects = initialProjects || [];
 
   if (projects.length === 0) {
@@ -58,29 +56,49 @@ export default function Projects({
     );
   }
 
+  let projectSection;
+
   switch (activeRole) {
     case "software-engineer":
-      return <SoftwareEngineerProjects projects={projects} role={activeRole} />;
+      projectSection = (
+        <SoftwareEngineerProjects projects={projects} role={activeRole} />
+      );
+      break;
     case "gtm-engineer":
-      return <GTMProjects projects={projects} role={activeRole} />;
+      projectSection = <GTMProjects projects={projects} role={activeRole} />;
+      break;
     case "video-editor":
-      return <CinematicProjects projects={projects} role={activeRole} />;
+      projectSection = (
+        <CinematicProjects projects={projects} role={activeRole} />
+      );
+      break;
     case "data-analyst":
-      return <DataProjects projects={projects} role={activeRole} />;
+      projectSection = <DataProjects projects={projects} role={activeRole} />;
+      break;
     case "social-media-manager":
-      return <SocialProjects projects={projects} role={activeRole} />;
+      projectSection = <SocialProjects projects={projects} role={activeRole} />;
+      break;
     case "marketing-manager":
-      return <MarketingProjects projects={projects} role={activeRole} />;
+      projectSection = (
+        <MarketingProjects projects={projects} role={activeRole} />
+      );
+      break;
     case "ecommerce-developer":
-      return <EcommerceProjects projects={projects} role={activeRole} />;
+      projectSection = <EcommerceProjects projects={projects} role={activeRole} />;
+      break;
     case "cpa":
-      return <CPAProjects projects={projects} role={activeRole} />;
+      projectSection = <CPAProjects projects={projects} role={activeRole} />;
+      break;
     case "sales-representative":
-      return <SalesProjects projects={projects} role={activeRole} />;
+      projectSection = <SalesProjects projects={projects} role={activeRole} />;
+      break;
     case "virtual-assistant":
-      return <VAProjects projects={projects} role={activeRole} />;
+      projectSection = <VAProjects projects={projects} role={activeRole} />;
+      break;
 
     default:
-      return <StandardProjects projects={projects} role={activeRole} />;
+      projectSection = <StandardProjects projects={projects} role={activeRole} />;
   }
+
+  return projectSection;
 }

@@ -2,6 +2,8 @@
 
 import { createClient, createServiceRoleClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
+import { isSiteExampleSlug } from "@/lib/website-examples";
+import type { SiteExampleSlug } from "@lugawplain/website-examples/thumbnails";
 
 async function getNextRoleProjectDisplayOrder(
   supabase: Awaited<ReturnType<typeof createClient>>,
@@ -201,7 +203,7 @@ export async function setProjectFeaturedForRole(
           display_order:
             existing.display_order ??
             (await getNextRoleProjectDisplayOrder(supabase, roleId)),
-          featured_display_order: null,
+          featured_display_order: 0,
         };
     console.log("setProjectFeaturedForRole attempting update", {
       matchingKey: { role_id: roleId, project_id: projectId },
@@ -226,7 +228,7 @@ export async function setProjectFeaturedForRole(
       display_order: await getNextRoleProjectDisplayOrder(supabase, roleId),
       featured_display_order: isFeatured
         ? await getNextRoleFeaturedDisplayOrder(supabase, roleId)
-        : null,
+        : 0,
     };
 
     console.log("setProjectFeaturedForRole attempting insert", insertPayload);
@@ -736,9 +738,17 @@ export async function createProject(projectData: {
   live_url?: string;
   github_url?: string;
   demo_type?: "lead-generator" | null;
+  website_example_slug?: SiteExampleSlug | null;
   display_order?: number;
   roleIds?: string[];
 }) {
+  if (
+    projectData.website_example_slug != null &&
+    !isSiteExampleSlug(projectData.website_example_slug)
+  ) {
+    return { error: "Invalid website example selection." };
+  }
+
   const supabase = await createClient();
 
   const { data: project, error } = await supabase
@@ -753,6 +763,7 @@ export async function createProject(projectData: {
       live_url: projectData.live_url || null,
       github_url: projectData.github_url || null,
       demo_type: projectData.demo_type || null,
+      website_example_slug: projectData.website_example_slug || null,
       is_published: true,
       display_order: projectData.display_order || 0,
     })
@@ -779,7 +790,7 @@ export async function createProject(projectData: {
         project_id: project.id,
         is_featured: false,
         display_order: await getNextRoleProjectDisplayOrder(supabase, roleId),
-        featured_display_order: null,
+        featured_display_order: 0,
       })),
     );
     await supabase.from("role_projects").insert(roleInserts);
@@ -988,10 +999,18 @@ export async function updateProject(
     live_url?: string;
     github_url?: string;
     demo_type?: "lead-generator" | null;
+    website_example_slug?: SiteExampleSlug | null;
     display_order?: number;
     roleIds?: string[];
   },
 ) {
+  if (
+    projectData.website_example_slug != null &&
+    !isSiteExampleSlug(projectData.website_example_slug)
+  ) {
+    return { error: "Invalid website example selection." };
+  }
+
   const supabase = await createClient();
 
   const { error } = await supabase
@@ -1006,6 +1025,7 @@ export async function updateProject(
       live_url: projectData.live_url || null,
       github_url: projectData.github_url || null,
       demo_type: projectData.demo_type || null,
+      website_example_slug: projectData.website_example_slug || null,
       display_order: projectData.display_order,
       updated_at: new Date().toISOString(),
     })
@@ -1064,7 +1084,7 @@ export async function updateProject(
           project_id: id,
           is_featured: false,
           display_order: await getNextRoleProjectDisplayOrder(supabase, roleId),
-          featured_display_order: null,
+          featured_display_order: 0,
         })),
       );
       const { error } = await supabase

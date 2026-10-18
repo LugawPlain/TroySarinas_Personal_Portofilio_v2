@@ -5,15 +5,15 @@ import {
   Inter,
   Passions_Conflict,
   Fraunces,
+  JetBrains_Mono,
   Montserrat,
+  Space_Grotesk,
   Space_Mono,
 } from "next/font/google";
 import "./globals.css";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import { cn } from "@/lib/utils";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
-import ClientProviders from "@/components/ClientProviders";
+import SiteShell from "@/components/SiteShell";
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -53,6 +53,18 @@ const spaceMono = Space_Mono({
   variable: "--font-spacemono",
   subsets: ["latin"],
   weight: ["400", "700"],
+  display: "swap",
+});
+
+const spaceGrotesk = Space_Grotesk({
+  variable: "--font-space-grotesk",
+  subsets: ["latin"],
+  display: "swap",
+});
+
+const jetBrainsMono = JetBrains_Mono({
+  variable: "--font-jetbrains-mono",
+  subsets: ["latin"],
   display: "swap",
 });
 
@@ -140,17 +152,15 @@ export default function RootLayout({
           fraunces.variable,
           montserrat.variable,
           spaceMono.variable,
+          spaceGrotesk.variable,
+          jetBrainsMono.variable,
           "antialiased",
         )}
       >
         <GoogleAnalytics
           gaId={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID || ""}
         />
-        <ClientProviders>
-          <Header />
-          {children}
-          <Footer />
-        </ClientProviders>
+        <SiteShell>{children}</SiteShell>
       </body>
     </html>
   );

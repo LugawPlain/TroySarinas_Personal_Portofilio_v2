@@ -1,6 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  transpilePackages: ["@lugawplain/website-examples"],
   serverExternalPackages: ["pdf-parse", "pdfjs-dist"],
   turbopack: {
     root: __dirname,
@@ -17,6 +18,12 @@ const nextConfig: NextConfig = {
         hostname: "dkyhwhijbmndzajxaeoy.supabase.co",
         port: "",
         pathname: "/storage/v1/object/public/**",
+      },
+      {
+        protocol: "https",
+        hostname: "assets.yortechne.com",
+        port: "",
+        pathname: "/**",
       },
     ],
   },

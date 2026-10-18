@@ -8,12 +8,9 @@ import { Project } from "@/lib/projects";
 import { useCart } from "@/contexts/CartContext";
 import {
   ShoppingCart,
-  Star,
   Eye,
-  TrendingUp,
   Plus,
   Check,
-  Tag,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -133,62 +130,56 @@ function ProductCard({
           </div>
         )}
 
-        {/* Add to Cart Button - Floating */}
-        <motion.button
-          initial={{ opacity: 0, scale: 0.8 }}
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
-          onClick={onAddToCart}
-          disabled={isInCart}
-          className={`absolute top-4 right-16 z-10 w-10 h-10 rounded-full flex items-center justify-center shadow-lg transition-colors ${
-            isInCart
-              ? "bg-emerald-600 text-white"
-              : "bg-white text-slate-700 hover:bg-emerald-50"
-          }`}
-        >
-          <AnimatePresence mode="wait">
-            {isAnimating ? (
-              <motion.div
-                key="check"
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                exit={{ scale: 0 }}
-              >
-                <Check className="w-5 h-5" />
-              </motion.div>
-            ) : isInCart ? (
-              <motion.div
-                key="added"
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-              >
-                <Check className="w-5 h-5" />
-              </motion.div>
-            ) : (
-              <motion.div
-                key="plus"
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                exit={{ scale: 0 }}
-              >
-                <Plus className="w-5 h-5" />
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </motion.button>
+        {!project.websiteExampleSlug && (
+          <motion.button
+            initial={{ opacity: 0, scale: 0.8 }}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            onClick={onAddToCart}
+            disabled={isInCart}
+            aria-label={`Add ${project.title} to cart`}
+            className={`absolute top-4 right-16 z-10 w-10 h-10 rounded-full flex items-center justify-center shadow-lg transition-colors ${
+              isInCart
+                ? "bg-emerald-600 text-white"
+                : "bg-white text-slate-700 hover:bg-emerald-50"
+            }`}
+          >
+            <AnimatePresence mode="wait">
+              {isAnimating || isInCart ? (
+                <motion.div
+                  key="check"
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  exit={{ scale: 0 }}
+                >
+                  <Check className="w-5 h-5" />
+                </motion.div>
+              ) : (
+                <motion.div
+                  key="plus"
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  exit={{ scale: 0 }}
+                >
+                  <Plus className="w-5 h-5" />
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </motion.button>
+        )}
 
         {/* Sale Badge */}
         <div className="absolute top-4 left-4 bg-emerald-600 text-white px-3 py-1 rounded-full text-xs font-bold"
         >
-          LIVE STORE
+          {project.websiteExampleSlug ? "WEBSITE EXAMPLE" : "LIVE STORE"}
         </div>
 
         {/* Rating */}
-        <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-lg flex items-center gap-1"
-        >
-          <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
-          <span className="text-xs font-bold">4.{8 + (index % 2)}</span>
-        </div>
+        {!project.websiteExampleSlug && (
+          <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-lg flex items-center gap-1">
+            <span className="text-xs font-bold">4.{8 + (index % 2)}</span>
+          </div>
+        )}
 
         {/* Quick View Overlay */}
         <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-3"
@@ -221,29 +212,36 @@ function ProductCard({
           </div>
         </div>
 
-        {/* Price Tag Style Metrics */}
-        <div className="flex items-center gap-4 mb-4 py-3 border-y border-slate-100"
-        >
-          <div className="flex items-center gap-1.5"
-          >
-            <Tag className="w-4 h-4 text-emerald-600" />
-            <span className="text-lg font-bold text-emerald-600"
-            >
-              +{(index + 2) * 150}%
-            </span>
-            <span className="text-sm text-slate-400">ROI</span>
+        {project.websiteExampleSlug ? (
+          <div className="mb-4 flex flex-wrap gap-2 border-y border-slate-100 py-3">
+            {project.tags
+              .filter((tag) => tag !== "Website Example")
+              .map((tag) => (
+                <span
+                  key={tag}
+                  className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-700"
+                >
+                  {tag}
+                </span>
+              ))}
           </div>
-          <div className="w-px h-4 bg-slate-200" />
-          <div className="flex items-center gap-1"
-          >
-            <TrendingUp className="w-4 h-4 text-emerald-600" />
-            <span className="font-bold text-slate-700"
-            >
-              {(index + 1) * 12}K
-            </span>
-            <span className="text-sm text-slate-400">Orders</span>
+        ) : (
+          <div className="flex items-center gap-4 mb-4 py-3 border-y border-slate-100">
+            <div className="flex items-center gap-1.5">
+              <span className="text-lg font-bold text-emerald-600">
+                +{(index + 2) * 150}%
+              </span>
+              <span className="text-sm text-slate-400">ROI</span>
+            </div>
+            <div className="w-px h-4 bg-slate-200" />
+            <div className="flex items-center gap-1">
+              <span className="font-bold text-slate-700">
+                {(index + 1) * 12}K
+              </span>
+              <span className="text-sm text-slate-400">Orders</span>
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Technologies as Product Specs */}
         <div className="flex flex-wrap gap-2 mb-5"
@@ -265,36 +263,43 @@ function ProductCard({
         </div>
 
         {/* CTA Buttons */}
-        <div className="flex gap-3"
-        >
-          <button
-            onClick={onAddToCart}
-            disabled={isInCart}
-            className={`flex-1 py-3 px-4 rounded-full font-semibold text-sm transition-all flex items-center justify-center gap-2 ${
-              isInCart
-                ? "bg-emerald-100 text-emerald-700 cursor-default"
-                : "bg-slate-100 text-slate-700 hover:bg-slate-200"
-            }`}
-          >
-            {isInCart ? (
-              <>
-                <Check className="w-4 h-4" />
-                In Cart
-              </>
-            ) : (
-              <>
-                <ShoppingCart className="w-4 h-4" />
-                Add to Cart
-              </>
-            )}
-          </button>
+        <div className="flex gap-3">
+          {!project.websiteExampleSlug && (
+            <button
+              onClick={onAddToCart}
+              disabled={isInCart}
+              className={`flex-1 py-3 px-4 rounded-full font-semibold text-sm transition-all flex items-center justify-center gap-2 ${
+                isInCart
+                  ? "bg-emerald-100 text-emerald-700 cursor-default"
+                  : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+              }`}
+            >
+              {isInCart ? (
+                <>
+                  <Check className="w-4 h-4" />
+                  In Cart
+                </>
+              ) : (
+                <>
+                  <ShoppingCart className="w-4 h-4" />
+                  Add to Cart
+                </>
+              )}
+            </button>
+          )}
           <Link
-            href={`${rolePrefix}/projects/${project.id}`}
+            href={
+              project.websiteExampleSlug
+                ? `/website-preview/${project.websiteExampleSlug}`
+                : `${rolePrefix}/projects/${project.id}`
+            }
+            target={project.websiteExampleSlug ? "_blank" : undefined}
+            rel={project.websiteExampleSlug ? "noopener noreferrer" : undefined}
             className="flex-1"
           >
             <Button className="w-full bg-emerald-600 hover:bg-emerald-700 text-white rounded-full font-semibold shadow-lg hover:shadow-xl transition-all"
             >
-              View Store
+              {project.websiteExampleSlug ? "Live Preview" : "View Store"}
             </Button>
           </Link>
         </div>

@@ -62,6 +62,7 @@ import IconPicker from "./IconPicker";
 import Image from "next/image";
 import { ChatConfigEditor } from "./ChatConfigEditor";
 import ProjectTagInput from "@/components/Projects/ProjectTagInput";
+import { websiteExampleOptions } from "@/lib/website-examples";
 import {
   DndContext,
   KeyboardSensor,
@@ -265,6 +266,7 @@ const MemoSortableProjectCard = React.memo(function SortableProjectCard({
                 live_url: project.live_url || "",
                 github_url: project.github_url || "",
                 demo_type: project.demo_type || "",
+                website_example_slug: project.website_example_slug || "",
                 display_order: project.display_order || 0,
                 roleIds: linkedRoles.map((role: any) => role.id),
               });
@@ -1932,7 +1934,7 @@ export function PortfolioContentManager({
                   }
 
                   if (createType === "project") {
-                    await createProject({
+                    const result = await createProject({
                       title: createFormData.title,
                       description: createFormData.description,
                       thumbnail_url: thumbnailUrl,
@@ -1945,11 +1947,16 @@ export function PortfolioContentManager({
                       live_url: createFormData.live_url,
                       github_url: createFormData.github_url,
                       demo_type: createFormData.demo_type || null,
+                      website_example_slug:
+                        createFormData.website_example_slug || null,
                       display_order: createFormData.display_order || 0,
                       roleIds: createFormData.roleIds || [],
                     });
+                    if (result?.error) {
+                      throw new Error(result.error);
+                    }
                   } else {
-                    await createBlog({
+                    const result = await createBlog({
                       title: createFormData.title,
                       excerpt: createFormData.excerpt,
                       content: createFormData.content,
@@ -1959,12 +1966,19 @@ export function PortfolioContentManager({
                         .filter(Boolean),
                       roleIds: createFormData.roleIds || [],
                     });
+                    if (result?.error) {
+                      throw new Error(result.error);
+                    }
                   }
                   setIsCreateModalOpen(false);
                   setCreateFormData({});
                   router.refresh();
                 } catch (err) {
-                  alert("Error creating content");
+                  alert(
+                    err instanceof Error
+                      ? `Error creating content: ${err.message}`
+                      : "Error creating content",
+                  );
                 } finally {
                   setCreateLoading(false);
                 }
@@ -2177,6 +2191,31 @@ export function PortfolioContentManager({
                       </select>
                     </div>
                     <div className="space-y-2">
+                      <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                        Website example preview
+                      </label>
+                      <select
+                        value={createFormData.website_example_slug || ""}
+                        onChange={(e) =>
+                          setCreateFormData((prev: any) => ({
+                            ...prev,
+                            website_example_slug: e.target.value || null,
+                          }))
+                        }
+                        className="w-full bg-background border rounded-lg px-4 py-3 outline-none focus:ring-2 focus:ring-purple-500/50 transition-all text-base"
+                      >
+                        <option value="">No package example</option>
+                        {websiteExampleOptions.map((example) => (
+                          <option key={example.value} value={example.value}>
+                            {example.label}
+                          </option>
+                        ))}
+                      </select>
+                      <p className="text-xs text-muted-foreground">
+                        Renders the selected interactive example on your portfolio domain.
+                      </p>
+                    </div>
+                    <div className="space-y-2">
                       <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-2">
                         <ArrowUpDown className="w-3.5 h-3.5" />
                         Display Order
@@ -2375,15 +2414,23 @@ export function PortfolioContentManager({
                       live_url: editFormData.live_url,
                       github_url: editFormData.github_url,
                       demo_type: editFormData.demo_type || null,
+                      website_example_slug:
+                        editFormData.website_example_slug || null,
                       roleIds: editFormData.roleIds || [],
                       ...(Number(editFormData.display_order) !==
                       Number(editItem.display_order)
                         ? { display_order: Number(editFormData.display_order) }
                         : {}),
                     };
-                    await updateProject(editItem.id, projectUpdate);
+                    const result = await updateProject(
+                      editItem.id,
+                      projectUpdate,
+                    );
+                    if (result?.error) {
+                      throw new Error(result.error);
+                    }
                   } else if (editType === "blog" && editItem) {
-                    await updateBlog(editItem.id, {
+                    const result = await updateBlog(editItem.id, {
                       title: editFormData.title,
                       excerpt: editFormData.excerpt,
                       content: editFormData.content,
@@ -2393,13 +2440,20 @@ export function PortfolioContentManager({
                         .filter(Boolean),
                       roleIds: editFormData.roleIds || [],
                     });
+                    if (result?.error) {
+                      throw new Error(result.error);
+                    }
                   }
                   setIsEditModalOpen(false);
                   setEditFormData({});
                   setEditItem(null);
                   router.refresh();
                 } catch (err) {
-                  alert("Error updating content");
+                  alert(
+                    err instanceof Error
+                      ? `Error updating content: ${err.message}`
+                      : "Error updating content",
+                  );
                 } finally {
                   setEditLoading(false);
                 }
@@ -2608,6 +2662,31 @@ export function PortfolioContentManager({
                           Google Maps lead generator
                         </option>
                       </select>
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                        Website example preview
+                      </label>
+                      <select
+                        value={editFormData.website_example_slug || ""}
+                        onChange={(e) =>
+                          setEditFormData((prev: any) => ({
+                            ...prev,
+                            website_example_slug: e.target.value || null,
+                          }))
+                        }
+                        className="w-full rounded-lg border bg-background px-4 py-3 text-base outline-none transition-all focus:ring-2 focus:ring-purple-500/50"
+                      >
+                        <option value="">No package example</option>
+                        {websiteExampleOptions.map((example) => (
+                          <option key={example.value} value={example.value}>
+                            {example.label}
+                          </option>
+                        ))}
+                      </select>
+                      <p className="text-xs text-muted-foreground">
+                        Renders the selected interactive example on your portfolio domain.
+                      </p>
                     </div>
                     <div className="space-y-2">
                       <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-2">

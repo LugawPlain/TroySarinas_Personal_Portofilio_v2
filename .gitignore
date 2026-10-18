@@ -8,6 +8,14 @@
 .qoder/rules/byterover-rules.md
 .augment/rules/byterover-rules.md
 supabase
+!supabase/
+supabase/*
+!supabase/migrations/
+supabase/migrations/*
+!supabase/migrations/20261019000000_add_website_example_slug.sql
+!supabase/migrations/20261019040000_add_automation_engineer_role.sql
+!supabase/migrations/20261019050000_link_automation_projects.sql
+!supabase/migrations/20261019060000_link_remaining_automation_projects.sql
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies

@@ -85,7 +85,18 @@ export const ProjectDetailsClient = ({
               <Layers className="h-5 w-5 text-secondary/60" />
             </div>
             <div className="space-y-3">
-              {project.liveUrl && (
+              {project.websiteExampleSlug ? (
+                <Link
+                  href={`/website-preview/${project.websiteExampleSlug}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block"
+                >
+                  <Button className="w-full gap-2 hover:bg-secondary hover:text-background transition-colors font-semibold">
+                    <FiExternalLink /> Live Preview
+                  </Button>
+                </Link>
+              ) : project.liveUrl ? (
                 <Link
                   href={project.liveUrl}
                   target="_blank"
@@ -96,7 +107,7 @@ export const ProjectDetailsClient = ({
                     <FiExternalLink /> Live Demo
                   </Button>
                 </Link>
-              )}
+              ) : null}
               {project.githubUrl ? (
                 <Link
                   href={project.githubUrl}
