@@ -12,6 +12,7 @@ import EcommerceFooter from "./variants/Ecommerce";
 import CPAFooter from "./variants/CPA";
 import SalesFooter from "./variants/Sales";
 import VAFooter from "./variants/VA";
+import AutomationEngineerFooter from "./variants/AutomationEngineer";
 
 export default function Footer() {
   const pathname = typeof window !== "undefined" ? window.location.pathname : undefined;
@@ -22,6 +23,8 @@ export default function Footer() {
   const { role } = usePortfolio();
 
   switch (role) {
+    case "automation-engineer":
+      return <AutomationEngineerFooter />;
     case "software-engineer":
       return <SoftwareEngineerFooter />;
     case "video-editor":

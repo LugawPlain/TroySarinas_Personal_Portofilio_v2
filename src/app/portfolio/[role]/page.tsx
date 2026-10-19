@@ -19,6 +19,7 @@ import {
 import { getProjects } from "@/lib/projects";
 import { getBlogPosts } from "@/lib/blog";
 import { getResumeForRole } from "@/lib/resume";
+import AutomationEngineerPortfolio from "@/components/AutomationEngineerPortfolio";
 
 import { TrackedSection } from "@/components/TrackedSection";
 
@@ -74,19 +75,26 @@ export default async function RolePortfolioPage({ params }: Props) {
     getSocialLinks(role),
   ]);
 
+  if (isAutomationEngineer) {
+    return (
+      <AutomationEngineerPortfolio
+        role={role}
+        resumeUrl={resumeUrl ?? null}
+        heroConfig={roleData.hero_config}
+        projects={projects}
+        technologies={techData}
+        experience={experienceData}
+        education={education}
+        certifications={certifications}
+        blogs={blogs}
+        socialLinks={socialLinks}
+      />
+    );
+  }
+
   return (
-    <div
-      className={
-        isAutomationEngineer
-          ? "automation-page"
-          : "min-h-screen bg-background selection:bg-accent/30"
-      }
-    >
-      <main
-        className={
-          isAutomationEngineer ? "automation-main" : "space-y-24 pb-20"
-        }
-      >
+    <div className="min-h-screen bg-background selection:bg-accent/30">
+      <main className="space-y-24 pb-20">
         <TrackedSection id="hero_view">
           <HeroSection
             headline={roleData.headline}
@@ -97,58 +105,36 @@ export default async function RolePortfolioPage({ params }: Props) {
           />
         </TrackedSection>
 
-        <div
-          className={
-            isAutomationEngineer
-              ? "automation-sections"
-              : "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-32"
-          }
-        >
-          {isAutomationEngineer ? (
-            <TrackedSection id="projects_view">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-32">
+          <TrackedSection id="projects_view">
+            <section id="projects">
+              <div className="space-y-4 mb-12">
+                <h2 className="text-4xl font-bold tracking-tight">
+                  Featured Projects
+                </h2>
+                <p className="text-muted-foreground text-lg max-w-2xl">
+                  A curated selection of my work specifically relevant to{" "}
+                  {roleData.title} roles.
+                </p>
+              </div>
               <Projects initialProjects={projects} />
-            </TrackedSection>
-          ) : (
-            <TrackedSection id="projects_view">
-              <section id="projects">
-                <div className="space-y-4 mb-12">
-                  <h2 className="text-4xl font-bold tracking-tight">
-                    Featured Projects
-                  </h2>
-                  <p className="text-muted-foreground text-lg max-w-2xl">
-                    A curated selection of my work specifically relevant to{" "}
-                    {roleData.title} roles.
-                  </p>
-                </div>
-                <Projects initialProjects={projects} />
-              </section>
-            </TrackedSection>
-          )}
+            </section>
+          </TrackedSection>
 
-          {(!isAutomationEngineer || techData.length > 0) && (
-            <TrackedSection id="skills_view">
-              <Technologies initialTech={techData} />
-            </TrackedSection>
-          )}
+          <TrackedSection id="skills_view">
+            <Technologies initialTech={techData} />
+          </TrackedSection>
 
-          {(!isAutomationEngineer || blogs.length > 0) && (
-            <TrackedSection id="blog_view">
-              <Blogs initialBlogs={blogs} />
-            </TrackedSection>
-          )}
+          <TrackedSection id="blog_view">
+            <Blogs initialBlogs={blogs} />
+          </TrackedSection>
 
-          {(!isAutomationEngineer || experienceData.length > 0) && (
-            <TrackedSection id="experience_view">
-              <Experience initialExperience={experienceData} />
-            </TrackedSection>
-          )}
+          <TrackedSection id="experience_view">
+            <Experience initialExperience={experienceData} />
+          </TrackedSection>
 
-          {(!isAutomationEngineer || education.length > 0) && (
-            <Education educationItems={education} />
-          )}
-          {(!isAutomationEngineer || certifications.length > 0) && (
-            <Certifications certifications={certifications} />
-          )}
+          <Education educationItems={education} />
+          <Certifications certifications={certifications} />
         </div>
       </main>
     </div>

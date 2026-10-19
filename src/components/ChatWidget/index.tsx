@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { BaseChatWidget, ChatConfig } from "./BaseChatWidget";
 import { softwareEngineerChatConfig } from "./variants/SoftwareEngineer";
 import { gtmEngineerChatConfig } from "./variants/GTMEngineer";
+import { automationEngineerChatConfig } from "./variants/AutomationEngineer";
 import { standardChatConfig } from "./variants/Standard";
 
 export default function ChatWidget() {
@@ -41,13 +42,16 @@ export default function ChatWidget() {
       ? softwareEngineerChatConfig
       : role === "gtm-engineer"
         ? gtmEngineerChatConfig
-        : standardChatConfig;
+        : role === "automation-engineer"
+          ? automationEngineerChatConfig
+          : standardChatConfig;
   const config = { ...defaultConfig, ...savedConfig };
 
   switch (role) {
     case "software-engineer":
       return <BaseChatWidget config={config} themeColor={themeColor} />;
     case "gtm-engineer":
+    case "automation-engineer":
       return <BaseChatWidget config={config} themeColor={themeColor} />;
     case "ecommerce-developer":
       return <BaseChatWidget config={config} themeColor={themeColor} />;

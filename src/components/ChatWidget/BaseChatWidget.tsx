@@ -145,7 +145,10 @@ export function BaseChatWidget({ config, themeColor }: BaseChatWidgetProps) {
   const [isSending, setIsSending] = useState(false);
   const MAX_MESSAGES_PER_SESSION = 20;
 
-  const accentColor = themeColor || "#3b82f6";
+  const isAutomationEngineer = role === "automation-engineer";
+  const accentColor =
+    themeColor ||
+    (isAutomationEngineer ? "var(--color-automation-accent)" : "#3b82f6");
   const welcomeMessage =
     config.welcomeMessage ||
     "Hi there! I'm Troy Sarinas. You can ask more about my background, skills, and projects.";
@@ -348,15 +351,25 @@ export function BaseChatWidget({ config, themeColor }: BaseChatWidgetProps) {
   return (
     <>
       <div
-        className={`fixed bottom-18 left-1/2 -translate-x-1/2 md:-translate-x-0 md:bottom-20 md:right-4 md:left-auto w-[95%] md:w-[600px] h-[80vh] md:h-[600px] max-h-[600px] bg-white border-2 border-gray-200 rounded-lg shadow-2xl flex flex-col transition-all duration-300 z-50 ${
-          isOpen
-            ? "opacity-100 translate-y-0 pointer-events-auto"
-            : "opacity-0 translate-y-4 pointer-events-none"
-        }`}
+        role="dialog"
+        aria-label="Chat with Troy Sarinas"
+        aria-hidden={!isOpen}
+        inert={!isOpen}
+        className={
+          isAutomationEngineer
+            ? `automation-chat-panel ${isOpen ? "is-open" : ""}`
+            : `fixed bottom-18 left-1/2 -translate-x-1/2 md:-translate-x-0 md:bottom-20 md:right-4 md:left-auto w-[95%] md:w-[600px] h-[80vh] md:h-[600px] max-h-[600px] bg-white border-2 border-gray-200 rounded-lg shadow-2xl flex flex-col transition-all duration-300 z-50 ${
+                isOpen
+                  ? "opacity-100 translate-y-0 pointer-events-auto"
+                  : "opacity-0 translate-y-4 pointer-events-none"
+              }`
+        }
       >
         {/* Header */}
         <div
-          className="p-3 md:p-4 rounded-t-lg flex items-center justify-between"
+          className={`p-3 md:p-4 flex items-center justify-between ${
+            isAutomationEngineer ? "automation-chat-header" : "rounded-t-lg"
+          }`}
           style={{ backgroundColor: accentColor }}
         >
           <div className="flex items-center gap-2 md:gap-3">
@@ -385,14 +398,23 @@ export function BaseChatWidget({ config, themeColor }: BaseChatWidgetProps) {
             {messages.length > 0 && (
               <button
                 onClick={restartSession}
-                className="text-xs bg-white/20 hover:bg-white/30 text-white px-2 py-1 md:px-3 md:py-1 rounded transition-colors"
+                className={`text-xs px-2 py-1 md:px-3 md:py-1 transition-colors ${
+                  isAutomationEngineer
+                    ? "automation-chat-control"
+                    : "bg-white/20 hover:bg-white/30 text-white rounded"
+                }`}
               >
                 Restart
               </button>
             )}
             <button
               onClick={toggleChat}
-              className="hover:bg-white/20 text-white/70 p-1 rounded transition-colors"
+              aria-label="Close chat"
+              className={`p-1 transition-colors ${
+                isAutomationEngineer
+                  ? "automation-chat-control"
+                  : "hover:bg-white/20 text-white/70 rounded"
+              }`}
             >
               <X className="w-4 h-4 md:w-6 md:h-6 text-white" />
             </button>
@@ -400,12 +422,20 @@ export function BaseChatWidget({ config, themeColor }: BaseChatWidgetProps) {
         </div>
 
         {/* Messages Area */}
-        <div className="flex-1 overflow-y-auto p-3 md:p-4 space-y-3 md:space-y-4 bg-gray-50">
+        <div
+          className={`flex-1 overflow-y-auto p-3 md:p-4 space-y-3 md:space-y-4 ${
+            isAutomationEngineer ? "automation-chat-messages" : "bg-gray-50"
+          }`}
+        >
           {messages.length === 0 && (
             <div className="space-y-2 md:space-y-3">
               <div className="flex justify-start">
                 <div
-                  className="max-w-[90%] md:max-w-[85%] bg-white text-black border-2 rounded-2xl p-3 md:p-4 rounded-bl-none shadow-md"
+                  className={`max-w-[90%] md:max-w-[85%] p-3 md:p-4 ${
+                    isAutomationEngineer
+                      ? "automation-chat-bubble"
+                      : "bg-white text-black border-2 rounded-2xl rounded-bl-none shadow-md"
+                  }`}
                   style={{ borderColor: `${accentColor}50` }}
                 >
                   <div className="text-xs md:text-sm chat-prose">
@@ -419,7 +449,11 @@ export function BaseChatWidget({ config, themeColor }: BaseChatWidgetProps) {
                         <button
                           key={idx}
                           onClick={() => setInputValue(question)}
-                          className="text-left p-2 md:p-3 bg-gray-50 border border-gray-200 rounded-lg hover:bg-gray-100 transition-colors text-xs md:text-sm text-gray-700"
+                          className={`text-left p-2 md:p-3 text-xs md:text-sm transition-colors ${
+                            isAutomationEngineer
+                              ? "automation-chat-suggestion"
+                              : "bg-gray-50 border border-gray-200 rounded-lg hover:bg-gray-100 text-gray-700"
+                          }`}
                         >
                           {question}
                         </button>
@@ -445,11 +479,15 @@ export function BaseChatWidget({ config, themeColor }: BaseChatWidgetProps) {
               }`}
             >
               <div
-                className={`max-w-[90%] md:max-w-[85%] rounded-2xl p-3 md:p-4 ${
+                className={`max-w-[90%] md:max-w-[85%] p-3 md:p-4 ${
                   message.sender === "user"
-                    ? "bg-primary text-black ml-auto border-2 border-secondary/50 rounded-br-none"
-                    : "bg-white text-black border-2 rounded-bl-none"
-                } shadow-md`}
+                    ? isAutomationEngineer
+                      ? "automation-chat-bubble automation-chat-user ml-auto"
+                      : "bg-primary text-black ml-auto border-2 border-secondary/50 rounded-2xl rounded-br-none shadow-md"
+                    : isAutomationEngineer
+                      ? "automation-chat-bubble"
+                      : "bg-white text-black border-2 rounded-2xl rounded-bl-none shadow-md"
+                }`}
                 style={
                   message.sender === "ai"
                     ? { borderColor: `${accentColor}50` }
@@ -497,7 +535,13 @@ export function BaseChatWidget({ config, themeColor }: BaseChatWidgetProps) {
         </div>
 
         {/* Input Area */}
-        <div className="p-3 md:p-4 bg-white border-t border-gray-200 rounded-b-lg">
+        <div
+          className={`p-3 md:p-4 ${
+            isAutomationEngineer
+              ? "automation-chat-input-area"
+              : "bg-white border-t border-gray-200 rounded-b-lg"
+          }`}
+        >
           <div className="flex gap-2">
             <input
               ref={inputRef}
@@ -506,12 +550,22 @@ export function BaseChatWidget({ config, themeColor }: BaseChatWidgetProps) {
               onChange={(e) => setInputValue(e.target.value)}
               onKeyDown={handleKeyPress}
               placeholder="Type your message..."
-              className="flex-1 px-3 py-2 md:px-4 md:py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm md:text-base"
+              aria-label="Type a message"
+              className={`flex-1 px-3 py-2 md:px-4 md:py-2 text-sm md:text-base ${
+                isAutomationEngineer
+                  ? "automation-chat-input"
+                  : "border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+              }`}
             />
             <Button
               onClick={handleSendMessage}
               disabled={isSending}
-              className="px-3 py-2 md:px-4 md:py-2 text-white cursor-pointer rounded-lg hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              aria-label="Send message"
+              className={`px-3 py-2 md:px-4 md:py-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed transition-colors ${
+                isAutomationEngineer
+                  ? "automation-chat-send"
+                  : "text-white rounded-lg hover:opacity-90"
+              }`}
               style={{ backgroundColor: accentColor }}
             >
               <Send className="w-4 h-4 md:w-5 md:h-5" />
@@ -536,16 +590,20 @@ export function BaseChatWidget({ config, themeColor }: BaseChatWidgetProps) {
 
         <button
           onClick={toggleChat}
-          className={`w-12 h-12 md:w-14 md:h-14 cursor-pointer rounded-full relative border-2 flex items-center justify-center shadow-lg hover:scale-110 transition-all duration-300`}
+          aria-label={isOpen ? "Close chat" : "Open automation chat"}
+          aria-expanded={isOpen}
+          className={`w-12 h-12 md:w-14 md:h-14 cursor-pointer relative flex items-center justify-center transition-all duration-300 ${
+            isAutomationEngineer
+              ? "automation-chat-trigger"
+              : "rounded-full border-2 shadow-lg hover:scale-110"
+          }`}
           style={{
             borderColor: accentColor,
-            backgroundColor: "white",
+            backgroundColor: isAutomationEngineer
+              ? "var(--color-automation-paper-raised)"
+              : "white",
           }}
         >
-          <div
-            className="absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 w-8 h-8 md:w-10 md:h-10 animate-[var(--animate-slowping)] rounded-full -z-10"
-            style={{ backgroundColor: accentColor }}
-          />
           {isOpen ? (
             <X
               className="w-6 h-6 md:w-8 md:h-8"

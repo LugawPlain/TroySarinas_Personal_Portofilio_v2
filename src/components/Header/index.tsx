@@ -13,6 +13,7 @@ import EcommerceHeader from "./variants/Ecommerce";
 import CPAHeader from "./variants/CPA";
 import SalesHeader from "./variants/Sales";
 import VAHeader from "./variants/VA";
+import AutomationEngineerHeader from "./variants/AutomationEngineer";
 
 export default function Header() {
   const pathname = usePathname();
@@ -23,6 +24,8 @@ export default function Header() {
   const { role } = usePortfolio();
 
   switch (role) {
+    case "automation-engineer":
+      return <AutomationEngineerHeader />;
     case "software-engineer":
       return <SoftwareEngineerHeader />;
     case "gtm-engineer":

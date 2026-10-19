@@ -1,0 +1,17 @@
+{
+  "scannedAt": "2026-10-19",
+  "framework": "Next.js 16 App Router",
+  "fontStack": [
+    "Geist",
+    "Inter",
+    "Space Grotesk",
+    "JetBrains Mono"
+  ],
+  "palette": "OKLCH custom properties in tokens.css",
+  "motion": [
+    "motion",
+    "gsap"
+  ],
+  "spacing": "Named 4-point automation spacing tokens",
+  "designMd": false
+}
