@@ -81,6 +81,54 @@ export async function middleware(request: NextRequest) {
     }
   }
 
+  // ─── A2. SHORT ROLE URLS: /{role} → /portfolio/{role}
+  const KNOWN_TOP_LEVEL = new Set([
+    "admin",
+    "auth",
+    "blog",
+    "login",
+    "portfolio",
+    "projects",
+    "website-preview",
+  ]);
+  const segments = url.pathname.split("/").filter(Boolean);
+  if (
+    request.method === "GET" &&
+    segments.length === 1 &&
+    !KNOWN_TOP_LEVEL.has(segments[0])
+  ) {
+    const slug = segments[0];
+    try {
+      const roleClient = createServerClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY!,
+        {
+          cookies: {
+            getAll() {
+              return request.cookies.getAll();
+            },
+            setAll() {},
+          },
+        },
+      );
+
+      const { data: roleRow } = await roleClient
+        .from("job_roles")
+        .select("slug")
+        .eq("slug", slug)
+        .maybeSingle();
+
+      if (roleRow) {
+        return NextResponse.redirect(
+          new URL(`/portfolio/${slug}`, request.url),
+          308,
+        );
+      }
+    } catch (e) {
+      console.warn("[Middleware] Short role URL lookup failed:", e);
+    }
+  }
+
   // ─── B. SET COOKIE ON DIRECT PORTFOLIO VISITS
   const isPortfolioPage = url.pathname.startsWith("/portfolio/");
   const currentPathRole = url.pathname.split("/")[2]; // /portfolio/[role]
