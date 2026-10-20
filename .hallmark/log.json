@@ -1,6 +1,14 @@
 [
   {
     "date": "2026-10-19",
+    "macrostructure": "Narrative Workflow",
+    "theme": "Midnight (custom dark palette)",
+    "theme_axes": "dark / grotesk-sans / warm-amber",
+    "enrichment": "Tier-A live pipeline signal",
+    "brief": "Automation Engineer portfolio — full-page dark control-room redesign (genre switch modern-minimal → atmospheric)"
+  },
+  {
+    "date": "2026-10-19",
     "macrostructure": "Split Studio",
     "theme": "Cobalt",
     "enrichment": "real project imagery + workflow illustration",

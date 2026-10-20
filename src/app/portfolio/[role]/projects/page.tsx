@@ -6,6 +6,7 @@ import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Code2, Layers, ArrowLeft, ExternalLink } from "lucide-react";
 import ProjectTagFilter from "@/components/Projects/ProjectTagFilter";
+import AutomationProjectsArchive from "@/components/AutomationProjectsArchive";
 
 interface Props {
   params: Promise<{ role: string }>;
@@ -39,6 +40,24 @@ const RoleProjectsPage = async ({ params, searchParams }: Props) => {
   }
 
   const allProjects = await getProjects(role);
+
+  if (role === "automation-engineer") {
+    return (
+      <AutomationProjectsArchive
+        role={role}
+        projects={tag
+          ? allProjects.filter((project) =>
+              project.tags.some(
+                (projectTag) => projectTag.toLowerCase() === tag.toLowerCase(),
+              ),
+            )
+          : allProjects}
+        allProjects={allProjects}
+        activeTag={tag}
+      />
+    );
+  }
+
   const projects = tag
     ? allProjects.filter((project) =>
         project.tags.some(

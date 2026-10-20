@@ -179,7 +179,6 @@ export default function AutomationEngineerPortfolio({
   blogs,
   socialLinks,
 }: AutomationEngineerPortfolioProps) {
-  const featuredProject = projects[0];
   const caseStudies = projects
     .flatMap((project) => {
       const copy = caseStudyCopy[project.title.trim().toLowerCase()];
@@ -242,6 +241,21 @@ export default function AutomationEngineerPortfolio({
                     )}
                   </div>
 
+                  <div className="automation-signal" aria-hidden="true">
+                    <span className="automation-signal-status">Pipeline nominal</span>
+                    <div className="automation-signal-track">
+                      <span className="automation-signal-pulse" />
+                      <span className="automation-signal-node" />
+                      <span className="automation-signal-node" />
+                      <span className="automation-signal-node" />
+                    </div>
+                    <div className="automation-signal-stops">
+                      <span>Trigger</span>
+                      <span>Rules</span>
+                      <span>Handoff</span>
+                    </div>
+                  </div>
+
                   {socialLinks.length > 0 && (
                     <nav className="automation-social-links" aria-label="Social profiles">
                       {socialLinks.map((link) => (
@@ -259,41 +273,47 @@ export default function AutomationEngineerPortfolio({
                   )}
                 </div>
 
-                <figure className="automation-featured">
-                  {featuredProject ? (
-                    <>
-                      <Link
-                        className="automation-featured-image"
-                        href={`/portfolio/${role}/projects/${featuredProject.id}`}
-                        aria-label={`View ${featuredProject.title}`}
-                      >
-                        <ProjectImage project={featuredProject} featured />
-                        <span className="automation-featured-arrow" aria-hidden="true">
-                          <ArrowUpRight />
-                        </span>
-                      </Link>
-                      <figcaption className="automation-featured-caption">
-                        <div>
-                          <p>Selected automation work</p>
-                          <h2>{featuredProject.title}</h2>
-                        </div>
-                        <span>01 / {String(projects.length).padStart(2, "0")}</span>
-                      </figcaption>
-                    </>
-                  ) : (
-                    <div className="automation-featured-empty">
-                      <div className="automation-flow-mark" aria-hidden="true">
-                        <span>Signal</span>
-                        <ArrowRight />
-                        <span>System</span>
-                        <ArrowRight />
-                        <span>Outcome</span>
-                      </div>
-                      <p>Good automation starts with a clear system.</p>
-                      <span>Explore the approach below.</span>
+                <div className="automation-console" aria-hidden="true">
+                  <div className="automation-console-header">
+                    <span className="automation-console-title">RUN — lead enrichment</span>
+                    <span className="automation-console-status">
+                      <span className="automation-console-dot" /> live
+                    </span>
+                  </div>
+                  <ul className="automation-console-log">
+                    <li>
+                      <span className="automation-console-time">09:41:02</span>
+                      <span className="automation-console-tag">trigger</span>
+                      <span>Tally form submitted</span>
+                    </li>
+                    <li>
+                      <span className="automation-console-time">09:41:03</span>
+                      <span className="automation-console-tag">enrich</span>
+                      <span>Apify + Firecrawl record lookup</span>
+                    </li>
+                    <li>
+                      <span className="automation-console-time">09:41:05</span>
+                      <span className="automation-console-tag">write</span>
+                      <span>Airtable row created</span>
+                    </li>
+                    <li>
+                      <span className="automation-console-time">09:41:05</span>
+                      <span className="automation-console-tag">create</span>
+                      <span>Notion follow-up page</span>
+                    </li>
+                    <li className="is-done">
+                      <span className="automation-console-time">09:41:06</span>
+                      <span className="automation-console-tag">done</span>
+                      <span>Lead enriched</span>
+                    </li>
+                  </ul>
+                  <div className="automation-console-footer">
+                    <div className="automation-console-track">
+                      <span className="automation-console-fill" />
                     </div>
-                  )}
-                </figure>
+                    <span className="automation-console-caret" />
+                  </div>
+                </div>
               </div>
             </div>
           </section>
@@ -303,6 +323,9 @@ export default function AutomationEngineerPortfolio({
           <section className="automation-services" id="capabilities">
             <div className="automation-services-heading">
               <div>
+                <p className="automation-stage">
+                  <span>1.0</span> Capabilities
+                </p>
                 <h2>Less busywork. Better-connected systems.</h2>
               </div>
               <p>
@@ -340,10 +363,13 @@ export default function AutomationEngineerPortfolio({
             <section className="automation-projects" id="projects">
               <div className="automation-projects-heading">
                 <div>
+                  <p className="automation-stage">
+                    <span>2.0</span> Selected work
+                  </p>
                   <h2>Automation in practice.</h2>
                   <p>
-                    Three workflows, broken down by the problem, the connected
-                    system, and the useful result.
+                    Featured builds with the problem, the connected system,
+                    and the result — the full archive is one click away.
                   </p>
                 </div>
                 <Link className="automation-all-projects" href={`/portfolio/${role}/projects`}>
@@ -352,69 +378,59 @@ export default function AutomationEngineerPortfolio({
               </div>
 
               {caseStudies.length > 0 ? (
-                <div className="automation-case-study-list">
-                  {caseStudies.map(({ project, copy }) => (
-                    <article className="automation-case-study" key={project.id}>
-                      <Link
-                        className="automation-project-image"
-                        href={`/portfolio/${role}/projects/${project.id}`}
-                        aria-label={`View ${project.title}`}
-                      >
-                        <ProjectImage project={project} />
-                        <span className="automation-project-image-arrow" aria-hidden="true">
-                          <ArrowUpRight />
-                        </span>
-                      </Link>
-                      <div className="automation-case-study-copy">
-                        <p className="automation-project-category">
-                          {project.tags.slice(0, 2).join(" / ") || "Automation project"}
-                        </p>
-                        <h3>
-                          <Link href={`/portfolio/${role}/projects/${project.id}`}>
-                            {project.title}
-                          </Link>
-                        </h3>
-                        <div className="automation-case-study-details">
-                          <div className="automation-case-study-part">
-                            <h4>Problem</h4>
-                            <p>{copy.problem}</p>
-                          </div>
-                          <div className="automation-case-study-part">
-                            <h4>Workflow</h4>
-                            <p>{copy.workflow}</p>
-                          </div>
-                          <div className="automation-case-study-part">
-                            <h4>Outcome</h4>
-                            <p>{copy.outcome}</p>
-                          </div>
-                        </div>
-                        {project.technologies.length > 0 && (
-                          <ul className="automation-project-technologies" aria-label="Technologies used">
-                            {project.technologies.slice(0, 5).map((technology) => (
-                              <li key={technology}>{technology}</li>
-                            ))}
-                          </ul>
-                        )}
+                <>
+                  <div className="automation-featured-grid">
+                    {caseStudies.map(({ project, copy }) => (
+                      <article className="automation-featured-card" key={project.id}>
                         <Link
-                          className="automation-link automation-case-study-link"
+                          className="automation-project-image automation-featured-card-image"
                           href={`/portfolio/${role}/projects/${project.id}`}
+                          aria-label={`View ${project.title}`}
                         >
-                          View project details <ArrowUpRight aria-hidden="true" />
+                          <ProjectImage project={project} />
+                          <span className="automation-project-image-arrow" aria-hidden="true">
+                            <ArrowUpRight />
+                          </span>
                         </Link>
-                      </div>
-                    </article>
-                  ))}
-                </div>
+                        <div className="automation-featured-card-body">
+                          <p className="automation-project-category">
+                            {project.tags.slice(0, 2).join(" / ") || "Automation project"}
+                          </p>
+                          <h3>
+                            <Link href={`/portfolio/${role}/projects/${project.id}`}>
+                              {project.title}
+                            </Link>
+                          </h3>
+                          <p className="automation-featured-card-outcome">{copy.outcome}</p>
+                          {project.technologies.length > 0 && (
+                            <ul className="automation-project-technologies" aria-label="Technologies used">
+                              {project.technologies.slice(0, 3).map((technology) => (
+                                <li key={technology}>{technology}</li>
+                              ))}
+                            </ul>
+                          )}
+                        </div>
+                      </article>
+                    ))}
+                  </div>
+                  <div className="automation-projects-cta">
+                    <Link
+                      className="automation-button automation-button-primary"
+                      href={`/portfolio/${role}/projects`}
+                    >
+                      Explore all projects <ArrowUpRight aria-hidden="true" />
+                    </Link>
+                    {projects.length > caseStudies.length && (
+                      <p className="automation-project-count">
+                        Featuring {caseStudies.length} of {projects.length} published projects.
+                      </p>
+                    )}
+                  </div>
+                </>
               ) : (
                 <p className="automation-empty-projects">
                   Case studies are being prepared. In the meantime, explore the
                   capabilities and approach behind my automation practice.
-                </p>
-              )}
-
-              {projects.length > caseStudies.length && caseStudies.length > 0 && (
-                <p className="automation-project-count">
-                  Featuring {caseStudies.length} of {projects.length} published projects.
                 </p>
               )}
             </section>
@@ -422,6 +438,9 @@ export default function AutomationEngineerPortfolio({
 
           <section className="automation-approach" id="approach">
             <div className="automation-section-heading">
+              <p className="automation-stage">
+                <span>3.0</span> The process
+              </p>
               <h2>Every engagement, end to end.</h2>
               <p>
                 Automation work is a process, not a black box — discovery
@@ -453,6 +472,9 @@ export default function AutomationEngineerPortfolio({
           {technologies.length > 0 && (
             <section className="automation-toolkit" id="technologies">
               <div className="automation-section-heading">
+                <p className="automation-stage">
+                  <span>4.0</span> Toolkit
+                </p>
                 <h2>Built with the right tools for the job.</h2>
               </div>
               <ul className="automation-tool-list">
@@ -467,6 +489,9 @@ export default function AutomationEngineerPortfolio({
             <TrackedSection id="experience_view">
               <section className="automation-record" id="experience">
                 <div className="automation-section-heading">
+                  <p className="automation-stage">
+                    <span>5.0</span> Record
+                  </p>
                   <h2>Where the work comes from.</h2>
                 </div>
                 <div className="automation-record-list">
