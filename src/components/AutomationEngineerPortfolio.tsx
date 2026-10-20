@@ -235,7 +235,12 @@ export default function AutomationEngineerPortfolio({
                       Map my workflow <ArrowUpRight aria-hidden="true" />
                     </a>
                     {resumeUrl && (
-                      <a className="automation-link" href={resumeUrl}>
+                      <a
+                        className="automation-link"
+                        href={`/resume/${encodeURIComponent(role)}`}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
                         View resume <ArrowUpRight aria-hidden="true" />
                       </a>
                     )}

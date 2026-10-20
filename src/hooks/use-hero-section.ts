@@ -2,7 +2,7 @@
 
 import { useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { useResumeModal } from "@/contexts/ResumeModalContext";
+import { usePortfolio } from "@/context/PortfolioContext";
 import { useTrack } from "./use-track";
 
 interface UseHeroSectionReturn {
@@ -23,7 +23,7 @@ export function useHeroSection(resumeUrl?: string): UseHeroSectionReturn {
   const router = useRouter();
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
   const [isResumeOpen, setIsResumeOpen] = useState(false);
-  const resumeModal = useResumeModal();
+  const { role } = usePortfolio();
 
   const trackResumeOpen = useTrack("resume_view", "hero");
   const trackContactOpen = useTrack("contact_open", "hero");
@@ -31,17 +31,11 @@ export function useHeroSection(resumeUrl?: string): UseHeroSectionReturn {
   const handleResumeClick = useCallback(() => {
     trackResumeOpen({ url: resumeUrl, source: "hero_button" });
     if (resumeUrl) {
-      // open via global resume modal so footer and hero share behavior
-      try {
-        resumeModal.openResume(resumeUrl);
-      } catch (e) {
-        // fallback to navigation if provider not mounted
-        router.push("/?resume=true");
-      }
+      window.open(`/resume/${encodeURIComponent(role)}`, "_blank", "noopener,noreferrer");
     } else {
       router.push("/?resume=true");
     }
-  }, [resumeUrl, router, trackResumeOpen, resumeModal]);
+  }, [resumeUrl, role, router, trackResumeOpen]);
 
   return {
     isContactModalOpen,

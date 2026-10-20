@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { Button } from "../../ui/button";
 import { IoSend, IoMail, IoPerson, IoDocumentText } from "react-icons/io5";
+import { usePortfolio } from "@/context/PortfolioContext";
 
 interface FormData {
   name: string;
@@ -12,6 +13,7 @@ interface FormData {
 }
 
 const StandardContactForm = () => {
+  const { role } = usePortfolio();
   const [formData, setFormData] = useState<FormData>({
     name: "",
     email: "",
@@ -41,7 +43,7 @@ const StandardContactForm = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({ ...formData, role }),
       });
 
       const result = await response.json();

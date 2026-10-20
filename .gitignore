@@ -19,6 +19,7 @@ supabase/migrations/*
 !supabase/migrations/20261020020000_update_clay_lead_enrichment_project.sql
 !supabase/migrations/20261020080000_add_gtm_lead_to_appointment_project.sql
 !supabase/migrations/20261020170000_add_marketing_manager_projects.sql
+!supabase/migrations/20261021020000_set_automation_engineer_resume.sql
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies

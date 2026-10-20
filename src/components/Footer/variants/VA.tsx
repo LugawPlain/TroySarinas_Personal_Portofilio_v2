@@ -2,7 +2,6 @@
 
 import React, { useEffect } from "react";
 import { motion } from "framer-motion";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "../../ui/button";
 import { useContactModal } from "@/contexts/ContactModalContext";
@@ -13,6 +12,7 @@ import BuyMeACoffeeButton from "../../BuyMeACoffeeButton";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import { Icon, addCollection } from "@iconify/react";
 import mdiData from "@iconify-json/mdi/icons.json";
+import { usePortfolio } from "@/context/PortfolioContext";
 
 let mdiCollectionAdded = false;
 
@@ -27,7 +27,7 @@ const VAFooter = () => {
     loadMDICollection();
   }, []);
 
-  const router = useRouter();
+  const { role } = usePortfolio();
   const { setIsContactModalOpen } = useContactModal();
 
   const quickLinks = [
@@ -100,7 +100,13 @@ const VAFooter = () => {
                 Let&apos;s Get Organized
               </Button>
               <Button
-                onClick={() => router.push("/?resume=true")}
+                onClick={() =>
+                  window.open(
+                    `/resume/${encodeURIComponent(role)}`,
+                    "_blank",
+                    "noopener,noreferrer",
+                  )
+                }
                 variant="outline"
                 className="rounded-full px-6 py-5 border-slate-600 hover:border-[#2dd4bf] hover:text-[#2dd4bf] text-slate-300 transition-all"
               >

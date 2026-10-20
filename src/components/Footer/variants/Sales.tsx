@@ -7,13 +7,13 @@ import GitHubButton from "react-github-btn";
 import Link from "next/link";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import BuyMeACoffeeButton from "../../BuyMeACoffeeButton";
-import { useRouter } from "next/navigation";
 import { Button } from "../../ui/button";
 import { useContactModal } from "@/contexts/ContactModalContext";
 import { Trophy, Phone, Mail } from "lucide-react";
+import { usePortfolio } from "@/context/PortfolioContext";
 
 const SalesFooter = () => {
-  const router = useRouter();
+  const { role } = usePortfolio();
   const { setIsContactModalOpen } = useContactModal();
 
   return (
@@ -78,7 +78,13 @@ const SalesFooter = () => {
               <li className="py-2 text-gray-700">Certifications</li>
             </Link>
             <button
-              onClick={() => router.push("/?resume=true")}
+              onClick={() =>
+                window.open(
+                  `/resume/${encodeURIComponent(role)}`,
+                  "_blank",
+                  "noopener,noreferrer",
+                )
+              }
               className="underline"
             >
               <li className="py-2 text-gray-700">Resume</li>

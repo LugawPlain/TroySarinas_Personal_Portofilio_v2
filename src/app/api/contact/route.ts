@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import nodemailer from "nodemailer";
 
 interface ContactFormData {
   name: string;
@@ -9,10 +8,28 @@ interface ContactFormData {
   role?: string;
 }
 
+function escapeHtml(value: string) {
+  return value.replace(/[&<>"']/g, (character) => {
+    const entities: Record<string, string> = {
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#39;",
+    };
+
+    return entities[character];
+  });
+}
+
 export async function POST(request: NextRequest) {
   try {
     const body: ContactFormData = await request.json();
     const { name, email, subject, message, role } = body;
+    const portfolioRole =
+      typeof role === "string" && role.trim()
+        ? role.trim().replace(/[\r\n]+/g, " ").slice(0, 100)
+        : "Not specified";
 
     // Validate required fields
     if (!name || !email || !subject || !message) {
@@ -31,21 +48,22 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Create transporter using environment variables
-    const transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASSWORD,
-      },
-    });
+    const safeName = escapeHtml(name);
+    const safeEmail = escapeHtml(email);
+    const safeSubject = escapeHtml(subject);
+    const safeMessage = escapeHtml(message);
+    const safeRole = escapeHtml(portfolioRole);
 
-    // Email content
-    const mailOptions = {
-      from: process.env.EMAIL_USER,
-      to: "troyjeffreysarinas@gmail.com",
-      subject: `Portfolio Contact${role ? ` [${role}]` : ""}: ${subject}`,
-      html: `
+    const resendApiKey = process.env.RESEND_API_KEY;
+    if (!resendApiKey) {
+      console.error("RESEND_API_KEY is not configured");
+      return NextResponse.json(
+        { error: "Email service is not configured." },
+        { status: 500 }
+      );
+    }
+
+    const html = `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
           <h2 style="color: #333; border-bottom: 2px solid #007bff; padding-bottom: 10px;">
             New Contact Form Submission
@@ -57,21 +75,25 @@ export async function POST(request: NextRequest) {
             <table style="width: 100%; border-collapse: collapse;">
               <tr>
                 <td style="padding: 8px; border-bottom: 1px solid #dee2e6; font-weight: bold; width: 120px;">Name:</td>
-                <td style="padding: 8px; border-bottom: 1px solid #dee2e6;">${name}</td>
+                <td style="padding: 8px; border-bottom: 1px solid #dee2e6;">${safeName}</td>
               </tr>
               <tr>
                 <td style="padding: 8px; border-bottom: 1px solid #dee2e6; font-weight: bold;">Email:</td>
                 <td style="padding: 8px; border-bottom: 1px solid #dee2e6;">
-                  <a href="mailto:${email}" style="color: #007bff; text-decoration: none;">${email}</a>
+                  <a href="mailto:${safeEmail}" style="color: #007bff; text-decoration: none;">${safeEmail}</a>
                 </td>
               </tr>
               <tr>
+                <td style="padding: 8px; border-bottom: 1px solid #dee2e6; font-weight: bold;">Portfolio role:</td>
+                <td style="padding: 8px; border-bottom: 1px solid #dee2e6;">${safeRole}</td>
+              </tr>
+              <tr>
                 <td style="padding: 8px; border-bottom: 1px solid #dee2e6; font-weight: bold;">Subject:</td>
-                <td style="padding: 8px; border-bottom: 1px solid #dee2e6;">${subject}</td>
+                <td style="padding: 8px; border-bottom: 1px solid #dee2e6;">${safeSubject}</td>
               </tr>
               <tr>
                 <td style="padding: 8px; font-weight: bold; vertical-align: top;">Message:</td>
-                <td style="padding: 8px; white-space: pre-wrap;">${message}</td>
+                <td style="padding: 8px; white-space: pre-wrap;">${safeMessage}</td>
               </tr>
             </table>
           </div>
@@ -81,18 +103,43 @@ export async function POST(request: NextRequest) {
             <p>Sent on: ${new Date().toLocaleString()}</p>
           </div>
         </div>
-      `,
-    };
+      `;
 
-    // Send email
-    await transporter.sendMail(mailOptions);
+    const resendResponse = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${resendApiKey}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        from:
+          process.env.RESEND_FROM_EMAIL ??
+          "Portfolio Contact <onboarding@resend.dev>",
+        to: ["troyjeffreysarinas@gmail.com"],
+        reply_to: email,
+        subject: `Portfolio Contact [${portfolioRole}]: ${subject.replace(/[\r\n]+/g, " ")}`,
+        html,
+      }),
+    });
+
+    const resendResult: unknown = await resendResponse.json().catch(() => null);
+    if (!resendResponse.ok) {
+      console.error("Resend email request failed:", {
+        status: resendResponse.status,
+        response: resendResult,
+      });
+      return NextResponse.json(
+        { error: "Failed to send message. Please try again later." },
+        { status: 502 }
+      );
+    }
 
     return NextResponse.json(
       { message: "Message sent successfully!" },
       { status: 200 }
     );
   } catch (error) {
-    console.error("Error sending email:", error);
+    console.error("Error sending email with Resend:", error);
 
     return NextResponse.json(
       { error: "Failed to send message. Please try again later." },

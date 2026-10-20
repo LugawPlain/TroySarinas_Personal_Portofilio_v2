@@ -2,15 +2,15 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { useResumeModal } from "@/contexts/ResumeModalContext";
 import Link from "next/link";
+import { usePortfolio } from "@/context/PortfolioContext";
 import { Button } from "../../ui/button";
 import { useContactModal } from "@/contexts/ContactModalContext";
 import SocialLinks from "../../SocialLinks";
 import { Code2, Terminal, ArrowUpRight, Mail, MapPin } from "lucide-react";
 
 const SoftwareEngineerFooter = () => {
-  const { openResume } = useResumeModal();
+  const { role } = usePortfolio();
   const { setIsContactModalOpen } = useContactModal();
 
   const quickLinks = [
@@ -74,7 +74,13 @@ const SoftwareEngineerFooter = () => {
                 Get in Touch
               </Button>
               <Button
-                onClick={() => openResume()}
+                onClick={() =>
+                  window.open(
+                    `/resume/${encodeURIComponent(role)}`,
+                    "_blank",
+                    "noopener,noreferrer",
+                  )
+                }
                 variant="outline"
                 className="rounded-full px-6 py-5 border border-gray-700 text-white hover:border-blue-500 hover:text-blue-400 bg-white/5 transition-all"
               >

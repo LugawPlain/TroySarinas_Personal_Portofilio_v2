@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { Button } from "../../ui/button";
 import { IoSend, IoMail, IoPerson, IoDocumentText } from "react-icons/io5";
 import { Film, Clapperboard } from "lucide-react";
+import { usePortfolio } from "@/context/PortfolioContext";
 
 interface FormData {
   name: string;
@@ -13,6 +14,7 @@ interface FormData {
 }
 
 const CinematicContactForm = () => {
+  const { role } = usePortfolio();
   const [formData, setFormData] = useState<FormData>({
     name: "",
     email: "",
@@ -40,7 +42,7 @@ const CinematicContactForm = () => {
       const response = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({ ...formData, role }),
       });
 
       const result = await response.json();
