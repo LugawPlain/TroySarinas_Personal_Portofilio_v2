@@ -32,6 +32,7 @@ const RoleProjectsPage = async ({ params, searchParams }: Props) => {
     "gtm-engineer",
     "video-editor",
     "ecommerce-developer",
+    "automation-engineer",
   ];
   if (!validRoles.includes(role)) {
     return notFound();

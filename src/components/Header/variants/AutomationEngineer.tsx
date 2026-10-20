@@ -19,6 +19,7 @@ const AutomationEngineerHeader = () => {
         <nav className="automation-nav" aria-label="Automation portfolio">
           <Link href={`${roleHome}#capabilities`}>Capabilities</Link>
           <Link href={`${roleHome}#projects`}>Selected work</Link>
+          <Link href={`${roleHome}/projects`}>All projects</Link>
           <Link href={`${roleHome}#approach`}>Approach</Link>
         </nav>
 

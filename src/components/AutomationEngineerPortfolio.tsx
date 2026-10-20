@@ -1,7 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import {
-  ArrowDown,
   ArrowRight,
   ArrowUpRight,
   Bot,
@@ -40,39 +39,66 @@ const capabilities = [
     title: "Workflow orchestration",
     description:
       "Connect triggers, business rules, and handoffs into workflows people can understand and maintain.",
+    link: { label: "How I approach it", href: "#approach" },
   },
   {
     icon: Bot,
     title: "AI-assisted operations",
     description:
       "Put language models to work where they add value, with clear review points for uncertain decisions.",
+    link: { label: "See it in practice", href: "#projects" },
   },
   {
     icon: Braces,
     title: "Reliable integrations",
     description:
       "Bring APIs and everyday tools together with sensible error paths, retries, and room to evolve.",
+    link: { label: "Browse the toolkit", href: "#technologies" },
   },
 ];
 
 const approach = [
   {
     number: "01",
-    title: "Map the work",
+    title: "Discover the pain",
     description:
-      "Find the repeated steps, handoffs, and exceptions before deciding what should be automated.",
+      "Listen for what is repetitive, manual, or error-prone, and what it costs the client when it goes wrong.",
+    deliverable: "discovery notes",
   },
   {
     number: "02",
-    title: "Design the flow",
+    title: "Map the process",
     description:
-      "Choose the right tools and make every trigger, decision, and human checkpoint explicit.",
+      "Shadow the real work and document every step, handoff, and exception before deciding what deserves automation.",
+    deliverable: "process map",
   },
   {
     number: "03",
-    title: "Make it dependable",
+    title: "Design the flow",
     description:
-      "Test edge cases, surface failures, and leave the workflow clear enough for a team to own.",
+      "Choose tools that fit the client's stack and make every trigger, decision, and human checkpoint explicit.",
+    deliverable: "flow spec",
+  },
+  {
+    number: "04",
+    title: "Build and test",
+    description:
+      "Ship one workflow end-to-end on real data, then push edge cases, outages, and duplicates until it holds.",
+    deliverable: "tested workflow",
+  },
+  {
+    number: "05",
+    title: "Deploy with observability",
+    description:
+      "Run alongside the manual process, alert loudly on failure, and log everything in plain language.",
+    deliverable: "monitored rollout",
+  },
+  {
+    number: "06",
+    title: "Hand over ownership",
+    description:
+      "Document, train the team, and leave the workflow clear enough for the client to run without me.",
+    deliverable: "team-owned runbook",
   },
 ];
 
@@ -80,6 +106,14 @@ const caseStudyCopy: Record<
   string,
   { problem: string; workflow: string; outcome: string }
 > = {
+  "clay lead enrichment & crm sync": {
+    problem:
+      "Prospect records need useful company context, and manually keeping CRM records current slows down follow-up.",
+    workflow:
+      "Clay enriches lead and company details, then syncs the results to Airtable to create or refresh CRM records for follow-up.",
+    outcome:
+      "Enriched lead records land in one Airtable pipeline, ready for review and follow-up without repetitive copy-and-paste.",
+  },
   "ai voice receptionist": {
     problem:
       "Callers need answers to policy and scheduling questions without waiting for someone to coordinate every request.",
@@ -192,9 +226,12 @@ export default function AutomationEngineerPortfolio({
                   </div>
 
                   <div className="automation-hero-actions">
-                    <a className="automation-button automation-button-primary" href="#projects">
-                      Explore selected work <ArrowDown aria-hidden="true" />
-                    </a>
+                    <Link
+                      className="automation-button automation-button-primary"
+                      href={`/portfolio/${role}/projects`}
+                    >
+                      Explore all work <ArrowUpRight aria-hidden="true" />
+                    </Link>
                     <a className="automation-button automation-button-secondary" href="#workflow-brief">
                       Map my workflow <ArrowUpRight aria-hidden="true" />
                     </a>
@@ -274,13 +311,25 @@ export default function AutomationEngineerPortfolio({
               </p>
             </div>
             <div className="automation-service-grid">
-              {capabilities.map(({ icon: Icon, title, description }) => (
+              {capabilities.map(({ icon: Icon, title, description, link }, index) => (
                 <article className="automation-service-card" key={title}>
+                  <span className="automation-service-index" aria-hidden="true">
+                    0{index + 1}
+                  </span>
                   <Icon aria-hidden="true" />
                   <h3>{title}</h3>
                   <p>{description}</p>
-                  <a className="automation-link" href="#approach">
-                    How I approach it <ArrowRight aria-hidden="true" />
+                  {index === 0 && (
+                    <div className="automation-flow-mark automation-service-flow" aria-hidden="true">
+                      <span>Trigger</span>
+                      <ArrowRight />
+                      <span>Rules</span>
+                      <ArrowRight />
+                      <span>Handoff</span>
+                    </div>
+                  )}
+                  <a className="automation-link" href={link.href}>
+                    {link.label} <ArrowRight aria-hidden="true" />
                   </a>
                 </article>
               ))}
@@ -373,16 +422,27 @@ export default function AutomationEngineerPortfolio({
 
           <section className="automation-approach" id="approach">
             <div className="automation-section-heading">
-              <h2>From the first handoff to the last edge case.</h2>
+              <h2>Every engagement, end to end.</h2>
+              <p>
+                Automation work is a process, not a black box — discovery
+                before tooling, explicit flow before build, ownership before
+                handoff.
+              </p>
             </div>
             <ol className="automation-approach-list">
               {approach.map((step) => (
                 <li className="automation-approach-step" key={step.number}>
-                  <span>{step.number}</span>
-                  <div>
+                  <span className="automation-approach-node" aria-hidden="true">
+                    {step.number}
+                  </span>
+                  <div className="automation-approach-copy">
                     <h3>{step.title}</h3>
                     <p>{step.description}</p>
                   </div>
+                  <span className="automation-approach-deliverable">
+                    <span className="automation-visually-hidden">Output: </span>
+                    {step.deliverable}
+                  </span>
                 </li>
               ))}
             </ol>

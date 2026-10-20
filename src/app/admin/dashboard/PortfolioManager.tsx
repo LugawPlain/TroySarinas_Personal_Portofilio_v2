@@ -2605,6 +2605,21 @@ export function PortfolioContentManager({
                                 }}
                               />
                             </label>
+                            {(editFormData[image.field] || editFormData[image.fileField]) && (
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  setEditFormData((prev: any) => ({
+                                    ...prev,
+                                    [image.field]: "",
+                                    [image.fileField]: null,
+                                  }))
+                                }
+                                className="w-full rounded-md border border-border px-3 py-2 text-xs font-semibold text-muted-foreground transition-colors hover:border-destructive/40 hover:bg-destructive/5 hover:text-destructive"
+                              >
+                                Remove image
+                              </button>
+                            )}
                           </div>
                         ))}
                       </div>
